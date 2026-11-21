@@ -279,6 +279,18 @@ header{flex-wrap:wrap;row-gap:8px}
 @media (prefers-reduced-motion: reduce){ *{animation:none!important;transition:none!important} }
 @media(max-width:860px){ body.role-player .layout > div:last-child{order:-1} body.role-player #guide{order:5} }
 
+/* practice + feedback */
+.fbbtn{position:fixed;right:16px;bottom:16px;z-index:30;border-radius:999px;padding:10px 16px;font-size:14px;background:var(--panel2);border:1px solid var(--line);box-shadow:0 6px 20px rgba(0,0,0,.35)}
+body.embed .fbbtn, body.embed header, body.embed .foot, body.embed #warnBox{display:none!important}
+body.embed .wrap{padding:6px}
+body.embed .layout{grid-template-columns:minmax(0,1fr)!important}
+body.embed .layout > div:last-child{order:-1}
+#previewBox iframe{width:100%;height:720px;border:1px solid var(--line);border-radius:14px;margin-top:10px;background:#0f1226}
+.kinds{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.kinds button.on{background:var(--blue);color:#032}
+.fbcount{font-size:12px;color:var(--muted);text-align:right}
+.pbadge{background:#1d3d6b;border-radius:999px;padding:4px 10px;font-size:13px;font-weight:800}
+
 </style>
 </head>
 <body>
@@ -333,6 +345,15 @@ header{flex-wrap:wrap;row-gap:8px}
         <input id="codeIn" inputmode="numeric" maxlength="4" placeholder="例：4821" style="font-size:28px;letter-spacing:.3em;text-align:center">
         <div class="small" id="roomInfo" style="min-height:1.5em;margin-top:6px;color:var(--muted)"></div>
         <button class="player" id="asPlayer" style="width:100%;margin-top:6px;font-size:18px;padding:14px;background:linear-gradient(160deg,#8f3b5a,#5e2340)">入室する</button>
+      </div>
+    </div>
+    <div class="startbox" style="margin-top:14px">
+      <h3>🤖 1人で試す（練習モード）</h3>
+      <div class="small muted" style="margin:0 0 8px">CPUを相手に、上で選んだ遊び方を1人で試せます。通信しないので、友達は入れません。</div>
+      <div class="row">
+        <label>CPUの人数</label><select id="botN"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option></select>
+        <label>強さ</label><select id="botLv"><option value="weak">弱い</option><option value="normal" selected>普通</option><option value="strong">強い</option></select>
+        <button id="asPractice" style="margin-left:auto;background:#1d3d6b">練習を始める</button>
       </div>
     </div>
     <div class="small" id="startMsg" style="margin-top:10px;color:#ffc2d0;min-height:1.4em"></div>
@@ -421,6 +442,12 @@ header{flex-wrap:wrap;row-gap:8px}
 
         <div class="card m-sg" id="sgMe"></div>
 
+        <div class="card hidden" id="previewCard">
+          <div class="row" style="justify-content:space-between"><h3 style="margin:0">回答者画面の見本</h3><button class="small" id="bPreview">横に表示</button></div>
+          <p class="small muted" style="margin:6px 0 0">「あなた（見本）」として回答者の画面を表示します。押すボタンも実際に使えます。</p>
+          <div id="previewBox"></div>
+        </div>
+
         <div class="card guide hidden" id="guide"></div>
 
         <div class="card">
@@ -447,6 +474,7 @@ header{flex-wrap:wrap;row-gap:8px}
   <label>BGM <input type="range" id="volBgm" min="0" max="100" step="1"></label>
   <label>効果音 <input type="range" id="volSfx" min="0" max="100" step="1"></label>
 </div>
+<button id="bFeedback" class="fbbtn">💡 要望を送る</button>
 <div id="modalRoot"></div>
 <audio id="hostAudio" loop></audio>
 
@@ -653,6 +681,9 @@ const mediaCache = {};
 let hadHost = false;
 const urlRoom = (new URLSearchParams(location.search).get("room") || "").replace(/[^0-9]/g, "").slice(0,4);
 let rejoinInfo = null, rejoinChecked = false;
+const qs = new URLSearchParams(location.search);
+const isEmbed = qs.get("embed") === "1" && qs.get("practice") === "1";
+if(isEmbed) document.body.classList.add("embed");
 
 function newGame(mode){
   return { v:3, stage:"lobby", mode, round:0, phase:"idle", order:[], cur:-1, wrong:[], result:null,
@@ -685,7 +716,8 @@ function avatarOf(name){
 }
 function attachRoom(r){
   room = r; roomCode = r.code;
-  $("roomCodeTxt").textContent = r.code; $("roomBadge").classList.remove("hidden");
+  $("roomCodeTxt").textContent = r.local ? "練習中" : r.code; $("roomBadge").classList.remove("hidden");
+  if(r.local) $("bInvite").classList.add("hidden");
   $("bLeave").classList.remove("hidden"); $("bVol").classList.remove("hidden");
   room.onConnection(c => setConn(c ? "on" : "wait", c ? "稼働中" : "再接続中…"), onRoomError);
   room.onPeers(ch => { peers = ch.peers; handlePeers(); }, onRoomError);
@@ -706,7 +738,9 @@ function showScreen(){
   $("closed").classList.toggle("hidden", !closed);
   if(closed){ $("start").classList.add("hidden"); $("main").classList.add("hidden"); return; }
   if(siteOpen === true){
-    if(role) $("main").classList.remove("hidden"); else { $("start").classList.remove("hidden"); checkRejoin(); }
+    if(role) $("main").classList.remove("hidden");
+    else if(isEmbed) autoEmbed();
+    else { $("start").classList.remove("hidden"); checkRejoin(); }
   }
 }
 setConn("wait", "準備中…");
@@ -723,7 +757,7 @@ setTimeout(() => Net.onOpen((open, err) => {
 // ===== host state save (for rejoin) =====
 let saveTimer = null;
 function saveHost(){
-  if(role !== "host" || !roomCode) return;
+  if(role !== "host" || !roomCode || (room && room.local)) return;
   clearTimeout(saveTimer);
   saveTimer = setTimeout(() => {
     try{ store.set("host." + roomCode, JSON.stringify({ game, textQs, t:Date.now() })); }catch(e){}
@@ -732,6 +766,11 @@ function saveHost(){
 
 // ===== leave =====
 async function leaveRoom(){
+  if(room && room.local){
+    if(!(await confirmBox("練習を終わりますか？", "最初の画面に戻ります。", "終わる"))) return;
+    try{ await room.leave(); }catch(e){}
+    goStart(); return;
+  }
   if(role === "host"){
     if(!(await confirmBox("部屋を閉じますか？", "司会が退出すると部屋が閉じて、参加者は全員最初の画面に戻ります。", "部屋を閉じる"))) return;
     try{ await room.setMeta({ closed:true }); }catch(e){}
@@ -1216,16 +1255,16 @@ function renderLobby(){
   }
   $("board").innerHTML = `<div class="lobby">
     <div class="rulestrip"><span>ロビー</span><span>遊び方：<b>${MODES[g.mode]}</b></span><span>${g.locked ? "🔒 参加締め切り中" : "🟢 参加受付中"}</span></div>
-    <div class="lobbytop">
+    ${room && room.local ? `<div class="sgbanner">🤖 練習モード<small>CPUと1人で試せます。友達は入れません（本番は「部屋を立てる」から）</small></div>` : `<div class="lobbytop">
       <div><div class="muted small">部屋コード</div><div class="bigcode">${esc(roomCode)}</div>
         <div class="row" style="margin-top:8px"><button class="small" id="bCopyLink">参加リンクをコピー</button></div>
         <div class="small muted" style="margin-top:6px">サイトを開いてコードを入れるか、QRコードを読み取ると入れます</div></div>
       <div id="qrbox"></div>
-    </div>
+    </div>`}
     <div class="slots">${slots.join("")}</div>
     ${role === "player" ? '<div class="sgbanner">司会がゲームを始めるのを待っています<small>右上の「退出」でいつでも抜けられます</small></div>' : ""}
   </div>`;
-  fillQR();
+  if(!(room && room.local)) fillQR();
   const cl = $("bCopyLink");
   if(cl) cl.onclick = () => { try{ navigator.clipboard.writeText(joinLink()); cl.textContent = "コピーしました"; setTimeout(() => { if($("bCopyLink")) $("bCopyLink").textContent = "参加リンクをコピー"; }, 1500); }catch(e){} };
 }
@@ -1468,7 +1507,7 @@ function sgLog(t){ game.sg.log.unshift(t); game.sg.log = game.sg.log.slice(0,6);
 function sgStart(){
   if(role !== "host") return;
   const names = [myName];
-  for(const p of players()){ const n = p.presence.name.slice(0,12); if(!names.includes(n)) names.push(n); }
+  for(const p of players()){ const n = p.presence.name.slice(0,12); if(!names.includes(n) && !(room && room.local && n === "あなた（見本）")) names.push(n); }
   if(names.length < 2){ showWarn("すごろくは2人以上で遊べます。回答者が入るのを待ってください。"); setTimeout(() => showWarn(""), 3000); return; }
   const order = names.slice(0,6).sort(() => Math.random() - .5);
   const board = Array(SG_LEN + 1).fill("");
@@ -1767,6 +1806,188 @@ $("bSgStart").onclick = sgStart;
 $("bSgSkip").onclick = sgSkip;
 
 
+// ===== practice mode: a room that lives only in this browser (no Firebase) =====
+const LocalNet = (() => {
+  const ch = ("BroadcastChannel" in window) ? new BroadcastChannel("asoviva-practice") : null;
+  function join(code, owner){
+    const myId = "L" + Math.random().toString(36).slice(2, 8);
+    const map = {}, own = new Set([myId]);
+    const peerH = [], mediaH = [], metaH = [];
+    let meta = { created:Date.now(), host:"", closed:false, locked:false };
+    const media = {};
+    let queued = false;
+    const emitNow = () => {
+      queued = false;
+      const arr = Object.entries(map).map(([k, v]) => ({ peer:k, presence:v.pr, avatar:v.av || "", isMe:k === myId, sameTab:k === myId, updatedAt:v.t || 0 }));
+      peerH.forEach(h => h({ peers:arr }));
+    };
+    const emit = () => { if(!queued){ queued = true; setTimeout(emitNow, 0); } };
+    const send = m => { if(ch) ch.postMessage(Object.assign({ code }, m)); };
+    const announce = id => { const e = map[id]; if(e) send({ t:"p", id, pr:e.pr, av:e.av }); };
+    map[myId] = { pr:{}, av:"", t:Date.now() };
+    if(ch) ch.addEventListener("message", e => {
+      const m = e.data; if(!m || m.code !== code) return;
+      if(m.t === "p" && !own.has(m.id)){ map[m.id] = { pr:m.pr, av:m.av, t:Date.now() }; emit(); }
+      else if(m.t === "x"){ if(!own.has(m.id)){ delete map[m.id]; emit(); } }
+      else if(m.t === "hi"){ own.forEach(announce); if(owner){ for(const k in media) send({ t:"m", k, v:media[k] }); send({ t:"meta", v:meta }); } }
+      else if(m.t === "m" && !owner){ media[m.k] = m.v; mediaH.forEach(h => h(m.k, m.v)); }
+      else if(m.t === "meta" && !owner){ meta = m.v; metaH.forEach(h => h(meta)); }
+    });
+    setTimeout(() => send({ t:"hi" }), 60);
+    window.addEventListener("beforeunload", () => own.forEach(id => send({ t:"x", id })));
+    return {
+      code, myId, local:true,
+      presence(patch){
+        const pr = map[myId].pr;
+        for(const k in patch){ if(patch[k] === null) delete pr[k]; else pr[k] = patch[k]; }
+        map[myId].pr = JSON.parse(JSON.stringify(pr)); map[myId].t = Date.now();
+        announce(myId); emit(); return Promise.resolve();
+      },
+      setAvatar(s){ map[myId].av = s; announce(myId); emit(); return Promise.resolve(); },
+      setMedia(k, v){ media[k] = v; send({ t:"m", k, v }); mediaH.forEach(h => h(k, v)); return Promise.resolve(); },
+      setMeta(p){ meta = Object.assign({}, meta, p); send({ t:"meta", v:meta }); metaH.forEach(h => h(meta)); return Promise.resolve(); },
+      onPeers(h){ peerH.push(h); emit(); },
+      onConnection(h){ setTimeout(() => h(true), 0); },
+      onMedia(h){ mediaH.push(h); },
+      onMeta(h){ metaH.push(h); if(!owner) return; setTimeout(() => h(meta), 0); },
+      connected(){ return true; },
+      async leave(){ if(owner) send({ t:"meta", v:Object.assign({}, meta, { closed:true }) }); own.forEach(id => send({ t:"x", id })); },
+      botSet(id, pr, av){ own.add(id); map[id] = { pr:JSON.parse(JSON.stringify(pr)), av, t:Date.now() }; announce(id); emit(); },
+      botPatch(id, patch){ const e = map[id]; if(!e) return; Object.assign(e.pr, patch); e.pr = JSON.parse(JSON.stringify(e.pr)); e.t = Date.now(); announce(id); emit(); }
+    };
+  }
+  return { join };
+})();
+
+// ===== CPU players =====
+const BOT_NAMES = ["CPUあお","CPUみどり","CPUきいろ","CPUもも","CPUむらさき"];
+const BOT_AV = ["e:🤖","e:👾","e:🦾","e:🛸","e:🎃"];
+const BOT_LV = {
+  weak:{ min:2.0, max:5.0, skip:.35, lie:.2, doubt:.15 },
+  normal:{ min:1.0, max:3.5, skip:.2, lie:.3, doubt:.25 },
+  strong:{ min:0.4, max:1.8, skip:.1, lie:.4, doubt:.35 }
+};
+let practice = null;   // { n, lv, bots:[{id,name}] }
+const botPlan = {};    // key -> time (ms) or -1 (skip)
+const botSecret = {};  // bot name -> { id, r }
+function setupBots(n, lv){
+  practice = { n, lv, bots:[] };
+  for(let i = 0; i < n; i++){
+    const b = { id:"bot" + i, name:BOT_NAMES[i] };
+    practice.bots.push(b);
+    room.botSet(b.id, { role:"player", name:b.name, buzz:null }, BOT_AV[i]);
+  }
+}
+const rnd = (a, b) => a + Math.random() * (b - a);
+function planOnce(key, fn){ if(!(key in botPlan)) botPlan[key] = fn(); return botPlan[key]; }
+setInterval(() => {
+  if(!practice || role !== "host" || !game || game.stage !== "play") return;
+  const L = BOT_LV[practice.lv] || BOT_LV.normal, now = Date.now();
+  if(game.mode !== "sugoroku"){
+    if(game.phase !== "open" && game.phase !== "answer") return;
+    for(const b of practice.bots){
+      const at = planOnce(`q:${game.round}:${b.id}`, () => Math.random() < L.skip ? -1 : now + rnd(L.min, L.max) * 1000);
+      if(at > 0 && now >= at){
+        botPlan[`q:${game.round}:${b.id}`] = -2;
+        room.botPatch(b.id, { buzz:game.round });
+      }
+    }
+    return;
+  }
+  const sg = game.sg; if(!sg) return;
+  const bot = n => practice.bots.find(b => b.name === n);
+  if(sg.phase === "roll" && bot(sgTurnName())){
+    const n = sgTurnName();
+    const key = `r:${sg.seq}:${sg.turn}:${sg.log.length}`;
+    const at = planOnce(key, () => now + rnd(900, 1800));
+    if(at > 0 && now >= at){
+      botPlan[key] = -2;
+      const r = 1 + Math.floor(Math.random() * 6);
+      let v = r;
+      if(Math.random() < L.lie){ do{ v = 1 + Math.floor(Math.random() * 6); }while(v === r); }
+      const id = rid();
+      botSecret[n] = { id, r };
+      if(processAct(n, { act:"declare", id, v, commit:"" })) commit();
+    }
+  } else if(sg.phase === "declared" && sg.decl){
+    for(const b of practice.bots){
+      if(b.name === sg.decl.n || !sg.order.includes(b.name)) continue;
+      const key = `d:${sg.decl.id}:${b.id}`;
+      const p = L.doubt + (sg.decl.v >= 5 ? .15 : 0);
+      const at = planOnce(key, () => Math.random() < p ? now + rnd(1500, 7000) : -1);
+      if(at > 0 && now >= at){
+        botPlan[key] = -2;
+        if(processAct(b.name, { act:"doubt", id:sg.decl.id })) commit();
+        break;
+      }
+    }
+  } else if(sg.phase === "doubted" && sg.decl && bot(sg.decl.n)){
+    const s = botSecret[sg.decl.n];
+    const key = `v:${sg.decl.id}`;
+    if(s && s.id === sg.decl.id && planOnce(key, () => 1) === 1){
+      botPlan[key] = -2;
+      processAct(sg.decl.n, { act:"reveal", id:s.id, r:s.r, salt:"" });
+    }
+  }
+}, 250);
+
+// ===== practice preview (player view in an iframe) =====
+function togglePreview(){
+  const box = $("previewBox");
+  if(box.firstChild){ box.innerHTML = ""; $("bPreview").textContent = "横に表示"; return; }
+  box.innerHTML = `<iframe src="${location.pathname}?practice=1&embed=1" title="回答者画面の見本"></iframe>`;
+  $("bPreview").textContent = "隠す";
+}
+
+// ===== feedback =====
+const FB_KINDS = [["bug","🐞 不具合"],["idea","✨ こうしてほしい"],["other","💬 その他"]];
+async function openFeedback(){
+  let kind = "idea";
+  const last = +(store.get("fb.last") || 0);
+  const wait = Math.ceil((60000 - (Date.now() - last)) / 1000);
+  if(wait > 0){ await modal("少し待ってください", `<p class="muted" style="margin:0">要望は1分に1回まで送れます。あと${wait}秒お待ちください。</p>`); return; }
+  const body = `<div class="kinds">${FB_KINDS.map(([k,l]) => `<button data-k="${k}" class="${k===kind?"on":""}">${l}</button>`).join("")}</div>
+    <textarea id="fbText" maxlength="500" placeholder="どんなときに、どうなった／どうしてほしいかを書いてください" style="min-height:120px"></textarea>
+    <div class="fbcount"><span id="fbCount">0</span> / 500</div>
+    <input id="fbName" maxlength="20" placeholder="名前（任意）" style="margin-top:6px">
+    <p class="small muted" style="margin:8px 0 0">送った日時・使っていた遊び方・スマホかPCかも一緒に送られます。内容はサイトの管理者だけが読めます。</p>
+    <div class="small" id="fbErr" style="color:#ffc2d0;min-height:1.2em;margin-top:4px"></div>`;
+  const p = modal("💡 改善要望を送る", body, [{ label:"やめる", value:false }, { label:"送信", value:true, cls:"b-open" }]);
+  const root = $("modalRoot").lastElementChild;
+  const ta = root.querySelector("#fbText");
+  root.querySelector("#fbName").value = myName || store.get("name") || "";
+  ta.oninput = () => { root.querySelector("#fbCount").textContent = ta.value.length; root.querySelector("#fbErr").textContent = ""; };
+  root.querySelector(".kinds").onclick = e => {
+    const b = e.target.closest("[data-k]"); if(!b) return;
+    kind = b.dataset.k; root.querySelectorAll(".kinds button").forEach(x => x.classList.toggle("on", x === b));
+  };
+  // keep the dialog open when the text is empty
+  const sendBtn = root.querySelector(".mrow .b-open");
+  const name = () => root.querySelector("#fbName").value.trim().slice(0,20);
+  sendBtn.addEventListener("click", e => {
+    if(!ta.value.trim()){ e.stopImmediatePropagation(); root.querySelector("#fbErr").textContent = "内容を入力してください"; ta.focus(); }
+  }, true);
+  const text = () => ta.value.trim().slice(0,500);
+  let savedText = "", savedName = "";
+  ta.addEventListener("input", () => { savedText = text(); });
+  root.querySelector("#fbName").addEventListener("input", () => { savedName = name(); });
+  savedName = name();
+  if(!(await p)) return;
+  const item = {
+    kind, text:savedText, name:savedName, t:Date.now(),
+    mode:(game && game.mode) || "start",
+    device:/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? "スマホ" : "PC"
+  };
+  try{
+    await Net.sendFeedback(item);
+    store.set("fb.last", String(Date.now()));
+    await modal("送信しました", '<p class="muted" style="margin:0">ご意見ありがとうございます！ 改善の参考にします。</p>');
+  }catch(err){
+    await modal("送れませんでした", '<p class="muted" style="margin:0">通信がうまくいきませんでした。少し時間をおいて、もう一度お試しください。</p>');
+  }
+}
+$("bFeedback").onclick = openFeedback;
+
 // ===== avatar picker =====
 function paintAvBtn(){
   const b = $("avBtn");
@@ -1853,8 +2074,14 @@ async function checkRejoin(){
 }
 $("bRejoin").onclick = () => { if(rejoinInfo) begin(rejoinInfo.role, rejoinInfo); };
 
-async function begin(r, rejoin){
+function autoEmbed(){
+  if(role || joining) return;
+  begin("player", null, { practice:true, name:"あなた（見本）" });
+}
+async function begin(r, rejoin, opts){
+  opts = opts || {};
   if(joining || siteOpen !== true) return;
+  if(opts.practice) return beginPractice(r, opts);
   const n = (rejoin ? rejoin.name : $("nameIn").value.trim()).slice(0,12);
   if(!n){ $("nameIn").focus(); $("nameIn").placeholder = "名前を入れてください"; startMsg("名前を入れてください"); return; }
   let code = rejoin ? rejoin.code : "";
@@ -1906,6 +2133,34 @@ async function begin(r, rejoin){
   }
   render();
 }
+async function beginPractice(r, opts){
+  const n = (opts.name || $("nameIn").value.trim() || "あなた").slice(0,12);
+  ac();
+  attachRoom(LocalNet.join("local", r === "host"));
+  myName = n; role = r;
+  document.body.classList.add("role-" + r);
+  $("start").classList.add("hidden"); $("main").classList.remove("hidden");
+  if(r === "host"){
+    store.set("name", n);
+    $("hostPanel").classList.remove("hidden");
+    $("modeSeg").classList.remove("hidden");
+    $("previewCard").classList.remove("hidden");
+    game = newGame(pickMode);
+    $("qList").value = store.get("q") || "";
+    $("foot").textContent = "練習モードです。CPUは問題が出ると自動で押します。正解・不正解はあなたが判定してください。";
+    renderThumbs();
+    commit();
+    setupBots(+$("botN").value || 3, $("botLv").value || "normal");
+  } else {
+    $("playerPanel").classList.remove("hidden");
+    $("modeLabel").classList.remove("hidden");
+    setPresence({ role:"player", name:n, buzz:null });
+    handlePeers();
+  }
+  render();
+}
+$("asPractice").onclick = () => begin("host", null, { practice:true });
+$("bPreview").onclick = togglePreview;
 $("asHost").onclick = () => begin("host");
 $("asPlayer").onclick = () => begin("player");
 

@@ -52,6 +52,11 @@
       try{ const ps = await fb.get(fb.ref(db, `rooms/${code}/peers`)); count = Object.keys(ps.val() || {}).length; }catch(e){}
       return { exists:true, host:m.host || "", closed:!!m.closed, locked:!!m.locked, count };
     },
+    // 改善要望を送る（読めるのは管理者だけ）
+    async sendFeedback(item){
+      await ready;
+      await fb.set(fb.push(fb.ref(db, "feedback")), item);
+    },
     // 部屋に入る
     async join(code){
       await ready;
