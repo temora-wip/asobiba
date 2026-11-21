@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;800&display=swap" rel="stylesheet">
 <style>
+
 :root{
   --bg:#0f1226; --panel:#181c3a; --panel2:#20264d; --line:#2f3770;
   --text:#eef0ff; --muted:#9aa2d6; --gold:#ffcc33; --red:#ff4d6d; --green:#2ee59d; --blue:#4da3ff;
@@ -177,6 +178,107 @@ body:not(.mode-sugoroku) .m-sg{display:none!important}
 .roomcode{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:6px 10px;font-size:14px;color:var(--muted);display:flex;align-items:center;gap:8px;margin-right:12px}
 .roomcode b{color:var(--gold);font-size:22px;letter-spacing:.15em}
 .roomcode button{padding:4px 8px;font-size:12px}
+
+/* ===== v3 additions ===== */
+body{background-attachment:fixed;transition:background .4s}
+header{flex-wrap:wrap;row-gap:8px}
+.hbtn{padding:6px 12px;font-size:13px;border-radius:10px;background:var(--panel2);border:1px solid var(--line)}
+.hgroup{display:flex;align-items:center;gap:8px;margin-left:auto}
+.dot.off{background:var(--red)}
+/* avatar */
+.av{display:inline-flex;align-items:center;justify-content:center;border-radius:50%;background:#2a3166;overflow:hidden;flex:none;line-height:1}
+.av img{width:100%;height:100%;object-fit:cover}
+.avpick{display:flex;align-items:center;gap:12px}
+.avbtn{width:56px;height:56px;border-radius:50%;padding:0;font-size:30px;background:#2a3166;border:2px solid var(--blue);overflow:hidden}
+.avbtn img{width:100%;height:100%;object-fit:cover}
+.emojigrid{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin:10px 0}
+.emojigrid button{font-size:24px;padding:6px 0;background:#141836}
+.emojigrid button.on{outline:2px solid var(--blue)}
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(5,6,16,.7);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal .card{max-width:440px;width:100%}
+.modal h3{color:var(--text);font-size:18px;margin:0 0 8px}
+.mrow{display:flex;gap:10px;justify-content:flex-end;margin-top:14px}
+/* rule strip + banner */
+.rulestrip{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;background:rgba(32,38,77,.85);border:1px solid var(--line);border-radius:12px;padding:8px 12px;font-size:14px}
+.rulestrip b{color:var(--gold)}
+.banner{position:fixed;left:50%;top:70px;transform:translateX(-50%);background:var(--gold);color:#222;font-weight:800;padding:10px 18px;border-radius:12px;z-index:40;box-shadow:0 8px 30px rgba(0,0,0,.4);animation:bannerIn 2.6s forwards}
+@keyframes bannerIn{0%{opacity:0;transform:translate(-50%,-10px)}10%{opacity:1;transform:translate(-50%,0)}85%{opacity:1}100%{opacity:0}}
+/* order cards */
+.ordrow{display:flex;gap:10px;align-items:stretch;flex-wrap:wrap}
+.ocard{display:flex;align-items:center;gap:10px;border-radius:14px;padding:10px 12px;background:var(--panel2);transition:all .35s}
+.ocard.big{flex:1 1 260px;background:linear-gradient(160deg,#ff4d6d,#b3213f);padding:14px 16px}
+.ocard.big .who{font-size:clamp(24px,4vw,40px);font-weight:800}
+.ocard .rk{font-size:12px;opacity:.85}
+.ocard .nm2{font-size:17px;font-weight:800}
+.ocard.ok{background:linear-gradient(160deg,#2ee59d,#139a63);color:#032}
+.ocard.ng{opacity:.45;text-decoration:line-through}
+.mark{font-weight:800;margin-left:4px}
+/* phone states */
+.myband{display:flex;align-items:center;gap:10px;border-radius:14px;padding:8px 12px;color:#0b0d1a;font-weight:800}
+.myband .chg{margin-left:auto;font-size:11px;padding:4px 8px;background:rgba(255,255,255,.35);color:#0b0d1a}
+.pstate{border-radius:14px;padding:12px;text-align:center;font-weight:800;font-size:20px;display:flex;align-items:center;justify-content:center;gap:10px;min-height:58px}
+.pstate .ic{font-size:26px}
+.ps-wait{background:#2a3166;color:#cfd4ff}
+.ps-go{background:#ff2d55;color:#fff;animation:pulse 0.9s infinite}
+.ps-first{background:#ffb800;color:#2a1d00}
+.ps-nth{background:#4da3ff;color:#06243f}
+.ps-lock{background:#3a3a44;color:#e0e0e6}
+.ps-rest{background:#5a5550;color:#f1efe8}
+.ps-ok{background:#2ee59d;color:#043}
+.ps-ng{background:#7a2a45;color:#ffd6e0}
+#buzz.locked{filter:grayscale(1);opacity:.35;box-shadow:none}
+/* guide */
+.guide .mchips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.mchip{border-radius:999px;padding:4px 10px;font-size:13px;background:#2a3166;color:var(--muted)}
+.mchip.on{background:var(--blue);color:#032;font-weight:800}
+.guide p{margin:6px 0 0;font-size:14px;line-height:1.6}
+/* lobby */
+.lobby{display:flex;flex-direction:column;gap:14px}
+.lobbytop{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.bigcode{font-size:clamp(48px,9vw,88px);font-weight:800;letter-spacing:.14em;color:var(--gold);line-height:1}
+#qrbox{background:#fff;padding:8px;border-radius:12px;width:148px;height:148px;display:flex;align-items:center;justify-content:center}
+#qrbox img,#qrbox canvas{width:132px!important;height:132px!important}
+.slots{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media(max-width:600px){.slots{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.slot{border-radius:14px;padding:12px;background:var(--panel2);display:flex;flex-direction:column;align-items:center;gap:6px;border-top:5px solid transparent;min-height:110px;justify-content:center}
+.slot.empty{background:transparent;border:2px dashed var(--line);color:var(--muted);font-size:13px}
+.slot .nm{font-weight:800;font-size:15px;text-align:center;word-break:break-all}
+.slot .st2{font-size:11px;color:var(--muted)}
+/* people rows w/ controls */
+.prow .ctl{display:flex;gap:4px;margin-left:6px}
+.prow .ctl button{padding:3px 7px;font-size:11px;border-radius:7px}
+.prow .ctl .on{background:var(--red)}
+.tag.lock{background:var(--red)}
+.tag.rest{background:#5a5550}
+/* host drawer sections */
+.sec2{margin-top:10px;border-top:1px solid var(--line);padding-top:8px}
+.sec2 > summary{cursor:pointer;font-weight:800;font-size:14px;color:var(--text);list-style:none;display:flex;align-items:center;gap:6px}
+.sec2 > summary::before{content:"▸";color:var(--muted)}
+.sec2[open] > summary::before{content:"▾"}
+.rulebtns{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+.rulebtns button{font-size:13px;padding:8px 4px}
+.rulebtns button.on{background:var(--blue);color:#032}
+.ppin{width:54px;padding:6px;font-size:14px;text-align:center}
+.bgchips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.bgchip{width:44px;height:32px;border-radius:8px;padding:0;border:2px solid transparent}
+.bgchip.on{border-color:#fff}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chips button{font-size:12px;padding:6px 10px}
+.chips button.on{background:var(--blue);color:#032}
+.thumb .need{border-color:var(--red)!important}
+.badge-need{font-size:11px;color:#ffc2d0}
+/* volume popover */
+.volpop{position:absolute;right:16px;top:64px;z-index:45;width:260px}
+.volpop label{display:flex;align-items:center;gap:8px;font-size:13px;margin-top:8px}
+.volpop input[type=range]{flex:1;padding:0}
+/* mosaic for players */
+#mzPlayer{width:100%;max-height:52vh;object-fit:contain;border-radius:12px;background:#000;display:block;image-rendering:pixelated;margin-top:8px}
+.ctrlbar{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ctrlbar .wide{grid-column:1/-1}
+@media (prefers-reduced-motion: reduce){ *{animation:none!important;transition:none!important} }
+@media(max-width:860px){ body.role-player .layout > div:last-child{order:-1} body.role-player #guide{order:5} }
+
 </style>
 </head>
 <body>
@@ -187,8 +289,12 @@ body:not(.mode-sugoroku) .m-sg{display:none!important}
       <button data-mode="normal">⚡ 普通</button><button data-mode="mosaic">🖼 モザイク</button><button data-mode="sugoroku">🎲 すごろく</button>
     </div>
     <div class="modelabel hidden" id="modeLabel"></div>
-    <div class="roomcode hidden" id="roomBadge">部屋 <b id="roomCodeTxt">----</b> <button id="bCopyCode" class="small" title="コードをコピー">コピー</button></div>
-    <div class="conn"><span class="dot" id="dot"></span><span id="connText">接続中…</span></div>
+    <div class="hgroup">
+      <div class="roomcode hidden" id="roomBadge">部屋 <b id="roomCodeTxt">----</b> <button id="bInvite" class="small" title="招待画面">招待</button></div>
+      <button class="hbtn hidden" id="bVol" title="音量">🔊</button>
+      <button class="hbtn hidden" id="bLeave">退出</button>
+      <div class="conn"><span class="dot" id="dot"></span><span id="connText">接続中…</span></div>
+    </div>
   </header>
 
   <div id="warnBox" class="warn hidden"></div>
@@ -196,23 +302,28 @@ body:not(.mode-sugoroku) .m-sg{display:none!important}
   <!-- closed -->
   <section id="closed" class="card hidden" style="max-width:520px;margin:60px auto;text-align:center">
     <div style="font-size:44px">🌙</div>
-    <h2 style="margin:8px 0">ただいま休止中です</h2>
+    <h2 style="margin:8px 0">ただいま停止中です</h2>
     <p class="muted" style="margin:0">いまは部屋を立てることも、入ることもできません。<br>またあとで来てください。</p>
   </section>
 
   <!-- start -->
   <section id="start" class="card hidden">
     <h2>ようこそ！</h2>
-    <p class="muted small" style="margin:0 0 14px">名前を入れて、部屋を立てるか、部屋コードで入ってください。</p>
-    <input id="nameIn" maxlength="12" placeholder="名前（例：たろう）">
+    <p class="muted small" style="margin:0 0 14px">プロフィール画像と名前を決めて、部屋を立てるか、部屋コードで入ってください。</p>
+    <div class="avpick">
+      <button class="avbtn" id="avBtn" title="プロフィール画像を変える">🐱</button>
+      <input id="nameIn" maxlength="12" placeholder="名前（例：たろう）">
+    </div>
+    <div class="small muted" style="margin-top:4px">← 丸を押すとアイコンや自分の画像に変えられます</div>
+    <div id="rejoinBox" class="hidden" style="margin-top:12px"><button id="bRejoin" style="width:100%;background:#1d3d6b"></button></div>
     <div class="startgrid">
       <div class="startbox">
         <h3>🎤 部屋を立てる（司会）</h3>
         <div class="small muted" style="margin:0 0 6px">遊び方を選ぶ（あとで切り替えられます）</div>
         <div class="modes" id="modePick">
-          <button data-mode="normal" class="on">⚡ 普通の早押し<small>問題文を出して早押し</small></button>
-          <button data-mode="mosaic">🖼 モザイククイズ<small>ぼかした画像を当てる</small></button>
-          <button data-mode="sugoroku">🎲 ダウトすごろく<small>嘘の目で進む・見破る</small></button>
+          <button data-mode="normal" class="on">⚡ 普通の早押し<small>約10分・2人〜</small></button>
+          <button data-mode="mosaic">🖼 モザイククイズ<small>約10分・2人〜</small></button>
+          <button data-mode="sugoroku">🎲 ダウトすごろく<small>約20分・2〜6人</small></button>
         </div>
         <button class="b-open" id="asHost" style="width:100%;margin-top:10px;font-size:18px;padding:14px">部屋を立てる</button>
       </div>
@@ -220,7 +331,8 @@ body:not(.mode-sugoroku) .m-sg{display:none!important}
         <h3>🔴 部屋に入る（回答者）</h3>
         <div class="small muted" style="margin:0 0 6px">司会から聞いた4けたの部屋コード</div>
         <input id="codeIn" inputmode="numeric" maxlength="4" placeholder="例：4821" style="font-size:28px;letter-spacing:.3em;text-align:center">
-        <button class="player" id="asPlayer" style="width:100%;margin-top:10px;font-size:18px;padding:14px;background:linear-gradient(160deg,#8f3b5a,#5e2340)">入室する</button>
+        <div class="small" id="roomInfo" style="min-height:1.5em;margin-top:6px;color:var(--muted)"></div>
+        <button class="player" id="asPlayer" style="width:100%;margin-top:6px;font-size:18px;padding:14px;background:linear-gradient(160deg,#8f3b5a,#5e2340)">入室する</button>
       </div>
     </div>
     <div class="small" id="startMsg" style="margin-top:10px;color:#ffc2d0;min-height:1.4em"></div>
@@ -231,87 +343,98 @@ body:not(.mode-sugoroku) .m-sg{display:none!important}
     <div class="layout">
       <div class="card board" id="board"></div>
       <div style="display:flex;flex-direction:column;gap:16px">
-        <!-- host side -->
+        <!-- host -->
         <div class="card hidden" id="hostPanel">
           <h3>司会の操作</h3>
-          <div class="ctrls m-quiz">
-            <button class="b-open wide" id="bOpen">出題スタート（ボタン解禁）<span class="kbd">Space</span></button>
-            <button class="b-ok" id="bOk">⭕ 正解<span class="kbd">O</span></button>
-            <button class="b-ng" id="bNg">❌ 不正解<span class="kbd">X</span></button>
-            <button class="m-mosaic" id="bLevel">🔍 ぼかしを1段階弱く<span class="kbd">B</span></button>
-            <button id="bThrough">スルー（答え発表）</button>
-            <button class="b-next" id="bNext">次へ<span class="kbd">N</span></button>
-            <button class="peek wide" id="bPeek">👀 押している間だけ答えを表示</button>
-          </div>
-          <div class="row m-quiz" style="margin-top:12px">
-            <label class="m-normal">正解</label>
-            <select class="m-normal" id="ptOk"><option value="1">+1</option><option value="2">+2</option><option value="3">+3</option></select>
-            <label>不正解</label>
-            <select id="ptNg"><option value="0">±0</option><option value="-1">-1</option><option value="-2">-2</option></select>
-          </div>
-          <!-- normal mode -->
-          <div class="m-normal">
-            <label class="toggle" style="margin-top:10px"><input type="checkbox" id="showText" checked>回答者の画面にも問題文を出す</label>
-            <details style="margin-top:12px" id="qDetails">
-              <summary>問題リストを編集（画面共有の前に！）</summary>
-              <p class="small muted" style="margin:8px 0 0">1行に1問。「問題｜答え」の形で書きます。空なら口頭出題モードになります。</p>
-              <textarea id="qList" placeholder="日本一高い山は？｜富士山&#10;1年は何日？｜365日"></textarea>
-              <div class="row" style="margin-top:8px">
-                <button id="bLoad">この内容で1問目から始める</button>
-              </div>
-            </details>
-          </div>
-          <!-- mosaic mode -->
-          <div class="m-mosaic">
-            <div class="row" style="margin-top:10px">
-              <label>ぼかしが弱くなる間隔</label>
-              <select id="imgStep"><option value="5">5秒</option><option value="10" selected>10秒</option><option value="15">15秒</option><option value="0">自動にしない</option></select>
+          <div id="hostMain"></div>
+          <details class="sec2 m-quiz" id="secRule">
+            <summary>回答権のルール</summary>
+            <div class="rulebtns" id="ruleBtns">
+              <button data-rule="std">標準</button><button data-rule="rest">1回休み</button>
+              <button data-rule="free">何度でも</button><button data-rule="first">先着〇人</button>
             </div>
-            <p class="small muted" style="margin:8px 0 0">得点：ぼかし1〜2段階目で正解＝3点、3〜4段階目＝2点、5段階目＝1点</p>
-            <details style="margin-top:12px" id="imgDetails">
-              <summary>画像を選ぶ・答えを直す（画面共有の前に！）</summary>
-              <p class="small muted" style="margin:8px 0">1枚が1問です。<b>ファイル名が答え</b>になります（例：「富士山.jpg」→ 答え「富士山」）。下の一覧で答えを書き直せます。画像は司会の画面にだけ表示され、外には送られません。</p>
-              <input type="file" id="imgFiles" accept="image/*" multiple>
-              <div class="thumbs" id="thumbs"></div>
-              <div class="row" style="margin-top:8px">
-                <button id="bImgLoad">1枚目から始める</button>
-              </div>
-            </details>
-          </div>
-          <div class="row m-quiz" style="margin-top:12px">
-            <button id="bReset" class="small">このモードの得点をリセット</button>
-          </div>
-          <!-- sugoroku mode -->
-          <div class="m-sg">
-            <p class="small muted" style="margin:0 0 10px">いまいる司会と回答者の全員（2〜6人）で遊びます。司会も自分の番が来たら遊べます。</p>
-            <div class="ctrls">
+            <div id="firstCfg" class="hidden" style="margin-top:8px">
+              <div class="row"><label>人数</label><select id="firstN"><option>2</option><option selected>3</option><option>4</option><option>5</option></select></div>
+              <div class="row" style="margin-top:6px" id="firstPts"></div>
+            </div>
+            <p class="small muted" id="ruleDesc" style="margin:8px 0 0"></p>
+            <div class="row m-normal" style="margin-top:8px">
+              <label>正解</label><select id="ptOk"><option value="1">+1</option><option value="2">+2</option><option value="3">+3</option></select>
+            </div>
+            <div class="row" style="margin-top:6px">
+              <label>不正解</label><select id="ptNg"><option value="0">±0</option><option value="-1">-1</option><option value="-2">-2</option></select>
+            </div>
+          </details>
+          <details class="sec2 m-normal" id="qDetails">
+            <summary>問題リスト（共有前に！）</summary>
+            <p class="small muted" style="margin:8px 0 0">1行に1問。「問題｜答え」の形。空なら口頭出題。</p>
+            <textarea id="qList" placeholder="日本一高い山は？｜富士山&#10;1年は何日？｜365日"></textarea>
+            <label class="toggle" style="margin-top:6px"><input type="checkbox" id="showText" checked>回答者のスマホにも問題文を出す</label>
+            <div class="row" style="margin-top:8px"><button id="bLoad">この内容で1問目から始める</button></div>
+          </details>
+          <details class="sec2 m-mosaic" id="imgDetails">
+            <summary>画像と答え（共有前に！）</summary>
+            <p class="small muted" style="margin:8px 0">画像を選んで、1枚ずつ答えを入力します。ぼかした画像は参加者のスマホにも届きます（くっきりした画像は答え発表のあと）。</p>
+            <input type="file" id="imgFiles" accept="image/*" multiple>
+            <div class="row" style="margin-top:8px"><label>ぼかしが弱くなる間隔</label>
+              <select id="imgStep"><option value="5">5秒</option><option value="10" selected>10秒</option><option value="15">15秒</option><option value="0">自動にしない</option></select></div>
+            <div class="thumbs" id="thumbs"></div>
+            <div class="row" style="margin-top:8px"><button id="bImgLoad">1枚目から始める</button></div>
+            <p class="small muted" style="margin:8px 0 0">得点：ぼかし1〜2段階目＝3点、3〜4＝2点、5＝1点（先着〇人ルールのときは順位の点数）</p>
+          </details>
+          <details class="sec2 m-sg" id="secSg" open>
+            <summary>ダウトすごろく</summary>
+            <p class="small muted" style="margin:8px 0">いまいる司会と回答者の全員（2〜6人）で遊びます。</p>
+            <div class="ctrlbar">
               <button class="b-open wide" id="bSgStart">🎲 いまいる人でゲーム開始</button>
               <button id="bSgSkip" class="wide">今の人の番を飛ばす（抜けた人がいるとき）</button>
             </div>
-            <p class="small muted" style="margin:10px 0 0">盤面は30マス。始めるたびにイベントマスの場所が変わります。</p>
-          </div>
+          </details>
+          <details class="sec2" id="secStage">
+            <summary>演出（背景・BGM・効果音）</summary>
+            <div class="small muted" style="margin-top:8px">背景（全員に反映）</div>
+            <div class="bgchips" id="bgChips"></div>
+            <div class="row" style="margin-top:6px"><input type="file" id="bgFile" accept="image/*" style="font-size:12px"></div>
+            <div class="small muted" style="margin-top:10px">BGM（内蔵曲は全員の端末で流れます）</div>
+            <div class="chips" id="bgmChips"></div>
+            <div class="row" style="margin-top:6px"><label>手持ちの曲（司会のPCだけ）</label><input type="file" id="bgmFile" accept="audio/*" style="font-size:12px"></div>
+            <div class="small muted" style="margin-top:10px">正解音</div>
+            <div class="chips" id="okChips"></div>
+            <div class="small muted" style="margin-top:8px">不正解音</div>
+            <div class="chips" id="ngChips"></div>
+          </details>
+          <details class="sec2 m-quiz">
+            <summary>得点</summary>
+            <div class="row" style="margin-top:8px"><button id="bReset" class="small">このモードの得点をリセット</button></div>
+          </details>
         </div>
 
-        <!-- player side -->
+        <!-- player -->
         <div class="card hidden m-quiz" id="playerPanel">
+          <div class="myband" id="myBand"></div>
+          <div class="pstate ps-wait" id="pState" style="margin-top:10px"><span class="ic">⏳</span><span>待機中</span></div>
           <div class="buzzwrap">
-            <div class="pstatus" id="pStatus">司会を待っています…</div>
             <button id="buzz">押す！</button>
             <div class="small muted">スペースキーでも押せます</div>
           </div>
         </div>
 
-        <!-- sugoroku: my actions (host and players) -->
         <div class="card m-sg" id="sgMe"></div>
 
-        <div class="card m-quiz">
-          <h3 id="scoreTitle">スコア</h3>
-          <div class="scores" id="scores"><div class="muted small">まだ参加者がいません</div></div>
-        </div>
+        <div class="card guide hidden" id="guide"></div>
 
         <div class="card">
           <h3 id="peopleTitle">参加者</h3>
           <div class="people" id="people"></div>
+          <div class="row m-quiz hidden" id="rightsBar" style="margin-top:10px">
+            <button class="small" id="bRightsReset">回答権をリセット</button>
+            <button class="small" id="bNextPerson">次の人へ</button>
+          </div>
+        </div>
+
+        <div class="card m-quiz">
+          <h3 id="scoreTitle">スコア</h3>
+          <div class="scores" id="scores"><div class="muted small">まだ参加者がいません</div></div>
         </div>
       </div>
     </div>
@@ -319,40 +442,199 @@ body:not(.mode-sugoroku) .m-sg{display:none!important}
   </section>
 </div>
 
+<div class="card volpop hidden" id="volPop">
+  <h3 style="margin:0">音量（この端末だけ）</h3>
+  <label>BGM <input type="range" id="volBgm" min="0" max="100" step="1"></label>
+  <label>効果音 <input type="range" id="volSfx" min="0" max="100" step="1"></label>
+</div>
+<div id="modalRoot"></div>
+<audio id="hostAudio" loop></audio>
+
 <script src="config.js"></script>
 <script src="net.js"></script>
 <script>
 (function(){
 "use strict";
-// ---------- helpers ----------
+// ===== helpers =====
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const store = {
-  get(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } },
-  set(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+  get(k){ try{ return localStorage.getItem("asobiba." + k); }catch(e){ return null; } },
+  set(k,v){ try{ localStorage.setItem("asobiba." + k, v); }catch(e){} },
+  del(k){ try{ localStorage.removeItem("asobiba." + k); }catch(e){} }
 };
 const MODES = { normal:"⚡ 普通の早押し", mosaic:"🖼 モザイククイズ", sugoroku:"🎲 ダウトすごろく" };
+const MODE_DESC = {
+  normal:"司会が問題を出します。分かったらすぐ押して、1番の人が答えます。",
+  mosaic:"ぼかした画像が少しずつはっきりします。早く当てるほど高得点です。",
+  sugoroku:"自分だけに見えるサイコロの目を宣言して進みます。嘘もOK。怪しいと思ったら「ダウト！」。"
+};
+const RULES = {
+  std:{ label:"標準", desc:"間違えた人は、その問題ではもう押せません。" },
+  rest:{ label:"1回休み", desc:"間違えた人は、その問題と次の問題で押せません。" },
+  free:{ label:"何度でも", desc:"間違えても列の最後に並び直して、もう一度答えられます。" },
+  first:{ label:"先着〇人", desc:"早く押した人から順に全員答えます。正解した人に、押した順位の点数が入ります。" }
+};
+const PALETTE = ["#4da3ff","#ff6b8a","#2ee59d","#ffcc33","#c58bff","#ff9a3c","#5fd3e6","#b9e05a"];
+const EMOJIS = ["🐱","🐶","🦊","🐼","🐸","🦁","🐧","🐙","🐰","🐻","🐯","🐨","🦄","🐲","🦖","🐳","🦉","🐝","🍣","🍙","🍩","🍓","⚡","🔥","🌙","⭐","🎮","🎲","🎸","⚽"];
+const BGS = {
+  night:{ name:"夜空", css:"radial-gradient(1200px 600px at 50% -10%,#2a2f6b 0%,#0f1226 60%)" },
+  ocean:{ name:"深海", css:"radial-gradient(1200px 700px at 30% -10%,#0f5c7a 0%,#06202e 65%)" },
+  forest:{ name:"森", css:"radial-gradient(1200px 700px at 70% -10%,#1f6b45 0%,#0a1f16 65%)" },
+  sunset:{ name:"夕焼け", css:"linear-gradient(170deg,#5a1f4a 0%,#2a1236 45%,#120a1e 100%)" },
+  sakura:{ name:"桜", css:"radial-gradient(1000px 600px at 20% 0%,#6b2d4f 0%,#2a1530 55%,#140b1a 100%)" },
+  stage:{ name:"ステージ", css:"radial-gradient(800px 500px at 50% 0%,#6b5410 0%,#2a1f08 50%,#0e0b04 100%)" },
+  mono:{ name:"モノクロ", css:"linear-gradient(180deg,#2b2b30 0%,#121214 100%)" },
+  grid:{ name:"グリッド", css:"linear-gradient(rgba(77,163,255,.07) 1px,transparent 1px) 0 0/32px 32px, linear-gradient(90deg,rgba(77,163,255,.07) 1px,transparent 1px) 0 0/32px 32px, #0d1022" }
+};
 
-// ---------- sound ----------
-let actx = null;
-function ac(){ try{ if(!actx) actx = new (window.AudioContext||window.webkitAudioContext)(); if(actx.state==="suspended") actx.resume(); }catch(e){} return actx; }
-function tone(freq, start, dur, type="square", vol=.15){
+// ===== audio =====
+let actx = null, sfxGain = null, bgmGain = null;
+function ac(){
+  try{
+    if(!actx){
+      actx = new (window.AudioContext||window.webkitAudioContext)();
+      sfxGain = actx.createGain(); bgmGain = actx.createGain();
+      sfxGain.connect(actx.destination); bgmGain.connect(actx.destination);
+      applyVolumes();
+    }
+    if(actx.state === "suspended") actx.resume();
+  }catch(e){}
+  return actx;
+}
+function volOf(k, def){ const v = store.get("vol." + k); return v === null ? def : +v; }
+function applyVolumes(){
+  const b = volOf("bgm", 40) / 100, s = volOf("sfx", 80) / 100;
+  if(bgmGain) bgmGain.gain.value = b * 0.5;
+  if(sfxGain) sfxGain.gain.value = s;
+  const ha = $("hostAudio"); if(ha) ha.volume = b;
+}
+function tone(freq, start, dur, type="square", vol=.15, to=null, dest=null){
   const a = ac(); if(!a) return;
   const o = a.createOscillator(), g = a.createGain();
-  o.type = type; o.frequency.value = freq;
+  o.type = type; o.frequency.setValueAtTime(freq, a.currentTime+start);
+  if(to) o.frequency.exponentialRampToValueAtTime(to, a.currentTime+start+dur);
   g.gain.setValueAtTime(vol, a.currentTime+start);
   g.gain.exponentialRampToValueAtTime(.001, a.currentTime+start+dur);
-  o.connect(g).connect(a.destination); o.start(a.currentTime+start); o.stop(a.currentTime+start+dur+.02);
+  o.connect(g).connect(dest || sfxGain); o.start(a.currentTime+start); o.stop(a.currentTime+start+dur+.02);
 }
+const OK_SOUNDS = [
+  { name:"ピンポン", play(){ tone(988,0,.25,"sine",.3); tone(784,.25,.5,"sine",.3); } },
+  { name:"ファンファーレ", play(){ [523,659,784].forEach((f,i)=>tone(f,i*.11,.14,"triangle",.25)); tone(1047,.33,.6,"triangle",.3); tone(784,.33,.6,"sine",.15); } },
+  { name:"キラキラ", play(){ [1319,1568,1760,2093,2637].forEach((f,i)=>tone(f,i*.06,.35,"sine",.18)); } },
+  { name:"チャイム", play(){ tone(1319,0,1.1,"sine",.25); tone(659,0,1.1,"sine",.12); tone(1568,.18,1,"sine",.18); } },
+  { name:"ジングル", play(){ [784,988,1175,1568].forEach((f,i)=>tone(f,i*.08,.2,"square",.08)); tone(1568,.32,.4,"triangle",.2); } }
+];
+const NG_SOUNDS = [
+  { name:"ブー", play(){ tone(180,0,.6,"sawtooth",.18); tone(150,0,.6,"square",.08); } },
+  { name:"ブブー", play(){ tone(170,0,.18,"sawtooth",.2); tone(170,.24,.4,"sawtooth",.2); } },
+  { name:"ガーン", play(){ [392,330,262].forEach((f,i)=>tone(f,i*.18,.3,"square",.12)); tone(131,.54,.8,"triangle",.25); } },
+  { name:"ポヨン", play(){ tone(600,0,.45,"sine",.3,150); } },
+  { name:"ブザー", play(){ tone(110,0,.9,"square",.14); tone(116,0,.9,"square",.08); } }
+];
 const sfx = {
   buzz(){ tone(1200,0,.12); tone(1600,.1,.25); },
-  ok(){ tone(988,0,.25,"sine",.3); tone(784,.25,.5,"sine",.3); },
-  ng(){ tone(180,0,.6,"sawtooth",.18); tone(150,0,.6,"square",.08); },
-  open(){ tone(660,0,.08,"triangle",.2); }
+  open(){ tone(660,0,.08,"triangle",.2); },
+  tick(){ tone(880,0,.06,"triangle",.15); },
+  ok(i){ (OK_SOUNDS[i] || OK_SOUNDS[0]).play(); },
+  ng(i){ (NG_SOUNDS[i] || NG_SOUNDS[0]).play(); }
 };
 document.addEventListener("pointerdown", ac, {once:true});
 
-// ---------- state ----------
+// ===== built-in BGM (original simple loops) =====
+const N = n => 440 * Math.pow(2, (n - 69) / 12);
+const BGMS = {
+  none:{ name:"なし" },
+  game:{ name:"ゲーム風", bpm:132, wave:"square", vol:.05,
+    mel:[72,null,76,79, 76,null,72,74, 76,null,79,81, 79,76,74,null, 72,null,76,79, 81,null,79,76, 74,76,72,null, 71,72,74,null],
+    bass:[48,48,55,55, 53,53,55,55, 48,48,55,55, 53,53,43,43] },
+  calm:{ name:"ほのぼの", bpm:92, wave:"triangle", vol:.08,
+    mel:[67,null,69,null, 72,null,69,67, 64,null,67,null, 69,null,null,null, 67,null,64,null, 62,null,64,67, 69,null,67,64, 62,null,null,null],
+    bass:[48,null,55,null, 53,null,48,null, 45,null,52,null, 43,null,50,null] },
+  tense:{ name:"緊張感", bpm:120, wave:"sawtooth", vol:.035,
+    mel:[69,null,null,70, 69,null,null,65, 69,null,null,70, 72,null,70,69, 69,null,null,70, 69,null,null,65, 64,null,65,67, 69,null,null,null],
+    bass:[45,45,45,45, 45,45,45,45, 41,41,41,41, 40,40,40,40] },
+  retro:{ name:"レトロ", bpm:150, wave:"square", vol:.04,
+    mel:[76,79,84,79, 76,79,84,88, 77,81,84,81, 77,81,84,89, 79,83,86,83, 79,83,86,91, 84,null,79,null, 76,null,72,null],
+    bass:[48,null,48,null, 53,null,53,null, 55,null,55,null, 48,null,43,null] }
+};
+let bgmTimer = null, bgmId = "none", bgmStep = 0, bgmNext = 0;
+function startBgm(id){
+  if(id === bgmId && bgmTimer) return;
+  stopBgm(); bgmId = id;
+  const t = BGMS[id]; if(!t || !t.mel) return;
+  const a = ac(); if(!a) return;
+  bgmStep = 0; bgmNext = a.currentTime + .1;
+  const stepDur = 60 / t.bpm / 2;
+  bgmTimer = setInterval(() => {
+    while(bgmNext < a.currentTime + .25){
+      const m = t.mel[bgmStep % t.mel.length];
+      const b = bgmStep % 2 === 0 ? t.bass[(bgmStep / 2) % t.bass.length] : null;
+      const off = bgmNext - a.currentTime;
+      if(m) tone(N(m), off, stepDur * .9, t.wave, t.vol, null, bgmGain);
+      if(b) tone(N(b), off, stepDur * 1.8, "triangle", t.vol * 1.6, null, bgmGain);
+      bgmStep++; bgmNext += stepDur;
+    }
+  }, 60);
+}
+function stopBgm(){ if(bgmTimer){ clearInterval(bgmTimer); bgmTimer = null; } bgmId = "none"; }
+
+// ===== avatar =====
+function avHtml(av, size, fallback){
+  size = size || 28;
+  const s = `width:${size}px;height:${size}px;font-size:${Math.round(size*.62)}px`;
+  if(typeof av === "string" && av.startsWith("i:data:image/")) return `<span class="av" style="${s}"><img src="${esc(av.slice(2))}" alt=""></span>`;
+  if(typeof av === "string" && av.startsWith("e:")) return `<span class="av" style="${s}">${esc(av.slice(2, 12))}</span>`;
+  return `<span class="av" style="${s}">${esc((fallback || "?").slice(0,1))}</span>`;
+}
+let myAvatar = store.get("avatar") || ("e:" + EMOJIS[Math.floor(Math.random() * EMOJIS.length)]);
+function fileToSquare(file, size, q){
+  return new Promise((res, rej) => {
+    const url = URL.createObjectURL(file), img = new Image();
+    img.onload = () => {
+      const s = Math.min(img.naturalWidth, img.naturalHeight);
+      const cv = document.createElement("canvas"); cv.width = cv.height = size;
+      cv.getContext("2d").drawImage(img, (img.naturalWidth - s) / 2, (img.naturalHeight - s) / 2, s, s, 0, 0, size, size);
+      URL.revokeObjectURL(url); res(cv.toDataURL("image/jpeg", q));
+    };
+    img.onerror = rej; img.src = url;
+  });
+}
+function fileToFit(file, max, q){
+  return new Promise((res, rej) => {
+    const url = URL.createObjectURL(file), img = new Image();
+    img.onload = () => {
+      const s = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+      const cv = document.createElement("canvas"); cv.width = Math.round(img.naturalWidth * s); cv.height = Math.round(img.naturalHeight * s);
+      cv.getContext("2d").drawImage(img, 0, 0, cv.width, cv.height);
+      URL.revokeObjectURL(url); res(cv.toDataURL("image/jpeg", q));
+    };
+    img.onerror = rej; img.src = url;
+  });
+}
+
+// ===== modal =====
+function modal(title, body, buttons){
+  return new Promise(resolve => {
+    const root = $("modalRoot");
+    const wrap = document.createElement("div"); wrap.className = "modal";
+    wrap.innerHTML = `<div class="card"><h3>${esc(title)}</h3><div class="mbody">${body}</div><div class="mrow"></div></div>`;
+    const row = wrap.querySelector(".mrow");
+    (buttons || [{ label:"OK", value:true, cls:"b-open" }]).forEach(b => {
+      const btn = document.createElement("button"); btn.textContent = b.label; if(b.cls) btn.className = b.cls;
+      btn.onclick = () => { wrap.remove(); resolve(b.value); };
+      row.appendChild(btn);
+    });
+    root.appendChild(wrap);
+  });
+}
+const confirmBox = (title, text, okLabel) => modal(title, `<p class="muted" style="margin:0">${esc(text)}</p>`, [{ label:"やめる", value:false }, { label:okLabel || "OK", value:true, cls:"b-ng" }]);
+function bannerMsg(t){
+  const b = document.createElement("div"); b.className = "banner"; b.textContent = t;
+  document.body.appendChild(b); setTimeout(() => b.remove(), 2700);
+}
+
+// ===== state =====
 let room = null, myPeer = null, peers = [];
 let role = null, myName = "", pickMode = "normal";
 let pendingPresence = null;
@@ -366,15 +648,24 @@ const PIX = [48, 28, 16, 9, 5];
 const imgPoints = lv => lv <= 1 ? 3 : lv <= 3 ? 2 : 1;
 let imgTick = 0, curImgUrl = null;
 const imgCache = new Map();
+let siteOpen = null, roomCode = null, joining = false, roomMeta = {};
+const mediaCache = {};
+let hadHost = false;
+const urlRoom = (new URLSearchParams(location.search).get("room") || "").replace(/[^0-9]/g, "").slice(0,4);
+let rejoinInfo = null, rejoinChecked = false;
 
 function newGame(mode){
-  return { v:2, mode, round:0, phase:"idle", order:[], cur:-1, wrong:[], result:null,
-           q:{ idx:-1, total:0, text:"", ans:"", showText:true, showAns:false },
-           scoresAll:{ normal:{}, mosaic:{}, sugoroku:{} }, pts:{ ok:1, ng:0 }, img:null, sg:null };
+  return { v:3, stage:"lobby", mode, round:0, phase:"idle", order:[], cur:-1, wrong:[], result:null,
+           q:{ idx:-1, total:0, text:"", ans:"", showText:true, showAns:false }, qn:0,
+           scoresAll:{ normal:{}, mosaic:{}, sugoroku:{} }, pts:{ ok:1, ng:0 }, img:null, sg:null,
+           rule:{ t:"std", n:3, pp:[3,2,1] }, ruleSeq:0, locks:[], rest:{}, colors:{},
+           st:{ bg:"night", bgm:"none", okMode:"fixed", ok:0, ngMode:"fixed", ng:0 },
+           snd:{ ok:0, ng:0, okSeq:0, ngSeq:0 }, locked:false };
 }
 const SC = () => game.scoresAll[game.mode];
+const colorOf = n => PALETTE[((game && game.colors && game.colors[n]) ?? 0) % PALETTE.length];
 
-// ---------- room ----------
+// ===== room plumbing =====
 function setConn(state, text){ $("dot").className = "dot " + state; $("connText").textContent = text; }
 async function setPresence(obj){
   if(!room){ pendingPresence = Object.assign(pendingPresence||{}, obj); return; }
@@ -382,40 +673,137 @@ async function setPresence(obj){
 }
 function onRoomError(){
   setConn("off", "接続が切れました");
-  if(siteOpen !== false) showWarn("部屋との接続が切れました。再読み込みして、もう一度入り直してください。");
+  if(siteOpen !== false) showWarn("部屋との接続が切れました。再読み込みすると、同じ部屋に戻れます。");
 }
-// ---------- site ON/OFF and rooms ----------
-let siteOpen = null, roomCode = null, joining = false;
+function showWarn(msg){ const w = $("warnBox"); if(msg){ w.textContent = msg; w.classList.remove("hidden"); } else w.classList.add("hidden"); }
+function players(){ return peers.filter(p => p.presence && p.presence.role === "player" && typeof p.presence.name === "string"); }
+function hosts(){ return peers.filter(p => p.presence && p.presence.role === "host" && p.presence.game && p.presence.game.scoresAll); }
+function avatarOf(name){
+  if(name === myName) return myAvatar;
+  const p = peers.find(x => x.presence && x.presence.name && x.presence.name.slice(0,12) === name);
+  return p ? p.avatar : "";
+}
 function attachRoom(r){
   room = r; roomCode = r.code;
   $("roomCodeTxt").textContent = r.code; $("roomBadge").classList.remove("hidden");
-  room.onConnection(c => setConn(c ? "on" : "wait", c ? "オンライン" : "再接続中…"), onRoomError);
+  $("bLeave").classList.remove("hidden"); $("bVol").classList.remove("hidden");
+  room.onConnection(c => setConn(c ? "on" : "wait", c ? "稼働中" : "再接続中…"), onRoomError);
   room.onPeers(ch => { peers = ch.peers; handlePeers(); }, onRoomError);
+  room.onMedia((k, v) => { mediaCache[k] = v; if(k === "bg") applyStage(true); if(k === "mz") drawPlayerMosaic(); });
+  room.onMeta(m => {
+    roomMeta = m || {};
+    if(roomMeta.closed && role === "player"){
+      store.del("last");
+      modal("部屋が閉じられました", '<p class="muted" style="margin:0">司会が部屋を閉じました。最初の画面に戻ります。</p>').then(() => goStart());
+    }
+  });
+  room.setAvatar(myAvatar);
   if(pendingPresence){ const p = pendingPresence; pendingPresence = null; setPresence(p); }
 }
+function goStart(){ location.href = location.pathname; }
 function showScreen(){
   const closed = siteOpen === false;
   $("closed").classList.toggle("hidden", !closed);
   if(closed){ $("start").classList.add("hidden"); $("main").classList.add("hidden"); return; }
   if(siteOpen === true){
-    if(role) $("main").classList.remove("hidden"); else $("start").classList.remove("hidden");
+    if(role) $("main").classList.remove("hidden"); else { $("start").classList.remove("hidden"); checkRejoin(); }
   }
 }
 setConn("wait", "準備中…");
-Net.onOpen((open, err) => {
+setTimeout(() => Net.onOpen((open, err) => {
   const wasClosed = siteOpen === false;
   siteOpen = open;
   if(err === "config"){ setConn("off", "設定が未完了"); showWarn("config.js にFirebaseの設定が貼り付けられていません（手順書のステップ7）。"); }
   else if(err === "load"){ setConn("off", "接続できません"); showWarn("通信の部品を読み込めませんでした。ネットにつながっているか確認して、再読み込みしてください。"); }
-  else if(!room) setConn(open ? "on" : "off", open ? "営業中" : "休止中");
+  else if(!room) setConn(open ? "on" : "off", open ? "稼働中" : "停止中");
   if(open && wasClosed && role){ location.reload(); return; }
   showScreen();
-});
+}), 0);
 
-function showWarn(msg){ const w = $("warnBox"); if(msg){ w.textContent = msg; w.classList.remove("hidden"); } else w.classList.add("hidden"); }
-function players(){ return peers.filter(p => p.presence && p.presence.role === "player" && typeof p.presence.name === "string"); }
-function hosts(){ return peers.filter(p => p.presence && p.presence.role === "host" && p.presence.game && p.presence.game.scoresAll); }
+// ===== host state save (for rejoin) =====
+let saveTimer = null;
+function saveHost(){
+  if(role !== "host" || !roomCode) return;
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    try{ store.set("host." + roomCode, JSON.stringify({ game, textQs, t:Date.now() })); }catch(e){}
+  }, 800);
+}
 
+// ===== leave =====
+async function leaveRoom(){
+  if(role === "host"){
+    if(!(await confirmBox("部屋を閉じますか？", "司会が退出すると部屋が閉じて、参加者は全員最初の画面に戻ります。", "部屋を閉じる"))) return;
+    try{ await room.setMeta({ closed:true }); }catch(e){}
+    store.del("host." + roomCode);
+  } else {
+    if(!(await confirmBox("退出しますか？", "部屋から抜けて最初の画面に戻ります。同じ名前で入り直せば得点は残ります。", "退出する"))) return;
+  }
+  store.del("last");
+  try{ await room.leave(); }catch(e){}
+  goStart();
+}
+
+// ===== stage (background / BGM) =====
+let stageKey = "";
+function applyStage(force){
+  const st = (game && game.st) || { bg:"night", bgm:"none" };
+  let bg = BGS[st.bg] ? BGS[st.bg].css : BGS.night.css;
+  if(st.bg === "custom" && mediaCache.bg) bg = `linear-gradient(rgba(10,12,30,.55),rgba(10,12,30,.8)), url("${mediaCache.bg}") center/cover fixed`;
+  const key = st.bg + "|" + st.bgm + "|" + (st.bg === "custom" ? (mediaCache.bg || "").length : 0);
+  if(!force && key === stageKey) return;
+  stageKey = key;
+  document.body.style.background = bg;
+  const ha = $("hostAudio");
+  if(st.bgm === "host"){
+    stopBgm();
+    if(role === "host" && ha.src){ ha.play().catch(() => {}); }
+  } else {
+    if(ha && !ha.paused) ha.pause();
+    if(role) startBgm(st.bgm || "none");
+  }
+}
+
+// ===== QR (lobby) =====
+let qrLib = null, qrData = {};
+function loadQR(){
+  if(qrLib) return qrLib;
+  qrLib = new Promise(res => {
+    if(window.QRCode) return res(true);
+    const s = document.createElement("script");
+    s.src = "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js";
+    s.onload = () => res(true); s.onerror = () => res(false);
+    document.head.appendChild(s);
+  });
+  return qrLib;
+}
+function joinLink(){ return location.origin + location.pathname + "?room=" + roomCode; }
+async function qrImage(){
+  if(qrData[roomCode]) return qrData[roomCode];
+  if(!(await loadQR()) || !window.QRCode) return null;
+  const div = document.createElement("div");
+  try{
+    new window.QRCode(div, { text:joinLink(), width:264, height:264, correctLevel:window.QRCode.CorrectLevel.M });
+    const cv = div.querySelector("canvas");
+    qrData[roomCode] = cv ? cv.toDataURL() : (div.querySelector("img") || {}).src || null;
+  }catch(e){ qrData[roomCode] = null; }
+  return qrData[roomCode];
+}
+async function fillQR(){
+  const box = $("qrbox"); if(!box) return;
+  const src = await qrImage();
+  const b2 = $("qrbox"); if(!b2) return;
+  b2.innerHTML = src ? `<img src="${src}" alt="参加用QRコード">` : '<span class="small" style="color:#333">QRコードを<br>読み込めません</span>';
+}
+
+// ===== peers / buzz pickup =====
+function canBuzz(n, peer){
+  if(game.locks.includes(n)) return false;
+  if((game.rest[n] || -1) >= game.qn) return false;
+  if(game.rule.t !== "free" && game.wrong.includes(peer)) return false;
+  if(game.rule.t === "first" && game.order.length >= game.rule.n) return false;
+  return true;
+}
 function handlePeers(){
   const me = peers.find(p => p.isMe && p.sameTab);
   if(me) myPeer = me.peer;
@@ -425,17 +813,20 @@ function handlePeers(){
     let changed = false;
     for(const p of players()){
       const n = p.presence.name.slice(0,12);
-      for(const m of ["normal","mosaic"]){
-        if(!(n in game.scoresAll[m])){ game.scoresAll[m][n] = 0; changed = true; }
-      }
+      for(const m of ["normal","mosaic"]) if(!(n in game.scoresAll[m])){ game.scoresAll[m][n] = 0; changed = true; }
+      if(!(n in game.colors)){ game.colors[n] = Object.keys(game.colors).length; changed = true; }
     }
-    if(game.phase === "open" || game.phase === "answer"){
+    if(!(myName in game.colors)){ game.colors[myName] = Object.keys(game.colors).length; changed = true; }
+    if(game.stage === "play" && game.mode !== "sugoroku" && (game.phase === "open" || game.phase === "answer")){
       const now = Date.now(), key = p => p.peer + ":" + game.round;
-      const fresh = players().filter(p => p.presence.buzz === game.round
-        && !game.order.some(o => o.p === p.peer) && !game.wrong.includes(p.peer));
+      const fresh = players().filter(p => p.presence.buzz === game.round && !game.order.some(o => o.p === p.peer));
       fresh.forEach(p => { if(!firstSeen[key(p)]) firstSeen[key(p)] = now; });
       fresh.sort((a,b) => firstSeen[key(a)] - firstSeen[key(b)]);
-      for(const p of fresh){ game.order.push({ p:p.peer, n:p.presence.name.slice(0,12) }); changed = true; }
+      for(const p of fresh){
+        const n = p.presence.name.slice(0,12);
+        if(!canBuzz(n, p.peer)) continue;
+        game.order.push({ p:p.peer, n }); changed = true;
+      }
       if(game.phase === "open"){
         const idx = nextAnswerer(-1);
         if(idx >= 0){ game.cur = idx; game.phase = "answer"; changed = true; }
@@ -446,9 +837,9 @@ function handlePeers(){
         const a = p.presence.sg;
         if(!a || typeof a !== "object" || typeof a.id !== "string" || typeof a.act !== "string") continue;
         const n = p.presence.name.slice(0,12);
-        const key = n + ":" + a.act + ":" + a.id;
-        if(doneActs.has(key)) continue;
-        doneActs.add(key);
+        const k = n + ":" + a.act + ":" + a.id;
+        if(doneActs.has(k)) continue;
+        doneActs.add(k);
         if(processAct(n, a)) changed = true;
       }
     }
@@ -457,62 +848,162 @@ function handlePeers(){
     const hs = hosts().sort((a,b) => a.peer < b.peer ? -1 : 1);
     showWarn(hs.length > 1 ? "⚠ 司会が複数います。司会は1人にしてください。" : "");
     const h = hs[0];
+    if(h) hadHost = true;
     applyGame(h ? h.presence.game : null);
   } else render();
 }
 function nextAnswerer(from){
-  for(let i = from+1; i < game.order.length; i++) if(!game.wrong.includes(game.order[i].p)) return i;
+  for(let i = from + 1; i < game.order.length; i++){
+    const o = game.order[i];
+    if(o.r) continue;
+    if(game.rule.t !== "free" && game.wrong.includes(o.p)) continue;
+    if(game.locks.includes(o.n)) continue;
+    return i;
+  }
   return -1;
 }
 
-// ---------- sounds on transitions ----------
+// ===== state change effects (everyone) =====
 function applyGame(g){
   const prev = prevGame;
   prevGame = g ? JSON.parse(JSON.stringify(g)) : null;
   game = g;
   if(g && g.mode === "sugoroku" && g.sg) sgOnUpdate(prev && prev.sg, g.sg);
-  if(prev && g && prev.mode === g.mode && g.mode !== "sugoroku"){
-    if(g.round !== prev.round && g.phase === "open") sfx.open();
-    else if(g.phase === "answer" && (prev.phase !== "answer" || prev.cur !== g.cur || prev.round !== g.round)) sfx.buzz();
-    if(g.result && g.result.type === "correct" && !(prev.result && prev.result.type === "correct" && prev.round === g.round)) sfx.ok();
-    if(g.round === prev.round && g.wrong.length > prev.wrong.length) sfx.ng();
+  if(prev && g){
+    if(g.mode !== "sugoroku" && prev.mode === g.mode){
+      if(g.round !== prev.round && g.phase === "open") sfx.open();
+      else if(g.phase === "answer" && (prev.phase !== "answer" || prev.cur !== g.cur || prev.round !== g.round)) sfx.buzz();
+    }
+    if(g.snd && prev.snd){
+      if(g.snd.okSeq !== prev.snd.okSeq) sfx.ok(g.snd.ok);
+      if(g.snd.ngSeq !== prev.snd.ngSeq) sfx.ng(g.snd.ng);
+    }
+    if(g.ruleSeq !== prev.ruleSeq && g.mode !== "sugoroku") bannerMsg(`回答権ルール：${ruleText(g)}`);
+    if(g.mode !== prev.mode) bannerMsg(`遊び方が「${MODES[g.mode]}」に変わりました`);
+    if(g.stage === "play" && prev.stage === "lobby") bannerMsg("ゲーム開始！");
   }
+  if(g) applyStage(false);
   render();
 }
+function ruleText(g){
+  const r = (g || game).rule;
+  if(r.t === "first") return `先着${r.n}人（${r.pp.slice(0, r.n).join("・")}点）`;
+  return RULES[r.t].label;
+}
 
-// ---------- host actions ----------
+// ===== host actions =====
 function commit(){
   const snap = JSON.parse(JSON.stringify(game));
   setPresence({ role:"host", name:myName, game:snap });
   applyGame(snap);
+  sendMosaic();
+  saveHost();
+}
+function pickSound(kind){
+  const mode = game.st[kind + "Mode"], list = kind === "ok" ? OK_SOUNDS : NG_SOUNDS;
+  game.snd[kind] = mode === "random" ? Math.floor(Math.random() * list.length) : game.st[kind];
+  game.snd[kind + "Seq"]++;
 }
 function hostOpen(){
-  if(game.mode === "sugoroku") return;
+  if(game.mode === "sugoroku" || game.stage !== "play") return;
   if(game.phase === "open" || game.phase === "answer") return;
   if(game.mode === "mosaic" && !game.img) return;
   game.round++; game.phase = "open"; game.order = []; game.cur = -1; game.wrong = []; game.result = null; game.q.showAns = false;
   commit();
 }
+function finishFirst(){
+  game.phase = "result"; game.cur = -1; game.q.showAns = true;
+  const oks = game.order.filter(o => o.r === "ok");
+  game.result = { type: oks.length ? "first" : "through", list: game.order.map(o => ({ n:o.n, r:o.r || "-", pts:o.pts || 0 })) };
+}
 function hostOk(){
-  if(game.phase !== "answer") return;
+  if(game.phase !== "answer" || game.cur < 0) return;
   const a = game.order[game.cur];
-  const pts = game.img ? imgPoints(game.img.level) : game.pts.ok;
-  SC()[a.n] = (SC()[a.n]||0) + pts;
-  game.result = { type:"correct", n:a.n, pts }; game.phase = "result"; game.q.showAns = true;
+  pickSound("ok");
+  if(game.rule.t === "first"){
+    const pts = game.rule.pp[game.cur] ?? 1;
+    SC()[a.n] = (SC()[a.n] || 0) + pts; a.r = "ok"; a.pts = pts;
+    const nx = nextAnswerer(game.cur);
+    if(nx >= 0) game.cur = nx; else finishFirst();
+  } else {
+    const pts = game.img ? imgPoints(game.img.level) : game.pts.ok;
+    SC()[a.n] = (SC()[a.n] || 0) + pts;
+    game.result = { type:"correct", n:a.n, pts }; game.phase = "result"; game.q.showAns = true;
+  }
   commit();
 }
+function advanceAfter(idx){
+  const nx = nextAnswerer(idx);
+  if(nx >= 0){ game.cur = nx; game.phase = "answer"; return; }
+  if(game.rule.t === "first" && game.order.length > 0 && (game.order.length >= game.rule.n || game.order.every(o => o.r))) { finishFirst(); return; }
+  game.cur = -1; game.phase = "open";
+}
 function hostNg(){
-  if(game.phase !== "answer") return;
+  if(game.phase !== "answer" || game.cur < 0) return;
   const a = game.order[game.cur];
-  SC()[a.n] = (SC()[a.n]||0) + game.pts.ng;
-  game.wrong.push(a.p);
-  const nx = nextAnswerer(game.cur);
-  if(nx >= 0) game.cur = nx; else { game.cur = -1; game.phase = "open"; }
+  SC()[a.n] = (SC()[a.n] || 0) + game.pts.ng;
+  pickSound("ng");
+  const t = game.rule.t;
+  if(t === "first"){ a.r = "ng"; advanceAfter(game.cur); }
+  else if(t === "free"){
+    game.order.splice(game.cur, 1); game.order.push({ p:a.p, n:a.n });
+    advanceAfter(game.cur - 1);
+  } else {
+    game.wrong.push(a.p);
+    if(t === "rest") game.rest[a.n] = game.qn + 1;
+    advanceAfter(game.cur);
+  }
+  commit();
+}
+function hostNextPerson(){
+  if(game.phase !== "answer" || game.cur < 0) return;
+  const a = game.order[game.cur], t = game.rule.t;
+  if(t === "first"){ a.r = "skip"; advanceAfter(game.cur); }
+  else if(t === "free"){ game.order.splice(game.cur, 1); game.order.push({ p:a.p, n:a.n }); advanceAfter(game.cur - 1); }
+  else { game.wrong.push(a.p); advanceAfter(game.cur); }
+  commit();
+}
+function hostGrant(name){
+  if(game.stage !== "play" || game.mode === "sugoroku") return;
+  const p = players().find(x => x.presence.name.slice(0,12) === name);
+  if(!p) return;
+  if(game.phase === "idle" || game.phase === "result"){
+    game.round++; game.order = []; game.wrong = []; game.result = null; game.q.showAns = false;
+  }
+  let i = game.order.findIndex(o => o.n === name);
+  let entry = i >= 0 ? game.order.splice(i, 1)[0] : { p:p.peer, n:name };
+  delete entry.r;
+  game.wrong = game.wrong.filter(x => x !== entry.p);
+  const at = game.cur >= 0 ? game.cur : Math.min(game.order.filter(o => o.r).length, game.order.length);
+  game.order.splice(at, 0, entry);
+  game.cur = at; game.phase = "answer";
+  commit();
+}
+function hostToggleLock(name){
+  const i = game.locks.indexOf(name);
+  if(i >= 0) game.locks.splice(i, 1);
+  else {
+    game.locks.push(name);
+    if(game.phase === "answer" && game.cur >= 0 && game.order[game.cur].n === name) advanceAfter(game.cur);
+  }
+  commit();
+}
+async function hostResetRights(){
+  if(game.mode === "sugoroku" || game.stage !== "play") return;
+  if(!(await confirmBox("回答権をリセットしますか？", "押した順をすべて消して、全員がもう一度押せる状態にします（得点はそのまま）。", "リセット"))) return;
+  game.round++; game.order = []; game.cur = -1; game.wrong = []; game.result = null; game.q.showAns = false;
+  if(game.phase !== "idle") game.phase = "open";
   commit();
 }
 function hostThrough(){
   if(game.phase === "idle" || game.phase === "result") return;
+  if(game.rule.t === "first" && game.order.some(o => o.r === "ok")){ finishFirst(); commit(); return; }
   game.result = { type:"through" }; game.phase = "result"; game.q.showAns = true; game.cur = -1;
+  commit();
+}
+function setRule(t){
+  if(!RULES[t]) return;
+  game.rule.t = t; game.ruleSeq++;
   commit();
 }
 function stepSec(){ return +$("imgStep").value || 0; }
@@ -523,7 +1014,7 @@ function setQuestion(i){
     game.q.total = images.length;
     if(i >= 0 && i < images.length){
       curImgUrl = images[i].url; game.q.text = "この画像は何？"; game.q.ans = images[i].a;
-      game.img = { level:0, max:PIX.length, left:stepSec() || null };
+      game.img = { level:0, max:PIX.length, left:stepSec() || null, seq:game.qn };
     } else { game.q.text = images.length && i >= 0 ? "全問終了！おつかれさまでした 🎉" : ""; game.q.ans = ""; }
   } else {
     game.q.total = textQs.length;
@@ -535,6 +1026,7 @@ function setQuestion(i){
 }
 function resetRound(){ game.phase = "idle"; game.order = []; game.cur = -1; game.wrong = []; game.result = null; game.q.showAns = false; }
 function hostNext(){
+  game.qn++;
   setQuestion(game.q.idx + 1);
   resetRound();
   commit();
@@ -549,7 +1041,6 @@ function switchMode(m){
   game.mode = m;
   resetRound();
   setQuestion(idxByMode[m]);
-  applyModeUI();
   commit();
 }
 setInterval(() => {
@@ -564,47 +1055,83 @@ setInterval(() => {
 function loadQuestions(){
   const lines = $("qList").value.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
   textQs = lines.map(l => { const m = l.split(/[｜|\t]/); return { t:(m[0]||"").trim().slice(0,300), a:(m.slice(1).join(" ")||"").trim().slice(0,120) }; });
-  store.set("hayaoshi.q", $("qList").value);
+  store.set("q", $("qList").value);
   game.q.idx = -1; hostNext();
   $("qDetails").open = false;
 }
 function addImages(){
   const files = Array.from($("imgFiles").files || []).filter(f => f.type.startsWith("image/"));
-  for(const f of files) images.push({ url:URL.createObjectURL(f), a:f.name.replace(/\.[^.]+$/, "").slice(0,120) });
+  for(const f of files) images.push({ url:URL.createObjectURL(f), a:"" });
   $("imgFiles").value = "";
   if(game && game.mode === "mosaic"){ game.q.total = images.length; commit(); }
   renderThumbs();
 }
-function startImages(){
+async function startImages(){
   if(!images.length){ $("imgFiles").click(); return; }
+  const empty = images.filter(x => !x.a.trim()).length;
+  if(empty && !(await confirmBox("答えが未入力の画像があります", `${empty}枚の答えが空です。このまま始めますか？`, "このまま始める"))) return;
   game.q.idx = -1; hostNext();
   $("imgDetails").open = false;
 }
 function renderThumbs(){
   const el = $("thumbs"); if(!el) return;
   const curIdx = game && game.mode === "mosaic" ? game.q.idx : idxByMode.mosaic;
+  const focused = document.activeElement && document.activeElement.closest && document.activeElement.closest("#thumbs");
+  if(focused) return;
   el.innerHTML = images.map((q,i) => `
     <div class="thumb ${i===curIdx ? "cur" : ""}">
       <span class="no">${i+1}</span><img src="${q.url}" alt="">
-      <input data-i="${i}" value="${esc(q.a)}" maxlength="120" aria-label="${i+1}枚目の答え">
+      <input data-i="${i}" value="${esc(q.a)}" maxlength="120" placeholder="答えを入力" class="${q.a.trim() ? "" : "need"}" aria-label="${i+1}枚目の答え">
       <button data-go="${i}">出す</button><button data-del="${i}" aria-label="削除">✕</button>
     </div>`).join("") || '<div class="small muted">まだ画像がありません</div>';
 }
 
-// ---------- player action ----------
+// ===== mosaic broadcast (host -> players) =====
+let mzSent = "";
+function mosaicCanvas(clear){
+  const img = imgCache.get(curImgUrl);
+  if(!img || !img.complete || !img.naturalWidth) return null;
+  if(clear){
+    const s = Math.min(1, 720 / Math.max(img.naturalWidth, img.naturalHeight));
+    const cv = document.createElement("canvas"); cv.width = Math.round(img.naturalWidth * s); cv.height = Math.round(img.naturalHeight * s);
+    cv.getContext("2d").drawImage(img, 0, 0, cv.width, cv.height);
+    return cv.toDataURL("image/jpeg", .78);
+  }
+  const s = Math.min(960 / img.naturalWidth, 540 / img.naturalHeight);
+  const w = Math.round(img.naturalWidth * s), h = Math.round(img.naturalHeight * s);
+  const ps = PIX[Math.min(game.img.level, PIX.length-1)];
+  const cv = document.createElement("canvas"); cv.width = Math.max(1, Math.ceil(w / ps)); cv.height = Math.max(1, Math.ceil(h / ps));
+  cv.getContext("2d").drawImage(img, 0, 0, cv.width, cv.height);
+  return cv.toDataURL("image/png");
+}
+function sendMosaic(){
+  if(role !== "host" || !room || !game || game.mode !== "mosaic" || !game.img || !curImgUrl) return;
+  const clear = game.phase === "result";
+  const key = `${game.img.seq}:${clear ? "c" : game.img.level}`;
+  if(key === mzSent) return;
+  if(!imgCache.get(curImgUrl)){ const im = new Image(); im.onload = () => sendMosaic(); im.src = curImgUrl; imgCache.set(curImgUrl, im); return; }
+  const data = mosaicCanvas(clear);
+  if(!data) { imgCache.get(curImgUrl).addEventListener("load", () => sendMosaic(), { once:true }); return; }
+  mzSent = key;
+  room.setMedia("mz", `${clear ? "c" : "p"}|${game.img.seq}|${data}`);
+}
+
+// ===== player action =====
 function buzz(){
-  if(role !== "player" || !game) return;
+  if(role !== "player" || !game || game.stage !== "play" || game.mode === "sugoroku") return;
   if(Date.now() < flyUntil) return;
+  const st = myState();
+  if(st.k === "lock" || st.k === "rest") return;
   const open = game.phase === "open" || game.phase === "answer";
-  if(!open){ flyUntil = Date.now() + 1000; sfx.ng(); render(); setTimeout(render, 1050); return; }
-  if(game.wrong.includes(myPeer) || myBuzzRound === game.round) return;
+  if(!open){ flyUntil = Date.now() + 1000; sfx.ng(0); render(); setTimeout(render, 1050); return; }
+  if(myBuzzRound === game.round) return;
   myBuzzRound = game.round;
   sfx.buzz();
   setPresence({ buzz: game.round });
   render();
 }
 
-// ---------- render ----------
+// ===== render =====
 const phaseLabel = { idle:"待機中", open:"受付中！", answer:"解答中", result:"" };
 function applyModeUI(){
   const m = game ? game.mode : pickMode;
@@ -612,69 +1139,101 @@ function applyModeUI(){
   document.body.classList.toggle("mode-mosaic", m === "mosaic");
   document.body.classList.toggle("mode-sugoroku", m === "sugoroku");
   document.querySelectorAll("#modeSeg button").forEach(b => b.classList.toggle("on", b.dataset.mode === m));
-  if(m !== "sugoroku") $("bNext").firstChild.textContent = m === "mosaic" ? "次の画像へ" : "次の問題へ";
   $("modeLabel").textContent = MODES[m];
   $("scoreTitle").textContent = "スコア（" + (m === "mosaic" ? "モザイク" : "普通") + "）";
-  renderPeople();
 }
 function render(){
   if(!role) return;
   const g = game, board = $("board");
   applyModeUI();
-  if(!g){ board.innerHTML = '<div class="qtext muted">司会がまだいません。司会が入ると始まります。</div>'; renderScores(null); renderPlayer(); return; }
-  if(g.mode === "sugoroku"){ renderSg(); return; }
-  let badgeCls = g.phase, badgeTxt = phaseLabel[g.phase];
-  if(g.phase === "result"){ badgeCls = g.result && g.result.type === "correct" ? "correct" : "through"; badgeTxt = badgeCls === "correct" ? "正解！" : "スルー"; }
+  renderPeople(); renderGuide();
+  if(!g){
+    board.innerHTML = `<div class="sgbanner">${hadHost ? "司会の接続を待っています…" : "司会がまだいません"}<small>${hadHost ? "司会が戻ると、そのまま続きから遊べます" : "司会が入ると始まります"}</small></div>`;
+    renderScores(null); renderPlayer(); return;
+  }
+  if(g.stage === "lobby"){ renderLobby(); renderHost(); renderPlayer(); renderScores(g); return; }
+  if(g.mode === "sugoroku"){ renderSg(); renderHost(); return; }
+  // rule strip
   const unit = g.mode === "mosaic" ? "枚" : "問";
-  const qno = g.q.idx >= 0 ? (g.q.total ? `第${Math.min(g.q.idx+1, g.q.total)}問 / 全${g.q.total}${unit}` : `第${g.q.idx+1}問`) : "準備中";
+  const left = g.q.total && g.q.idx >= 0 ? `残り${Math.max(0, g.q.total - g.q.idx - 1)}${unit}` : (g.q.idx >= 0 ? `第${g.q.idx+1}問` : "準備中");
+  const strip = `<div class="rulestrip"><span>${MODES[g.mode]}</span><span>回答権：<b>${esc(ruleText(g))}</b></span><span>${g.q.idx >= 0 && g.q.total ? `第${Math.min(g.q.idx+1, g.q.total)}${unit === "枚" ? "問" : "問"} / 全${g.q.total}${unit}` : ""}</span><span>${left}</span></div>`;
+  let badgeCls = g.phase, badgeTxt = phaseLabel[g.phase];
+  if(g.phase === "result"){ const ok = g.result && (g.result.type === "correct" || g.result.type === "first"); badgeCls = ok ? "correct" : "through"; badgeTxt = ok ? "正解発表" : "スルー"; }
   let qtxt;
   if(g.mode === "mosaic"){
     if(g.img){
       qtxt = role === "host"
         ? `${esc(g.q.text)}<canvas id="mosaic" width="960" height="540" style="margin-top:8px"></canvas>`
-        : `${esc(g.q.text)}<div class="small muted" style="margin-top:6px">画像は司会の画面（Discord）で見てください</div>`;
+        : `${esc(g.q.text)}<canvas id="mzPlayer" width="640" height="360"></canvas>`;
     } else if(g.q.text) qtxt = esc(g.q.text);
-    else qtxt = role === "host" ? '<div class="noimg">右の「画像を選ぶ」から画像を追加してください</div>' : '<span class="muted">司会が画像を準備しています</span>';
+    else qtxt = role === "host" ? '<div class="noimg">右の「画像と答え」から画像を追加してください</div>' : '<span class="muted">司会が画像を準備しています</span>';
   } else {
     if(g.q.text) qtxt = (role === "host" || g.q.showText) ? esc(g.q.text) : '<span class="muted">問題は司会の画面（Discord）で確認してください</span>';
     else qtxt = '<span class="muted">司会が口頭で出題します</span>';
   }
-  let ansBox;
-  if(g.phase === "answer" && g.cur >= 0){
-    const a = g.order[g.cur], isMe = a.p === myPeer;
-    ansBox = `<div class="answerer hot"><div class="lbl">${isMe ? "あなたの番！答えてください" : "解答者"}</div><div class="who">${esc(a.n)}</div></div>`;
-  } else if(g.phase === "result" && g.result && g.result.type === "correct"){
-    ansBox = `<div class="answerer ok"><div class="lbl">正解！</div><div class="who">⭕ ${esc(g.result.n)}</div></div>`;
-  } else if(g.phase === "open"){
-    ansBox = `<div class="answerer"><div class="who" style="color:var(--gold)">早押し受付中</div><div class="lbl">いちばん早く押した人が解答できます</div></div>`;
-  } else if(g.phase === "result"){
-    ansBox = `<div class="answerer"><div class="who">スルー</div><div class="lbl">誰も正解しませんでした</div></div>`;
-  } else {
-    ansBox = `<div class="answerer"><div class="who muted" style="font-size:28px">待機中</div><div class="lbl">司会が「出題スタート」を押すと押せます</div></div>`;
-  }
-  const chips = g.order.map((o,i) => `<span class="chip ${i===g.cur&&g.phase==="answer"?"cur":""} ${g.wrong.includes(o.p)?"ng":""}">${i+1}番 ${esc(o.n)}${o.p===myPeer?"（あなた）":""}</span>`).join("");
-  const ans = (g.q.showAns && g.q.ans) ? `<div class="ans">答え：${esc(g.q.ans)}${g.result && g.result.pts ? `（${esc(g.result.n)} +${g.result.pts}点）` : ""}</div>` : "";
-  let lvl = "";
-  if(g.img){
+  const lvl = g.img ? (() => {
     const clear = g.phase === "result";
-    const left = !clear && g.phase === "open" && g.img.left ? `<b>次の段階まで ${g.img.left}秒</b>` : "";
-    lvl = `<div class="lvl">ぼかし ${clear ? "なし" : `${g.img.level+1}/${g.img.max}段階目・正解で${imgPoints(g.img.level)}点`} ${Array.from({length:g.img.max},(_,i)=>`<i class="${i<=g.img.level||clear?"on":""}"></i>`).join("")}${left}</div>`;
-  }
+    const lft = !clear && g.phase === "open" && g.img.left ? `<b>次の段階まで ${g.img.left}秒</b>` : "";
+    return `<div class="lvl">ぼかし ${clear ? "なし" : `${g.img.level+1}/${g.img.max}段階目${g.rule.t === "first" ? "" : `・正解で${imgPoints(g.img.level)}点`}`} ${Array.from({length:g.img.max},(_,i)=>`<i class="${i<=g.img.level||clear?"on":""}"></i>`).join("")}${lft}</div>`;
+  })() : "";
   board.innerHTML = `
-    <div class="qhead"><span class="qno">${qno}</span>${badgeTxt ? `<span class="badge ${badgeCls}">${badgeTxt}</span>` : ""}</div>
+    ${strip}
+    <div class="qhead">${badgeTxt ? `<span class="badge ${badgeCls}">${badgeTxt}</span>` : ""}</div>
     <div class="qtext">${qtxt}</div>
     ${lvl}
-    ${ansBox}
-    ${chips ? `<div><h3>押した順</h3><div class="order">${chips}</div></div>` : ""}
-    ${ans}`;
-  drawMosaic();
+    ${orderHtml(g)}
+    ${(g.q.showAns && g.q.ans) ? `<div class="ans">答え：${esc(g.q.ans)}${g.result && g.result.pts && g.result.n ? `（${esc(g.result.n)} +${g.result.pts}点）` : ""}</div>` : ""}`;
+  drawMosaic(); drawPlayerMosaic();
   renderScores(g); renderHost(); renderPlayer();
+}
+function orderHtml(g){
+  const mark = o => o.r === "ok" ? `<span class="mark">○ +${o.pts||0}</span>` : o.r === "ng" ? '<span class="mark">×</span>' : o.r === "skip" ? '<span class="mark">−</span>' : "";
+  if(g.phase === "result" && g.result && g.result.type === "correct"){
+    return `<div class="ordrow"><div class="ocard big ok">${avHtml(avatarOf(g.result.n), 52, g.result.n)}<div><div class="rk">正解！</div><div class="who">⭕ ${esc(g.result.n)}</div></div></div></div>`;
+  }
+  if(g.phase === "result" && g.result && g.result.type === "first"){
+    return `<div class="ordrow">${g.result.list.map((o,i) => `<div class="ocard ${o.r==="ok"?"ok":""} ${o.r==="ng"?"ng":""}">${avHtml(avatarOf(o.n), 32, o.n)}<div><div class="rk">${i+1}番</div><div class="nm2">${esc(o.n)}${mark(o)}</div></div></div>`).join("")}</div>`;
+  }
+  if(g.phase === "result") return `<div class="answerer"><div class="who">スルー</div><div class="lbl">誰も正解しませんでした</div></div>`;
+  if(g.phase === "open" && !g.order.length) return `<div class="answerer"><div class="who" style="color:var(--gold)">早押し受付中</div><div class="lbl">いちばん早く押した人が答えます</div></div>`;
+  if(g.phase === "idle") return `<div class="answerer"><div class="who muted" style="font-size:28px">待機中</div><div class="lbl">司会が「出題スタート」を押すと押せます</div></div>`;
+  const cards = g.order.map((o,i) => {
+    const isCur = i === g.cur && g.phase === "answer";
+    const wrong = g.rule.t !== "free" && g.wrong.includes(o.p);
+    if(isCur) return `<div class="ocard big" style="order:-1">${avHtml(avatarOf(o.n), 52, o.n)}<div><div class="rk">${i+1}番・解答中${o.p===myPeer?"（あなた）":""}</div><div class="who">${esc(o.n)}</div></div></div>`;
+    return `<div class="ocard ${o.r==="ok"?"ok":""} ${(o.r==="ng"||wrong)?"ng":""}">${avHtml(avatarOf(o.n), 30, o.n)}<div><div class="rk">${i+1}番</div><div class="nm2">${esc(o.n)}${mark(o)}</div></div></div>`;
+  }).join("");
+  return `<div class="ordrow">${cards}</div>${g.phase === "open" ? '<div class="small muted">受付中：まだ押せます</div>' : ""}`;
+}
+function renderLobby(){
+  const g = game;
+  const ps = [{ n: hosts()[0] ? hosts()[0].presence.name : (role === "host" ? myName : "司会"), host:true }].concat(players().map(p => ({ n:p.presence.name.slice(0,12) })));
+  const slots = [];
+  for(let i = 0; i < 8; i++){
+    const p = ps[i];
+    if(p) slots.push(`<div class="slot" style="border-top-color:${colorOf(p.n)}">${avHtml(avatarOf(p.n), 48, p.n)}<div class="nm">${esc(p.n)}${p.n===myName?"（あなた）":""}</div><div class="st2">${p.host ? "司会" : "● 参加中"}</div></div>`);
+    else slots.push(`<div class="slot empty">空き</div>`);
+  }
+  $("board").innerHTML = `<div class="lobby">
+    <div class="rulestrip"><span>ロビー</span><span>遊び方：<b>${MODES[g.mode]}</b></span><span>${g.locked ? "🔒 参加締め切り中" : "🟢 参加受付中"}</span></div>
+    <div class="lobbytop">
+      <div><div class="muted small">部屋コード</div><div class="bigcode">${esc(roomCode)}</div>
+        <div class="row" style="margin-top:8px"><button class="small" id="bCopyLink">参加リンクをコピー</button></div>
+        <div class="small muted" style="margin-top:6px">サイトを開いてコードを入れるか、QRコードを読み取ると入れます</div></div>
+      <div id="qrbox"></div>
+    </div>
+    <div class="slots">${slots.join("")}</div>
+    ${role === "player" ? '<div class="sgbanner">司会がゲームを始めるのを待っています<small>右上の「退出」でいつでも抜けられます</small></div>' : ""}
+  </div>`;
+  fillQR();
+  const cl = $("bCopyLink");
+  if(cl) cl.onclick = () => { try{ navigator.clipboard.writeText(joinLink()); cl.textContent = "コピーしました"; setTimeout(() => { if($("bCopyLink")) $("bCopyLink").textContent = "参加リンクをコピー"; }, 1500); }catch(e){} };
 }
 function drawMosaic(){
   const cv = $("mosaic");
   if(!cv || !curImgUrl || !game || !game.img) return;
   let img = imgCache.get(curImgUrl);
-  if(!img){ img = new Image(); img.onload = () => drawMosaic(); img.src = curImgUrl; imgCache.set(curImgUrl, img); return; }
+  if(!img){ img = new Image(); img.onload = () => { drawMosaic(); sendMosaic(); }; img.src = curImgUrl; imgCache.set(curImgUrl, img); return; }
   if(!img.complete || !img.naturalWidth) return;
   const s = Math.min(960 / img.naturalWidth, 540 / img.naturalHeight);
   const w = Math.max(1, Math.round(img.naturalWidth * s)), h = Math.max(1, Math.round(img.naturalHeight * s));
@@ -688,6 +1247,29 @@ function drawMosaic(){
   ctx.imageSmoothingEnabled = false;
   ctx.drawImage(off, 0, 0, sw, sh, 0, 0, w, h);
 }
+const mzImg = new Image(); let mzKey = "";
+function drawPlayerMosaic(){
+  const cv = $("mzPlayer");
+  if(!cv || !game || !game.img) return;
+  const raw = mediaCache.mz || "";
+  const m = /^([pc])\|(\d+)\|(.*)$/s.exec(raw);
+  const ctx = cv.getContext("2d");
+  if(!m || +m[2] !== game.img.seq){
+    ctx.fillStyle = "#000"; ctx.fillRect(0, 0, cv.width, cv.height);
+    ctx.fillStyle = "#9aa2d6"; ctx.font = "20px sans-serif"; ctx.textAlign = "center"; ctx.fillText("画像を受け取っています…", cv.width/2, cv.height/2);
+    return;
+  }
+  const draw = () => {
+    const c2 = $("mzPlayer"); if(!c2) return;
+    const W = 640, H = Math.max(1, Math.round(640 * mzImg.naturalHeight / mzImg.naturalWidth));
+    c2.width = W; c2.height = H;
+    const x = c2.getContext("2d");
+    x.imageSmoothingEnabled = m[1] === "c";
+    x.drawImage(mzImg, 0, 0, W, H);
+  };
+  if(mzKey === raw && mzImg.complete && mzImg.naturalWidth) draw();
+  else { mzKey = raw; mzImg.onload = draw; mzImg.src = m[3]; }
+}
 function renderScores(g){
   const el = $("scores");
   const sc = g && g.scoresAll ? g.scoresAll[g.mode] || {} : {};
@@ -696,43 +1278,139 @@ function renderScores(g){
   const myN = role === "player" ? myName : null;
   el.innerHTML = Object.entries(sc).sort((a,b) => b[1]-a[1]).map(([n,s],i) => `
     <div class="srow ${n===myN?"me":""} ${room && !online.has(n)?"away":""}">
-      <span class="rank">${i+1}</span><span class="nm">${esc(n)}</span><span class="pt">${s}</span>
+      <span class="rank">${i+1}</span>${avHtml(avatarOf(n), 26, n)}<span class="nm">${esc(n)}</span><span class="pt">${s}</span>
       ${role==="host" ? `<span class="adj"><button data-adj="1" data-n="${esc(n)}">+</button> <button data-adj="-1" data-n="${esc(n)}">−</button></span>` : ""}
     </div>`).join("");
 }
+
+// ===== host panel (built only when its layout changes, so buttons never vanish mid-press) =====
+let hostKey = "";
 function renderHost(){
-  if(role !== "host") return;
-  const ph = game.phase;
-  $("bOpen").disabled = ph === "open" || ph === "answer" || (game.mode === "mosaic" && !game.img);
-  $("bOk").disabled = $("bNg").disabled = ph !== "answer";
-  $("bThrough").disabled = ph === "idle" || ph === "result";
-  $("bLevel").disabled = !game.img || ph === "result" || game.img.level >= game.img.max - 1;
+  if(role !== "host" || !game) return;
+  const key = game.stage + ":" + game.mode;
+  const el = $("hostMain");
+  if(key !== hostKey){
+    hostKey = key;
+    if(game.stage === "lobby"){
+      el.innerHTML = `<div class="ctrlbar">
+        <button class="b-open wide" id="bStart" style="font-size:18px;padding:14px">▶ ゲーム開始</button>
+        <button class="wide" id="bLock"></button></div>
+        <p class="small muted" style="margin:8px 0 0">開始前に、下の「問題リスト」や「画像と答え」を準備しておくとスムーズです。</p>`;
+      $("bStart").onclick = () => { game.stage = "play"; commit(); };
+      $("bLock").onclick = () => { game.locked = !game.locked; room.setMeta({ locked:game.locked }); commit(); };
+    } else if(game.mode === "sugoroku"){
+      el.innerHTML = `<div class="ctrlbar"><button class="wide small" id="bToLobby">招待画面（ロビー）を出す</button></div>`;
+      $("bToLobby").onclick = () => { game.stage = "lobby"; commit(); };
+    } else {
+      el.innerHTML = `<div class="ctrlbar">
+        <button class="b-open wide" id="bOpen">出題スタート（ボタン解禁）<span class="kbd">Space</span></button>
+        <button class="b-ok" id="bOk">⭕ 正解<span class="kbd">O</span></button>
+        <button class="b-ng" id="bNg">❌ 不正解<span class="kbd">X</span></button>
+        ${game.mode === "mosaic" ? '<button id="bLevel">🔍 ぼかし−1<span class="kbd">B</span></button>' : ""}
+        <button id="bThrough">スルー（答え発表）</button>
+        <button class="b-next ${game.mode === "mosaic" ? "" : "wide"}" id="bNext">${game.mode === "mosaic" ? "次の画像へ" : "次の問題へ"}<span class="kbd">N</span></button>
+        <button class="peek wide" id="bPeek">👀 押している間だけ答えを表示</button>
+        <button class="wide small" id="bToLobby">招待画面（ロビー）を出す</button></div>`;
+      $("bOpen").onclick = hostOpen; $("bOk").onclick = hostOk; $("bNg").onclick = hostNg;
+      $("bThrough").onclick = hostThrough; $("bNext").onclick = hostNext;
+      if($("bLevel")) $("bLevel").onclick = hostLevel;
+      $("bToLobby").onclick = () => { game.stage = "lobby"; commit(); };
+      const peek = $("bPeek");
+      peek.addEventListener("pointerdown", () => { peek.textContent = game && game.q.ans ? "答え：" + game.q.ans : "（答えが登録されていません）"; });
+      ["pointerup","pointerleave","pointercancel"].forEach(ev => peek.addEventListener(ev, () => { peek.textContent = "👀 押している間だけ答えを表示"; }));
+    }
+  }
+  if(game.stage === "lobby"){ $("bLock").textContent = game.locked ? "🔓 参加の受付を再開する" : "🔒 参加を締め切る"; }
+  else if(game.mode !== "sugoroku"){
+    const ph = game.phase;
+    $("bOpen").disabled = ph === "open" || ph === "answer" || (game.mode === "mosaic" && !game.img);
+    $("bOk").disabled = $("bNg").disabled = ph !== "answer";
+    $("bThrough").disabled = ph === "idle" || ph === "result";
+    if($("bLevel")) $("bLevel").disabled = !game.img || ph === "result" || game.img.level >= game.img.max - 1;
+  }
+  // rule section
+  document.querySelectorAll("#ruleBtns button").forEach(b => b.classList.toggle("on", b.dataset.rule === game.rule.t));
+  $("firstCfg").classList.toggle("hidden", game.rule.t !== "first");
+  $("ruleDesc").textContent = RULES[game.rule.t].desc;
+  if(game.rule.t === "first" && document.activeElement && !document.activeElement.closest("#firstCfg")){
+    $("firstN").value = String(game.rule.n);
+    $("firstPts").innerHTML = Array.from({length:game.rule.n}, (_,i) => `<label>${i+1}位</label><input class="ppin" type="number" min="0" max="9" data-pp="${i}" value="${game.rule.pp[i] ?? 1}">`).join("");
+  }
+  $("rightsBar").classList.toggle("hidden", !(game.stage === "play" && game.mode !== "sugoroku"));
+  renderStageCtl();
+}
+let stageCtlKey = "";
+function renderStageCtl(){
+  const st = game.st, key = JSON.stringify(st);
+  if(key === stageCtlKey) return; stageCtlKey = key;
+  $("bgChips").innerHTML = Object.entries(BGS).map(([k,v]) => `<button class="bgchip ${st.bg===k?"on":""}" data-bg="${k}" title="${v.name}" style="background:${v.css}"></button>`).join("") +
+    (mediaCache.bg ? `<button class="bgchip ${st.bg==="custom"?"on":""}" data-bg="custom" title="自分の画像" style="background:url('${mediaCache.bg}') center/cover"></button>` : "");
+  $("bgmChips").innerHTML = Object.entries(BGMS).map(([k,v]) => `<button data-bgm="${k}" class="${st.bgm===k?"on":""}">${v.name}</button>`).join("") +
+    ($("hostAudio").src ? `<button data-bgm="host" class="${st.bgm==="host"?"on":""}">手持ちの曲</button>` : "");
+  const chips = (list, kind) => list.map((s,i) => `<button data-snd="${kind}" data-i="${i}" class="${st[kind+"Mode"]==="fixed" && st[kind]===i ? "on" : ""}">${s.name}</button>`).join("") +
+    `<button data-snd="${kind}" data-i="r" class="${st[kind+"Mode"]==="random" ? "on" : ""}">毎回ランダム</button>`;
+  $("okChips").innerHTML = chips(OK_SOUNDS, "ok");
+  $("ngChips").innerHTML = chips(NG_SOUNDS, "ng");
+}
+
+// ===== player phone =====
+function myState(){
+  const g = game;
+  if(!g) return { k:"wait", ic:"⏳", t:"司会を待っています" };
+  if(g.stage === "lobby") return { k:"wait", ic:"⏳", t:"まもなく開始します" };
+  if(g.locks.includes(myName)) return { k:"lock", ic:"🔒", t:"司会がロック中" };
+  if((g.rest[myName] || -1) >= g.qn) return { k:"rest", ic:"💤", t:"1回休み（この問題はお休み）" };
+  if(Date.now() < flyUntil) return { k:"lock", ic:"⚠", t:"フライング！ 1秒待って" };
+  const pos = g.order.findIndex(o => o.p === myPeer);
+  const o = pos >= 0 ? g.order[pos] : null;
+  if(g.phase === "result"){
+    if(g.result && g.result.type === "correct" && g.result.n === myName) return { k:"ok", ic:"⭕", t:`正解！ +${g.result.pts}点` };
+    if(o && o.r === "ok") return { k:"ok", ic:"⭕", t:`正解！ +${o.pts}点` };
+    return { k:"wait", ic:"⏳", t:"次の問題を待っています" };
+  }
+  if(g.rule.t !== "free" && g.wrong.includes(myPeer)) return { k:"lock", ic:"✖", t:"不正解… この問題は押せません" };
+  if(o && o.r === "ok") return { k:"ok", ic:"⭕", t:`正解！ +${o.pts}点` };
+  if(o && o.r === "ng") return { k:"lock", ic:"✖", t:"不正解…" };
+  if(o){
+    if(g.phase === "answer" && g.cur === pos) return { k:"first", ic:"★", t:"あなたの番！ 答えて！" };
+    return { k:"nth", ic:String(pos + 1), t:`${pos + 1}番目に押しました` };
+  }
+  if(g.phase === "open" || g.phase === "answer"){
+    if(g.rule.t === "first" && g.order.length >= g.rule.n) return { k:"lock", ic:"🔒", t:`受付終了（先着${g.rule.n}人）` };
+    if(myBuzzRound === g.round) return { k:"nth", ic:"…", t:"送信中…" };
+    return { k:"go", ic:"●", t:"今だ！ 押せ！" };
+  }
+  return { k:"wait", ic:"⏳", t:"次の問題を待っています（今押すとフライング）" };
 }
 function renderPlayer(){
   if(role !== "player") return;
-  const b = $("buzz"), st = $("pStatus");
-  b.classList.remove("pressed"); st.className = "pstatus";
-  if(!game){ b.disabled = true; st.textContent = "司会を待っています…"; return; }
-  if(Date.now() < flyUntil){ b.disabled = true; st.textContent = "フライング！ちょっと待って"; st.classList.add("bad"); return; }
-  const open = game.phase === "open" || game.phase === "answer";
-  const pos = game.order.findIndex(o => o.p === myPeer);
-  if(game.wrong.includes(myPeer)){ b.disabled = true; st.textContent = "不正解… この問題はもう押せません"; st.classList.add("bad"); return; }
-  if(pos >= 0){
-    b.disabled = false; b.classList.add("pressed");
-    if(game.phase === "answer" && game.cur === pos){ st.textContent = "🎉 あなたが解答者！答えて！"; st.classList.add("good"); }
-    else if(game.phase === "result" && game.result && game.result.type === "correct" && game.result.n === myName){ st.textContent = "⭕ 正解！"; st.classList.add("good"); }
-    else st.textContent = `${pos+1}番目に押しました`;
-    return;
-  }
-  if(open && myBuzzRound === game.round){ b.disabled = false; b.classList.add("pressed"); st.textContent = "送信中…"; return; }
-  b.disabled = false;
-  if(open){ st.textContent = "今だ！押せ！"; st.classList.add("good"); }
-  else if(game.phase === "result") st.textContent = game.result && game.result.type === "correct" ? `${game.result.n} さんが正解` : "スルー";
-  else st.textContent = "次の問題を待っています（今押すとフライング）";
+  const col = game ? colorOf(myName) : PALETTE[0];
+  $("myBand").style.background = col;
+  $("myBand").innerHTML = `${avHtml(myAvatar, 34, myName)}<span>${esc(myName)}</span><button class="chg" id="bMyAv">画像を変える</button>`;
+  $("playerPanel").style.borderTop = `6px solid ${col}`;
+  const s = myState();
+  const el = $("pState");
+  el.className = "pstate ps-" + s.k;
+  el.innerHTML = `<span class="ic">${esc(s.ic)}</span><span>${esc(s.t)}</span>`;
+  const b = $("buzz");
+  b.classList.toggle("locked", s.k === "lock" || s.k === "rest");
+  b.classList.toggle("pressed", s.k === "first" || s.k === "nth");
+  b.disabled = s.k === "lock" || s.k === "rest" || !game || game.stage === "lobby";
+}
+function renderGuide(){
+  const el = $("guide");
+  if(role !== "player" || !game){ el.classList.add("hidden"); return; }
+  el.classList.remove("hidden");
+  const m = game.mode;
+  el.innerHTML = `<h3>遊び方</h3>
+    <div class="mchips">${Object.entries(MODES).map(([k,v]) => `<span class="mchip ${k===m?"on":""}">${v}${k===m?"（いまこれ）":""}</span>`).join("")}</div>
+    <p>${esc(MODE_DESC[m])}</p>
+    ${m !== "sugoroku" ? `<p><b>回答権：${esc(ruleText())}</b> … ${esc(RULES[game.rule.t].desc)}</p>` : ""}
+    <p class="small muted">順番は、司会の画面に届いた順で決まります。</p>`;
 }
 
-// ---------- participants ----------
-const knownPeople = new Map();   // name -> role ("host"|"player")
+// ===== participants (with host controls) =====
+const knownPeople = new Map();
 function renderPeople(){
   const el = $("people"); if(!el || !role) return;
   const online = new Map();
@@ -747,10 +1425,17 @@ function renderPeople(){
   for(const [n,r] of online) knownPeople.set(n, r);
   const rows = [...knownPeople.entries()].sort((a,b) => (a[1]==="host"?-1:0) - (b[1]==="host"?-1:0) || (online.has(b[0]) - online.has(a[0])));
   $("peopleTitle").textContent = `参加者 ${online.size}人`;
+  const quiz = game && game.stage === "play" && game.mode !== "sugoroku";
   el.innerHTML = rows.map(([n,r]) => {
     const on = online.has(n);
-    return `<div class="prow ${on?"":"off"}"><span class="pd"></span><span>${esc(n)}${n===myName?"（あなた）":""}</span>
-      <span class="tag ${r==="host"?"host":""}">${on ? (r==="host"?"司会":"回答者") : "退出"}</span></div>`;
+    const locked = game && game.locks.includes(n);
+    const rest = game && (game.rest[n] || -1) >= game.qn;
+    let tag = on ? (r === "host" ? "司会" : "回答者") : "切断・退出";
+    let tcls = r === "host" ? "host" : "";
+    if(on && locked){ tag = "ロック中"; tcls = "lock"; } else if(on && rest && quiz){ tag = "1回休み"; tcls = "rest"; }
+    const ctl = (role === "host" && quiz && on && r === "player") ? `<span class="ctl"><button data-grant="${esc(n)}">回答権</button><button data-lock="${esc(n)}" class="${locked?"on":""}">${locked?"解除":"ロック"}</button></span>` : "";
+    return `<div class="prow ${on?"":"off"}" style="${on && game ? `border-left:4px solid ${colorOf(n)};padding-left:6px` : ""}">${avHtml(n === myName ? myAvatar : avatarOf(n), 26, n)}<span>${esc(n)}${n===myName?"（あなた）":""}</span>
+      <span class="tag ${tcls}">${tag}</span>${ctl}</div>`;
   }).join("");
 }
 
@@ -795,6 +1480,7 @@ function sgStart(){
   game.sg = { len:SG_LEN, order, pos, dbl, board, turn:0, phase:"roll", decl:null, doubt:null, res:null,
               left:0, log:[], winner:null, seq:(game.sg ? game.sg.seq + 1 : 1) };
   sgLog(`ゲーム開始！ 順番：${order.join(" → ")}`);
+  game.stage = "play";
   commit();
 }
 function sgSkip(){
@@ -1080,48 +1766,135 @@ $("sgMe").addEventListener("pointerdown", e => {
 $("bSgStart").onclick = sgStart;
 $("bSgSkip").onclick = sgSkip;
 
-// ---------- start ----------
-$("nameIn").value = store.get("hayaoshi.name") || "";
-const savedMode = store.get("hayaoshi.mode");
+
+// ===== avatar picker =====
+function paintAvBtn(){
+  const b = $("avBtn");
+  if(myAvatar.startsWith("i:")) b.innerHTML = `<img src="${esc(myAvatar.slice(2))}" alt="">`;
+  else b.textContent = myAvatar.slice(2) || "🐱";
+}
+async function pickAvatar(){
+  let chosen = myAvatar;
+  const body = `<div class="emojigrid">${EMOJIS.map(e => `<button data-e="${e}" class="${chosen==="e:"+e?"on":""}">${e}</button>`).join("")}</div>
+    <div class="small muted">または自分の画像（正方形に切り抜いて小さくします）</div>
+    <input type="file" id="avFile" accept="image/*" style="margin-top:6px">
+    <div id="avPrev" style="margin-top:8px"></div>`;
+  const p = modal("プロフィール画像", body, [{ label:"やめる", value:false }, { label:"決定", value:true, cls:"b-open" }]);
+  const root = $("modalRoot").lastElementChild;
+  root.querySelector(".emojigrid").onclick = e => {
+    const b = e.target.closest("[data-e]"); if(!b) return;
+    chosen = "e:" + b.dataset.e;
+    root.querySelectorAll(".emojigrid button").forEach(x => x.classList.toggle("on", x === b));
+    root.querySelector("#avPrev").innerHTML = "";
+  };
+  root.querySelector("#avFile").onchange = async e => {
+    const f = e.target.files && e.target.files[0]; if(!f) return;
+    try{
+      const d = await fileToSquare(f, 96, .8);
+      chosen = "i:" + d;
+      root.querySelectorAll(".emojigrid button").forEach(x => x.classList.remove("on"));
+      root.querySelector("#avPrev").innerHTML = avHtml(chosen, 64);
+    }catch(err){ root.querySelector("#avPrev").textContent = "画像を読み込めませんでした"; }
+  };
+  if(await p){
+    myAvatar = chosen; store.set("avatar", myAvatar); paintAvBtn();
+    if(room) room.setAvatar(myAvatar);
+    render();
+  }
+}
+
+// ===== start screen =====
+$("nameIn").value = store.get("name") || "";
+paintAvBtn();
+const savedMode = store.get("mode");
 if(MODES[savedMode]) pickMode = savedMode;
 function paintPick(){ document.querySelectorAll("#modePick button").forEach(b => b.classList.toggle("on", b.dataset.mode === pickMode)); }
 paintPick();
 $("modePick").addEventListener("click", e => {
   const b = e.target.closest("button[data-mode]"); if(!b) return;
-  pickMode = b.dataset.mode; store.set("hayaoshi.mode", pickMode); paintPick();
+  pickMode = b.dataset.mode; store.set("mode", pickMode); paintPick();
 });
+$("avBtn").onclick = pickAvatar;
 function startMsg(t){ $("startMsg").textContent = t || ""; }
-async function begin(r){
+if(urlRoom){ $("codeIn").value = urlRoom; }
+let infoTimer = null;
+async function showRoomInfo(){
+  const code = $("codeIn").value;
+  const el = $("roomInfo");
+  if(code.length !== 4){ el.textContent = ""; return; }
+  el.textContent = "部屋をさがしています…";
+  try{
+    const i = await Net.roomInfo(code);
+    if($("codeIn").value !== code) return;
+    if(!i.exists || i.closed) el.innerHTML = '<span style="color:#ffc2d0">その部屋は見つかりません</span>';
+    else if(i.locked) el.innerHTML = `<span style="color:#ffc2d0">🔒 ${esc(i.host)}さんの部屋は参加を締め切っています</span>`;
+    else el.innerHTML = `<span style="color:var(--green)">🟢 ${esc(i.host)}さんの部屋・${i.count}人いま参加中</span>`;
+  }catch(e){ el.textContent = ""; }
+}
+$("codeIn").addEventListener("input", e => {
+  e.target.value = e.target.value.replace(/[^0-9]/g, "").slice(0,4);
+  clearTimeout(infoTimer); infoTimer = setTimeout(showRoomInfo, 300);
+});
+$("codeIn").addEventListener("keydown", e => { if(e.key === "Enter") begin("player"); });
+
+async function checkRejoin(){
+  if(rejoinChecked) return; rejoinChecked = true;
+  if(urlRoom) setTimeout(showRoomInfo, 200);
+  let last = null;
+  try{ last = JSON.parse(store.get("last") || "null"); }catch(e){}
+  if(!last || Date.now() - last.t > 12 * 3600 * 1000) return;
+  try{
+    const i = await Net.roomInfo(last.code);
+    if(!i.exists || i.closed){ store.del("last"); return; }
+    rejoinInfo = last;
+    $("bRejoin").textContent = `↩ 前の部屋 ${last.code} に${last.role === "host" ? "司会" : "回答者"}として戻る（${last.name}）`;
+    $("rejoinBox").classList.remove("hidden");
+  }catch(e){}
+}
+$("bRejoin").onclick = () => { if(rejoinInfo) begin(rejoinInfo.role, rejoinInfo); };
+
+async function begin(r, rejoin){
   if(joining || siteOpen !== true) return;
-  const n = $("nameIn").value.trim().slice(0,12);
+  const n = (rejoin ? rejoin.name : $("nameIn").value.trim()).slice(0,12);
   if(!n){ $("nameIn").focus(); $("nameIn").placeholder = "名前を入れてください"; startMsg("名前を入れてください"); return; }
-  let code = "";
-  if(r === "player"){
+  let code = rejoin ? rejoin.code : "";
+  if(r === "player" && !rejoin){
     code = $("codeIn").value.replace(/[^0-9]/g, "").slice(0,4);
     if(code.length !== 4){ $("codeIn").focus(); startMsg("4けたの部屋コードを入れてください"); return; }
   }
   ac();
-  joining = true; startMsg(r === "host" ? "部屋を作っています…" : "部屋をさがしています…");
+  joining = true; startMsg(r === "host" && !rejoin ? "部屋を作っています…" : "部屋に入っています…");
   try{
-    if(r === "host") code = await Net.createRoom(n);
-    else if(!(await Net.roomExists(code))){ startMsg("その部屋は見つかりませんでした。コードを確かめてください。"); joining = false; return; }
-    const rm = await Net.join(code);
-    attachRoom(rm);
+    if(r === "host" && !rejoin) code = await Net.createRoom(n);
+    else {
+      const i = await Net.roomInfo(code);
+      if(!i.exists || i.closed){ startMsg("その部屋は見つかりませんでした。コードを確かめてください。"); joining = false; return; }
+      if(i.locked && !rejoin){ startMsg("この部屋は参加を締め切っています。司会に再開してもらってください。"); joining = false; return; }
+    }
+    attachRoom(await Net.join(code));
   }catch(e){
     console.warn(e);
-    startMsg(siteOpen === false ? "休止中です" : "うまくつながりませんでした。少し待ってからもう一度お試しください。");
+    startMsg(siteOpen === false ? "停止中です" : "うまくつながりませんでした。少し待ってからもう一度お試しください。");
     joining = false; return;
   }
   joining = false; startMsg("");
-  myName = n; role = r; store.set("hayaoshi.name", n);
+  myName = n; role = r; store.set("name", n);
+  document.body.classList.add("role-" + r);
+  store.set("last", JSON.stringify({ code, role:r, name:n, t:Date.now() }));
+  if(location.search) history.replaceState(null, "", location.pathname);
   $("start").classList.add("hidden"); $("main").classList.remove("hidden");
   if(r === "host"){
     $("hostPanel").classList.remove("hidden");
     $("modeSeg").classList.remove("hidden");
-    game = newGame(pickMode);
-    $("qList").value = store.get("hayaoshi.q") || "";
-    if(pickMode === "mosaic") $("imgDetails").open = true;
-    $("foot").textContent = `部屋コード ${code} を友達に伝えてください。この画面をDiscordで画面共有すると盛り上がります。問題リストや画像の一覧は、共有前に閉じておくのがおすすめです。`;
+    let restored = null;
+    if(rejoin){ try{ restored = JSON.parse(store.get("host." + code) || "null"); }catch(e){} }
+    if(restored && restored.game && restored.game.v === 3){
+      game = restored.game; textQs = restored.textQs || [];
+      if(game.mode === "mosaic"){ game.img = null; game.q.idx = -1; game.q.text = ""; game.phase = "idle"; }
+      bannerMsg("前の続きから再開しました");
+    } else game = newGame(pickMode);
+    $("qList").value = store.get("q") || "";
+    $("foot").textContent = `部屋コード ${code} を友達に伝えてください。この画面をDiscordで画面共有すると盛り上がります。問題や答えの欄は、共有前に閉じておくのがおすすめです。`;
     renderThumbs();
     commit();
   } else {
@@ -1135,28 +1908,42 @@ async function begin(r){
 }
 $("asHost").onclick = () => begin("host");
 $("asPlayer").onclick = () => begin("player");
-$("codeIn").addEventListener("keydown", e => { if(e.key === "Enter") begin("player"); });
-$("codeIn").addEventListener("input", e => { e.target.value = e.target.value.replace(/[^0-9]/g, "").slice(0,4); });
-$("bCopyCode").onclick = () => { try{ navigator.clipboard.writeText(roomCode || ""); $("bCopyCode").textContent = "コピー済"; setTimeout(() => $("bCopyCode").textContent = "コピー", 1500); }catch(e){} };
 
+// ===== header =====
+$("bLeave").onclick = leaveRoom;
+$("bInvite").onclick = () => {
+  if(role === "host" && game){ game.stage = "lobby"; commit(); return; }
+  modal("招待", `<p style="margin:0">部屋コード <b style="font-size:28px;color:var(--gold)">${esc(roomCode)}</b></p><p class="small muted">参加リンク：${esc(joinLink())}</p>`);
+};
+$("bVol").onclick = () => $("volPop").classList.toggle("hidden");
+$("volBgm").value = volOf("bgm", 40); $("volSfx").value = volOf("sfx", 80);
+$("volBgm").oninput = e => { store.set("vol.bgm", e.target.value); applyVolumes(); };
+$("volSfx").oninput = e => { store.set("vol.sfx", e.target.value); applyVolumes(); };
+$("volSfx").onchange = () => sfx.ok(0);
+document.addEventListener("pointerdown", e => { if(!e.target.closest("#volPop") && !e.target.closest("#bVol")) $("volPop").classList.add("hidden"); });
 $("modeSeg").addEventListener("click", e => {
   const b = e.target.closest("button[data-mode]"); if(!b || role !== "host") return;
   switchMode(b.dataset.mode);
   if(b.dataset.mode === "mosaic" && !images.length) $("imgDetails").open = true;
 });
-$("bOpen").onclick = hostOpen;
-$("bOk").onclick = hostOk;
-$("bNg").onclick = hostNg;
-$("bThrough").onclick = hostThrough;
-$("bNext").onclick = hostNext;
-$("bLevel").onclick = hostLevel;
-$("bLoad").onclick = loadQuestions;
-$("bImgLoad").onclick = startImages;
-$("imgFiles").onchange = addImages;
-$("bReset").onclick = () => { const sc = SC(); for(const k in sc) sc[k] = 0; commit(); };
+
+// ===== host settings =====
+$("ruleBtns").addEventListener("click", e => { const b = e.target.closest("[data-rule]"); if(b && role === "host") setRule(b.dataset.rule); });
+$("firstN").onchange = e => { game.rule.n = +e.target.value; while(game.rule.pp.length < game.rule.n) game.rule.pp.push(1); game.ruleSeq++; commit(); $("firstPts").innerHTML = ""; renderHost(); };
+$("firstPts").addEventListener("change", e => {
+  const i = +e.target.dataset.pp; if(isNaN(i)) return;
+  game.rule.pp[i] = Math.max(0, Math.min(9, +e.target.value || 0)); game.ruleSeq++; commit();
+});
 $("ptOk").onchange = e => { game.pts.ok = +e.target.value; commit(); };
 $("ptNg").onchange = e => { game.pts.ng = +e.target.value; commit(); };
 $("showText").onchange = e => { game.q.showText = e.target.checked; commit(); };
+$("bLoad").onclick = loadQuestions;
+$("bImgLoad").onclick = startImages;
+$("imgFiles").onchange = addImages;
+$("bReset").onclick = async () => {
+  if(!(await confirmBox("得点をリセットしますか？", "このモードの全員の得点を0にします。", "リセット"))) return;
+  const sc = SC(); for(const k in sc) sc[k] = 0; commit();
+};
 $("scores").addEventListener("click", e => {
   const b = e.target.closest("button[data-adj]"); if(!b || role !== "host") return;
   const n = b.getAttribute("data-n"); SC()[n] = (SC()[n]||0) + (+b.getAttribute("data-adj")); commit();
@@ -1164,6 +1951,7 @@ $("scores").addEventListener("click", e => {
 $("thumbs").addEventListener("input", e => {
   const i = +e.target.getAttribute("data-i"); if(isNaN(i) || !images[i]) return;
   images[i].a = e.target.value.slice(0,120);
+  e.target.classList.toggle("need", !images[i].a.trim());
   if(game && game.mode === "mosaic" && i === game.q.idx){ game.q.ans = images[i].a; commit(); }
 });
 $("thumbs").addEventListener("click", e => {
@@ -1180,18 +1968,50 @@ $("thumbs").addEventListener("click", e => {
     } else { if(idxByMode.mosaic >= i) idxByMode.mosaic--; renderThumbs(); }
   }
 });
-const peek = $("bPeek");
-peek.addEventListener("pointerdown", () => { peek.textContent = game && game.q.ans ? "答え：" + game.q.ans : "（答えが登録されていません）"; });
-["pointerup","pointerleave","pointercancel"].forEach(ev => peek.addEventListener(ev, () => { peek.textContent = "👀 押している間だけ答えを表示"; }));
+$("people").addEventListener("click", e => {
+  if(role !== "host") return;
+  const g = e.target.closest("[data-grant]"), l = e.target.closest("[data-lock]");
+  if(g) hostGrant(g.getAttribute("data-grant"));
+  if(l) hostToggleLock(l.getAttribute("data-lock"));
+});
+$("bRightsReset").onclick = hostResetRights;
+$("bNextPerson").onclick = hostNextPerson;
+$("bgChips").addEventListener("click", e => { const b = e.target.closest("[data-bg]"); if(!b) return; game.st.bg = b.dataset.bg; commit(); });
+$("bgFile").onchange = async e => {
+  const f = e.target.files && e.target.files[0]; if(!f) return;
+  try{
+    const d = await fileToFit(f, 1280, .72);
+    mediaCache.bg = d; await room.setMedia("bg", d);
+    game.st.bg = "custom"; stageCtlKey = ""; commit(); applyStage(true);
+  }catch(err){ showWarn("背景画像を読み込めませんでした。"); }
+  e.target.value = "";
+};
+$("bgmChips").addEventListener("click", e => { const b = e.target.closest("[data-bgm]"); if(!b) return; game.st.bgm = b.dataset.bgm; commit(); applyStage(true); });
+$("bgmFile").onchange = e => {
+  const f = e.target.files && e.target.files[0]; if(!f) return;
+  const ha = $("hostAudio"); ha.src = URL.createObjectURL(f); applyVolumes();
+  game.st.bgm = "host"; stageCtlKey = ""; commit(); applyStage(true);
+};
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-snd]"); if(!b || role !== "host" || !b.closest("#secStage")) return;
+  const kind = b.dataset.snd;
+  if(b.dataset.i === "r") game.st[kind + "Mode"] = "random";
+  else { game.st[kind + "Mode"] = "fixed"; game.st[kind] = +b.dataset.i; (kind === "ok" ? sfx.ok : sfx.ng)(+b.dataset.i); }
+  commit();
+});
+document.addEventListener("click", e => { if(e.target.id === "bMyAv") pickAvatar(); });
+
+// ===== player buzz + keyboard =====
 $("buzz").addEventListener("pointerdown", e => { e.preventDefault(); buzz(); });
 document.addEventListener("keydown", e => {
   if(e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA" || e.target.tagName === "SELECT" || e.repeat) return;
-  if(game && game.mode === "sugoroku"){
+  if(document.querySelector(".modal")) return;
+  if(game && game.mode === "sugoroku" && game.stage === "play"){
     if(e.code === "Space"){ e.preventDefault(); sgDoubt(); }
     return;
   }
   if(role === "player" && (e.code === "Space" || e.key === "Enter")){ e.preventDefault(); buzz(); }
-  if(role === "host"){
+  if(role === "host" && game && game.stage === "play"){
     if(e.code === "Space"){ e.preventDefault(); hostOpen(); }
     else if(e.key === "o" || e.key === "O") hostOk();
     else if(e.key === "x" || e.key === "X") hostNg();
@@ -1199,6 +2019,7 @@ document.addEventListener("keydown", e => {
     else if(e.key === "b" || e.key === "B") hostLevel();
   }
 });
+
 })();
 </script>
 </body>

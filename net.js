@@ -17,11 +17,12 @@
     db = fb.getDatabase(app);
   })();
 
-  function okCode(code){ return /^[0-9]{4}$/.test(code); }
+  const okCode = code => /^[0-9]{4}$/.test(code);
+  const fresh = m => !!m && Date.now() - (m.created || 0) < ROOM_TTL;
 
   window.Net = {
     ready,
-    // サイトのON/OFF（config/open）を見張る。cb(true/false, エラー文字)
+    // サイトのON/OFF（config/open）を見張る。cb(true/false, エラー)
     async onOpen(cb){
       try{ await ready; }catch(e){ cb(false, e.message === "config" ? "config" : "load"); return; }
       fb.onValue(fb.ref(db, "config/open"), s => cb(s.val() === true), () => cb(false, "denied"));
@@ -33,52 +34,68 @@
         const code = String(1000 + Math.floor(Math.random() * 9000));
         const s = await fb.get(fb.ref(db, `rooms/${code}/meta`));
         const v = s.val();
-        if(!v || Date.now() - (v.created || 0) > ROOM_TTL){
-          await fb.set(fb.ref(db, `rooms/${code}`), { meta:{ created:Date.now(), host:String(hostName).slice(0,12) } });
+        if(!v || !fresh(v) || v.closed){
+          await fb.set(fb.ref(db, `rooms/${code}`), { meta:{ created:Date.now(), host:String(hostName).slice(0,12), closed:false, locked:false } });
           return code;
         }
       }
       throw new Error("full");
     },
-    async roomExists(code){
+    // 部屋の様子（入る前の確認用）
+    async roomInfo(code){
       await ready;
-      if(!okCode(code)) return false;
+      if(!okCode(code)) return { exists:false };
       const s = await fb.get(fb.ref(db, `rooms/${code}/meta`));
-      const v = s.val();
-      return !!v && Date.now() - (v.created || 0) < ROOM_TTL;
+      const m = s.val();
+      if(!fresh(m)) return { exists:false };
+      let count = 0;
+      try{ const ps = await fb.get(fb.ref(db, `rooms/${code}/peers`)); count = Object.keys(ps.val() || {}).length; }catch(e){}
+      return { exists:true, host:m.host || "", closed:!!m.closed, locked:!!m.locked, count };
     },
-    // 部屋に入る。返り値は「参加者の状態を共有する」ための小さな道具箱
+    // 部屋に入る
     async join(code){
       await ready;
-      const peersRef = fb.ref(db, `rooms/${code}/peers`);
+      const base = `rooms/${code}`;
+      const peersRef = fb.ref(db, `${base}/peers`);
       const meRef = fb.push(peersRef);
       const myId = meRef.key;
-      let mine = {};
-      const peerH = [], connH = [], errH = [];
-      let last = [];
-      let connected = false;
+      const avRef = fb.ref(db, `${base}/av/${myId}`);
+      let mine = {}, myAv = "";
+      const peerH = [], connH = [], errH = [], mediaH = [], metaH = [];
+      let rawPeers = {}, avs = {}, last = [], connected = false, left = false;
+      const unsubs = [];
+      const fail = err => { if(!left) errH.forEach(f => f({ code:"revoked", message:String(err) })); };
 
-      const write = () => fb.set(meRef, { p:JSON.stringify(mine), t:Date.now() }).catch(err => errH.forEach(f => f({ code:"revoked", message:String(err) })));
+      const write = () => left ? Promise.resolve() : fb.set(meRef, { p:JSON.stringify(mine), t:Date.now() }).catch(fail);
       fb.onDisconnect(meRef).remove();
+      fb.onDisconnect(avRef).remove();
       await write();
 
-      fb.onValue(peersRef, snap => {
-        const val = snap.val() || {};
-        const arr = Object.entries(val).map(([k, v]) => {
+      const emit = () => {
+        const arr = Object.entries(rawPeers).map(([k, v]) => {
           let pr = {};
           try{ pr = JSON.parse(v && v.p) || {}; }catch(e){}
-          return { peer:k, presence:pr, isMe:k === myId, sameTab:k === myId, kind:"viewer", guest:false, by:null, updatedAt:(v && v.t) || 0 };
+          return { peer:k, presence:pr, avatar:avs[k] || "", isMe:k === myId, sameTab:k === myId, updatedAt:(v && v.t) || 0 };
         });
-        if(!arr.some(x => x.isMe)) arr.push({ peer:myId, presence:mine, isMe:true, sameTab:true, kind:"viewer", guest:false, by:null, updatedAt:Date.now() });
+        if(!arr.some(x => x.isMe)) arr.push({ peer:myId, presence:mine, avatar:myAv, isMe:true, sameTab:true, updatedAt:Date.now() });
         last = arr;
-        peerH.forEach(h => h({ peers:arr, joined:[], left:[], updated:[] }));
-      }, err => errH.forEach(f => f({ code:"revoked", message:String(err) })));
-
-      fb.onValue(fb.ref(db, ".info/connected"), s => {
+        peerH.forEach(h => h({ peers:arr }));
+      };
+      unsubs.push(fb.onValue(peersRef, snap => { rawPeers = snap.val() || {}; emit(); }, fail));
+      unsubs.push(fb.onValue(fb.ref(db, `${base}/av`), snap => { avs = snap.val() || {}; emit(); }, () => {}));
+      const mediaRef = fb.ref(db, `${base}/media`);
+      const onMediaSnap = s => mediaH.forEach(h => h(s.key, s.val()));
+      unsubs.push(fb.onChildAdded(mediaRef, onMediaSnap, () => {}));
+      unsubs.push(fb.onChildChanged(mediaRef, onMediaSnap, () => {}));
+      unsubs.push(fb.onValue(fb.ref(db, `${base}/meta`), s => metaH.forEach(h => h(s.val() || { closed:true })), () => {}));
+      unsubs.push(fb.onValue(fb.ref(db, ".info/connected"), s => {
         connected = !!s.val();
-        if(connected){ fb.onDisconnect(meRef).remove(); write(); }
+        if(connected && !left){
+          fb.onDisconnect(meRef).remove(); fb.onDisconnect(avRef).remove();
+          write(); if(myAv) fb.set(avRef, myAv).catch(() => {});
+        }
         connH.forEach(h => h(connected));
-      });
+      }));
 
       return {
         code, myId,
@@ -87,10 +104,20 @@
           mine = JSON.parse(JSON.stringify(mine));
           return write();
         },
-        peers(){ return last; },
-        onPeers(h, onErr){ peerH.push(h); if(onErr) errH.push(onErr); setTimeout(() => h({ peers:last, joined:[], left:[], updated:[] }), 0); return () => {}; },
-        onConnection(h, onErr){ connH.push(h); if(onErr) errH.push(onErr); setTimeout(() => h(connected), 0); return () => {}; },
-        connected(){ return connected; }
+        setAvatar(str){ myAv = String(str || ""); return fb.set(avRef, myAv).catch(() => {}); },
+        setMedia(key, str){ return fb.set(fb.ref(db, `${base}/media/${key}`), String(str)).catch(() => {}); },
+        setMeta(patch){ return fb.update(fb.ref(db, `${base}/meta`), patch).catch(() => {}); },
+        onPeers(h, onErr){ peerH.push(h); if(onErr) errH.push(onErr); setTimeout(() => h({ peers:last }), 0); },
+        onConnection(h, onErr){ connH.push(h); if(onErr) errH.push(onErr); setTimeout(() => h(connected), 0); },
+        onMedia(h){ mediaH.push(h); },
+        onMeta(h){ metaH.push(h); },
+        connected(){ return connected; },
+        async leave(){
+          left = true;
+          unsubs.forEach(u => { try{ u(); }catch(e){} });
+          try{ await fb.onDisconnect(meRef).cancel(); await fb.onDisconnect(avRef).cancel(); }catch(e){}
+          try{ await fb.remove(meRef); await fb.remove(avRef); }catch(e){}
+        }
       };
     }
   };
