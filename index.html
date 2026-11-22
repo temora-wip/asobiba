@@ -334,6 +334,110 @@ body:not(.mode-moji) .m-mj{display:none!important}
 .kanagrid.pick .kana{font-size:18px;padding:8px 0}
 .kanagrid.pick .kana.sel{background:var(--blue);color:#032}
 
+/* ===== background visibility ===== */
+.card{background:rgba(24,28,58,var(--cardA,1))}
+.modal .card,.volpop{background:var(--panel)}
+.rng{display:grid;grid-template-columns:auto auto minmax(0,1fr) auto;gap:6px;align-items:center;font-size:12px;color:var(--muted);margin-top:8px}
+.rng label{color:var(--text);font-size:13px;white-space:nowrap}
+.rng input[type=range]{padding:0}
+
+/* ===== sugoroku v3 (board game style) ===== */
+body.mode-sugoroku .wrap{max-width:1680px}
+@media(min-width:1100px){ body.mode-sugoroku .layout{grid-template-columns:minmax(0,1fr) 300px} }
+body.mode-sugoroku.sg-on #peopleCard{display:none}
+.sgbar{display:flex;align-items:center;gap:10px;border-radius:14px;padding:10px 14px;background:var(--panel2);font-weight:800;font-size:clamp(17px,2.2vw,24px)}
+.sgbar .sgbt{flex:1;min-width:0}
+.sgbar small{display:block;font-size:14px;font-weight:500;opacity:.9;margin-top:2px}
+.sgbar .sgbb{display:flex;gap:6px;flex:none}
+.sgrbtn{padding:6px 12px;font-size:13px;background:rgba(255,255,255,.15)}
+.sgbar.doubt{background:linear-gradient(160deg,#ff4d6d,#b3213f)}
+.sgbar.lie{background:linear-gradient(160deg,#b3213f,#5e1020)}
+.sgbar.truth{background:linear-gradient(160deg,#2ee59d,#139a63);color:#032}
+.sgbar.win{background:linear-gradient(160deg,#ffcc33,#b38600);color:#221}
+.sgx{display:grid;grid-template-columns:minmax(0,1fr) 230px;gap:12px;align-items:start}
+@media(max-width:1100px){ .sgx{grid-template-columns:minmax(0,1fr)} }
+.sgmain{display:flex;flex-direction:column;gap:10px;min-width:0}
+.sgstage{position:relative;width:100%;border-radius:18px;overflow:hidden}
+.sgsvg{display:block;width:100%;height:auto}
+.sgstage.theme-bg{background:rgba(255,255,255,.06)}
+.sgt[data-ev]{cursor:pointer}
+.sgtoks{position:absolute;inset:0;pointer-events:none}
+.pawn{position:absolute;width:30px;height:36px;margin:-30px 0 0 -15px;transition:left .2s ease,top .2s ease}
+.pawn .pb{position:absolute;left:0;top:0;width:30px;height:30px;border-radius:50% 50% 45% 45%;background:var(--pc);border:3px solid #fff;color:#111;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 0 rgba(0,0,0,.35)}
+.pawn::after{content:"";position:absolute;left:5px;bottom:-2px;width:20px;height:6px;border-radius:50%;background:rgba(0,0,0,.28);z-index:-1}
+.pawn.turn .pb{outline:3px solid var(--gold);outline-offset:1px}
+.pawn.hop .pb{animation:hop .22s ease-out}
+@keyframes hop{0%{transform:translateY(0)}50%{transform:translateY(-12px)}100%{transform:translateY(0)}}
+.bub{position:absolute;left:50%;bottom:40px;transform:translateX(-50%) scale(.6);opacity:0;background:#fff;color:#222;font-weight:800;font-size:16px;padding:4px 10px;border-radius:12px;white-space:nowrap;transition:all .18s;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.bub::after{content:"";position:absolute;left:50%;bottom:-6px;margin-left:-6px;border:6px solid transparent;border-top-color:#fff;border-bottom:0}
+.bub.show{opacity:1;transform:translateX(-50%) scale(1)}
+.bub.red{background:#ff2d55;color:#fff}.bub.red::after{border-top-color:#ff2d55}
+.sgdie{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:4px;pointer-events:none;z-index:60}
+.sgdie .dface{width:clamp(44px,6vw,70px);height:clamp(44px,6vw,70px);border-radius:14px;background:#fff;border:2px solid #444441;box-shadow:0 6px 0 #888780;display:flex;align-items:center;justify-content:center;font-size:clamp(22px,3vw,36px);font-weight:800;color:#2c2c2a}
+.sgdie .dcap{font-size:12px;font-weight:800;background:rgba(20,22,44,.85);color:#fff;border-radius:8px;padding:2px 8px;white-space:nowrap}
+.sgdie.idle .dface{opacity:.9}
+.sgdie.roll .dface{animation:droll .9s ease-out}
+.sgdie.shake .dface{animation:dshake .5s infinite}
+.sgdie.true .dface{border-color:#139a63;box-shadow:0 6px 0 #139a63}
+.sgdie.lie .dface{border-color:#b3213f;box-shadow:0 6px 0 #b3213f}
+@keyframes droll{0%{transform:translateY(-40px) rotate(0)}40%{transform:translateY(0) rotate(300deg)}60%{transform:translateY(-14px) rotate(400deg)}80%{transform:translateY(0) rotate(700deg)}100%{transform:rotate(720deg)}}
+@keyframes dshake{0%,100%{transform:rotate(0)}25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
+.pips{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);width:70%;height:70%;gap:6%}
+.pips i{border-radius:50%}.pips i.on{background:#2c2c2a}
+.sgpv{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(20,22,44,.85);border-radius:12px;padding:8px 14px;font-size:14px;font-weight:800;text-align:center}
+.sglegend{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+@media(max-width:700px){ .sglegend{grid-template-columns:repeat(2,minmax(0,1fr))} }
+.lgi{display:flex;gap:8px;align-items:flex-start;text-align:left;background:rgba(20,24,54,.85);border:1px solid var(--line);border-radius:12px;padding:8px;font-weight:500}
+.lgi .sw{flex:none;width:20px;height:18px;border-radius:5px;margin-top:2px}
+.lgi b{display:block;font-size:13px}
+.lgi small{display:block;font-size:12px;color:var(--muted);line-height:1.45;margin-top:2px}
+.sgside{display:flex;flex-direction:column;gap:10px}
+.sbox{background:rgba(20,24,54,.85);border:1px solid var(--line);border-radius:14px;padding:10px}
+.sbox h4{margin:0 0 6px;font-size:14px;display:flex;justify-content:space-between}
+.sbox h4 small{color:var(--muted);font-weight:500}
+.spl{display:flex;align-items:center;gap:8px;padding:5px 6px;border-radius:10px;font-size:14px}
+.spl.turn{background:rgba(255,204,51,.16);outline:1px solid var(--gold)}
+.spl .pd2{flex:none;width:24px;height:24px;border-radius:50%;border:2px solid #fff;color:#111;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.spl .spn{flex:1;min-width:0;word-break:break-all}
+.spl .spn small{color:var(--muted);font-weight:500}
+.spl .spn .tb{display:inline-block;margin-left:4px;background:var(--gold);color:#221;border-radius:6px;padding:0 5px;font-size:11px;font-weight:800}
+.spl .x2{color:var(--gold);font-size:12px}
+.spl .sp{font-weight:800;color:var(--gold)}
+/* result */
+.sgres{position:absolute;inset:0;z-index:80;background:rgba(18,14,50,.92);overflow:auto;display:flex;justify-content:center;align-items:flex-start;padding:14px}
+.rbox{position:relative;width:100%;max-width:760px;text-align:center}
+.rtitle{font-size:clamp(22px,3.2vw,34px);font-weight:800;color:var(--gold);animation:pop .5s ease-out}
+.rsub{color:#cfd4ff;margin-top:4px}
+@keyframes pop{0%{transform:scale(.4);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+.podium{display:flex;justify-content:center;align-items:flex-end;gap:12px;margin:14px 0}
+.pcol{width:min(140px,28%);display:flex;flex-direction:column;align-items:center;animation:rise .7s ease-out both}
+.pcol.p1{animation-delay:.6s}.pcol.p2{animation-delay:.3s}.pcol.p3{animation-delay:0s}
+@keyframes rise{0%{transform:translateY(40px);opacity:0}100%{transform:none;opacity:1}}
+.pav{width:48px;height:48px;border-radius:50%;border:3px solid #fff;color:#111;font-weight:800;font-size:20px;display:flex;align-items:center;justify-content:center;margin-bottom:4px}
+.p1 .pav{width:60px;height:60px;font-size:24px}
+.crown{font-size:26px;animation:pop .6s .9s both}
+.pnm{font-weight:800;font-size:14px;word-break:break-all}
+.pstep{width:100%;margin-top:4px;border-radius:10px 10px 0 0;font-size:26px;font-weight:800;padding-top:6px}
+.p1 .pstep{height:100px;background:#ef9f27;color:#412402}
+.p2 .pstep{height:70px;background:#b4b2a9;color:#2c2c2a}
+.p3 .pstep{height:48px;background:#d85a30;color:#4a1b0c}
+.rtable{overflow-x:auto}
+.rtable table{width:100%;border-collapse:collapse;font-size:13px;min-width:460px}
+.rtable th,.rtable td{padding:6px 4px;border-bottom:1px solid #3c3489}
+.rtable th{color:#afa9ec;font-weight:500}
+.rtable td.nm{font-weight:800;word-break:break-all}
+.rtable tr.me td{background:rgba(255,204,51,.12)}
+.rnote{font-size:12px;color:#afa9ec;margin-top:6px}
+.awards{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:12px}
+.awards span{background:#3c3489;border-radius:10px;padding:6px 12px;font-size:13px;font-weight:800}
+.rbtns{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:14px}
+.confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.confetti i{position:absolute;top:-20px;width:9px;height:14px;border-radius:2px;animation:fall 3s linear infinite}
+@keyframes fall{0%{transform:translateY(-20px) rotate(0)}100%{transform:translateY(110vh) rotate(720deg)}}
+@media(max-width:600px){ .pawn{width:22px;height:28px;margin:-24px 0 0 -11px} .pawn .pb{width:22px;height:22px;font-size:11px;border-width:2px} .pawn::after{left:3px;width:16px} .bub{font-size:13px;bottom:30px} }
+.sgstage.showres{min-height:min(860px,calc(100vh - 140px))}
+@media(max-width:600px){ .sgstage.showres{min-height:720px} .sgres{padding:8px} }
+
 </style>
 </head>
 <body>
@@ -453,6 +557,8 @@ body:not(.mode-moji) .m-mj{display:none!important}
           <details class="sec2 m-sg" id="secSg" open>
             <summary>ダウトすごろく</summary>
             <p class="small muted" style="margin:8px 0">いまいる司会と回答者の全員（2〜6人）で遊びます。始めたあとは自動で進むので、ボタンを押す必要はありません。</p>
+            <div class="small muted">盤の景色（全員に反映）</div>
+            <div class="chips" id="sgThemeChips" style="margin-bottom:8px"></div>
             <div class="ctrlbar">
               <button class="b-open wide" id="bSgStart">🎲 いまいる人でゲーム開始</button>
               <button id="bSgForce" class="wide hidden">⏭ 次へ進める（止まったとき）</button>
@@ -479,6 +585,9 @@ body:not(.mode-moji) .m-mj{display:none!important}
             <div class="small muted" style="margin-top:8px">背景（全員に反映）</div>
             <div class="bgchips" id="bgChips"></div>
             <div class="row" style="margin-top:6px"><input type="file" id="bgFile" accept="image/*" style="font-size:12px"></div>
+            <div class="rng"><label>枠の透け具合</label><span>見やすさ</span><input type="range" id="stGlass" min="0" max="100" step="5"><span>背景</span></div>
+            <div class="rng"><label>背景画像の暗さ</label><span>明るく</span><input type="range" id="stDim" min="0" max="90" step="5"><span>暗く</span></div>
+            <div class="small muted">透かすほど背景がよく見え、文字は読みにくくなります（全員に反映）</div>
             <div class="small muted" style="margin-top:10px">BGM（内蔵曲は全員の端末で流れます）</div>
             <div class="chips" id="bgmChips"></div>
             <div class="row" style="margin-top:6px"><label>手持ちの曲（司会のPCだけ）</label><input type="file" id="bgmFile" accept="audio/*" style="font-size:12px"></div>
@@ -514,7 +623,7 @@ body:not(.mode-moji) .m-mj{display:none!important}
 
         <div class="card guide hidden" id="guide"></div>
 
-        <div class="card">
+        <div class="card" id="peopleCard">
           <h3 id="peopleTitle">参加者</h3>
           <div class="people" id="people"></div>
           <div class="row m-quiz hidden" id="rightsBar" style="margin-top:10px">
@@ -545,8 +654,7 @@ body:not(.mode-moji) .m-mj{display:none!important}
 <script src="config.js"></script>
 <script src="net.js"></script>
 <script>
-(function(){
-"use strict";
+(function(){"use strict";
 // ===== helpers =====
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -756,7 +864,7 @@ function newGame(mode){
            q:{ idx:-1, total:0, text:"", ans:"", showText:true, showAns:false }, qn:0,
            scoresAll:{ normal:{}, mosaic:{}, sugoroku:{}, moji:{} }, pts:{ ok:1, ng:0 }, img:null, sg:null, mj:null,
            rule:{ t:"std", n:3, pp:[3,2,1] }, ruleSeq:0, locks:[], rest:{}, colors:{},
-           st:{ bg:"night", bgm:"none", okMode:"fixed", ok:0, ngMode:"fixed", ng:0 },
+           st:{ bg:"night", bgm:"none", okMode:"fixed", ok:0, ngMode:"fixed", ng:0, glass:25, dim:45, sgt:"grass" },
            snd:{ ok:0, ng:0, okSeq:0, ngSeq:0 }, locked:false };
 }
 const SC = () => game.scoresAll[game.mode];
@@ -854,8 +962,10 @@ let stageKey = "";
 function applyStage(force){
   const st = (game && game.st) || { bg:"night", bgm:"none" };
   let bg = BGS[st.bg] ? BGS[st.bg].css : BGS.night.css;
-  if(st.bg === "custom" && mediaCache.bg) bg = `linear-gradient(rgba(10,12,30,.55),rgba(10,12,30,.8)), url("${mediaCache.bg}") center/cover fixed`;
-  const key = st.bg + "|" + st.bgm + "|" + (st.bg === "custom" ? (mediaCache.bg || "").length : 0);
+  const dimA = Math.max(0, Math.min(.9, (st.dim ?? 45) / 100)), glass = Math.max(0, Math.min(100, st.glass ?? 25));
+  if(st.bg === "custom" && mediaCache.bg) bg = `linear-gradient(rgba(10,12,30,${dimA}),rgba(10,12,30,${Math.min(.95, dimA + .15)})), url("${mediaCache.bg}") center/cover fixed`;
+  document.body.style.setProperty("--cardA", String(1 - glass / 100 * .8));
+  const key = st.bg + "|" + st.bgm + "|" + dimA + "|" + glass + "|" + (st.bg === "custom" ? (mediaCache.bg || "").length : 0);
   if(!force && key === stageKey) return;
   stageKey = key;
   document.body.style.background = bg;
@@ -1530,6 +1640,8 @@ let stageCtlKey = "";
 function renderStageCtl(){
   const st = game.st, key = JSON.stringify(st);
   if(key === stageCtlKey) return; stageCtlKey = key;
+  if(document.activeElement !== $("stGlass")) $("stGlass").value = String(st.glass ?? 25);
+  if(document.activeElement !== $("stDim")) $("stDim").value = String(st.dim ?? 45);
   $("bgChips").innerHTML = Object.entries(BGS).map(([k,v]) => `<button class="bgchip ${st.bg===k?"on":""}" data-bg="${k}" title="${v.name}" style="background:${v.css}"></button>`).join("") +
     (mediaCache.bg ? `<button class="bgchip ${st.bg==="custom"?"on":""}" data-bg="custom" title="自分の画像" style="background:url('${mediaCache.bg}') center/cover"></button>` : "");
   $("bgmChips").innerHTML = Object.entries(BGMS).map(([k,v]) => `<button data-bgm="${k}" class="${st.bgm===k?"on":""}">${v.name}</button>`).join("") +
@@ -1640,6 +1752,9 @@ const doneActs = new Set();
 let mySecret = null;          // {id, r, salt}
 let revealSentFor = null;
 let rolling = false;
+let myHist = [];              // my rolls this session {id,r,salt,seq}
+let sgHist = [];              // host only: declarations {id,n,v,commit}
+let sgTruth = {};             // host only: id -> real roll (-1 = lie, roll unknown)
 
 async function sha256(t){
   try{
@@ -1664,8 +1779,9 @@ function sgStart(){
   const free = []; for(let i = 3; i < SG_LEN; i++) free.push(i);
   free.sort(() => Math.random() - .5);
   evs.forEach((e,k) => { board[free[k]] = e; });
-  const pos = {}, dbl = {}; order.forEach(n => { pos[n] = 0; dbl[n] = false; });
-  game.sg = { len:SG_LEN, order, pos, dbl, board, turn:0, phase:"roll", decl:null, doubt:null, res:null,
+  const pos = {}, dbl = {}, cnt = {}; order.forEach(n => { pos[n] = 0; dbl[n] = false; cnt[n] = { d:0, c:0, ok:0, ng:0, l:null }; });
+  sgHist = []; sgTruth = {};
+  game.sg = { len:SG_LEN, order, pos, dbl, board, cnt, turn:0, phase:"roll", decl:null, doubt:null, res:null,
               left:0, log:[], winner:null, seq:(game.sg ? game.sg.seq + 1 : 1) };
   sgLog(`ゲーム開始！ 順番：${order.join(" → ")}`);
   game.stage = "play";
@@ -1684,6 +1800,8 @@ function processAct(n, a){
     if(sg.phase !== "roll" || n !== sgTurnName()) return false;
     const v = +a.v; if(!(v >= 1 && v <= 6)) return false;
     sg.decl = { id:String(a.id).slice(0,40), n, v, commit:String(a.commit || "").slice(0,64), dbl:!!sg.dbl[n] };
+    if(sg.cnt && sg.cnt[n]) sg.cnt[n].d++;
+    sgHist.push({ id:sg.decl.id, n, v, commit:sg.decl.commit });
     sg.doubt = null; sg.res = null; sg.trust = []; sg.phase = "declared"; sg.left = SG_TIME; sg.dl = Date.now() + SG_TIME * 1000;
     return true;
   }
@@ -1700,6 +1818,11 @@ function processAct(n, a){
     if(sg.order.filter(x => x !== sg.decl.n).every(x => sg.trust.includes(x))) sgResolveNoDoubt();
     return true;
   }
+  if(a.act === "hist"){
+    if(sg.phase !== "end" || a.id !== "h" + sg.seq || !Array.isArray(a.list)) return false;
+    sgVerifyHist(n, a.list.slice(0, 60));
+    return false;
+  }
   if(a.act === "reveal"){
     if(sg.phase !== "doubted" || !sg.decl || n !== sg.decl.n || a.id !== sg.decl.id) return false;
     sgVerifyReveal(+a.r, String(a.salt || ""));
@@ -1715,6 +1838,28 @@ async function sgVerifyReveal(r, salt){
   sgResolveDoubt(ok ? r : null);
   commit();
 }
+async function sgVerifyHist(n, list){
+  const sg = game.sg;
+  for(const e of list){
+    if(!e || typeof e.id !== "string") continue;
+    const h = sgHist.find(x => x.id === e.id && x.n === n); if(!h || sgTruth[h.id] !== undefined) continue;
+    const r = +e.r; if(!(r >= 1 && r <= 6)) continue;
+    if(h.commit && (await sha256(`${r}:${String(e.salt || "")}:${h.id}`)) !== h.commit) continue;
+    sgTruth[h.id] = r;
+  }
+  if(game.sg !== sg) return;
+  sgFinalize(); commit();
+}
+// count lies (including ones nobody caught) once the real rolls are known
+function sgFinalize(){
+  const sg = game.sg; if(!sg || !sg.cnt) return;
+  for(const n of sg.order){
+    const c = sg.cnt[n]; if(!c) continue;
+    const ds = sgHist.filter(x => x.n === n);
+    if(ds.length < c.d || ds.some(x => sgTruth[x.id] === undefined)){ c.l = null; continue; }
+    c.l = ds.filter(x => sgTruth[x.id] !== x.v).length;
+  }
+}
 function sgMove(n, delta){
   const sg = game.sg;
   sg.pos[n] = Math.max(0, Math.min(sg.len, (sg.pos[n] || 0) + delta));
@@ -1724,6 +1869,8 @@ function sgResolveDoubt(r){
   const truth = r !== null && r === d.v;
   if(!truth){
     const back = d.dbl ? 10 : 5;
+    sgTruth[d.id] = r === null ? -1 : r;
+    if(sg.cnt){ if(sg.cnt[d.n]) sg.cnt[d.n].c++; if(sg.cnt[by]) sg.cnt[by].ok++; }
     sgMove(d.n, -back);
     sg.res = { kind:"lie", n:d.n, by, r, v:d.v, back };
     sgLog(r === null ? `${d.n} は答え合わせできず嘘あつかい。${back}マス戻る` : `${by} のダウト成功！ ${d.n} は「${d.v}」と言ったが本当は${r}。${back}マス戻る`);
@@ -1731,6 +1878,8 @@ function sgResolveDoubt(r){
     sgShow(false);
   } else {
     sgMove(by, -3);
+    sgTruth[d.id] = r;
+    if(sg.cnt && sg.cnt[by]) sg.cnt[by].ng++;
     sg.res = { kind:"truth", n:d.n, by, r, v:d.v };
     sgLog(`${d.n} の「${d.v}」は本当だった！ ${by} は3マス戻る`);
     sg.dbl[d.n] = false;
@@ -1752,6 +1901,7 @@ function sgAdvance(n, v){
     sg.winner = n; sg.phase = "end"; sg.res.ev = null;
     sgLog(`🏆 ${n} がゴール！`);
     SC()[n] = (SC()[n] || 0) + 1;
+    sgFinalize();
     return;
   }
   const e = sg.board[sg.pos[n]];
@@ -1837,6 +1987,7 @@ function sgRoll(){
   const r = 1 + Math.floor(Math.random() * 6);
   const salt = rid() + rid();
   mySecret = { id:rid(), r, salt, seq:sg.seq, turnKey:sgTurnKey(), commit:null };
+  myHist.push({ id:mySecret.id, r, salt, seq:sg.seq }); myHist = myHist.slice(-80);
   sha256(`${r}:${salt}:${mySecret.id}`).then(h => { if(mySecret) mySecret.commit = h; });
   let k = 0;
   const t = setInterval(() => {
@@ -1874,8 +2025,152 @@ function sgSelfReveal(){
   revealSentFor = sg.decl.id;
   sgSend({ act:"reveal", id:mySecret.id, r:mySecret.r, salt:mySecret.salt });
 }
-// everyone: react to state changes (sounds + auto reveal)
-let rulesShownFor = null;
+// ---------- look & feel ----------
+const SG_THEMES = {
+  grass:{ name:"🌳 草原", bg:"#a8d97a", patch:"#93cb62", road:"#ecdfb8", edge:"#9b8558", line:"#c9b98c" },
+  sea:{ name:"🏖 海辺", bg:"#f2dea4", patch:"#7cc6ea", road:"#fff7df", edge:"#c7a35e", line:"#e3cc97" },
+  town:{ name:"🌃 夜の町", bg:"#262a52", patch:"#30366a", road:"#4b5080", edge:"#14162c", line:"#f4c84a" },
+  candy:{ name:"🍭 お菓子の国", bg:"#ffd9ea", patch:"#ffc4dd", road:"#fff4f9", edge:"#e08db4", line:"#f3b9d2" },
+  bg:{ name:"🖼 背景画像を使う", bg:null, road:"rgba(255,255,255,.72)", edge:"rgba(15,18,40,.6)", line:"rgba(120,120,150,.7)" }
+};
+// [top, side(thickness), text]
+const SG_TILE = { "":["#ffffff","#b4b2a9","#5f5e5a"], s:["#cecbf6","#534ab7","#26215c"], b:["#f7c1c1","#a32d2d","#501313"],
+  a:["#c0dd97","#3b6d11","#173404"], d:["#fac775","#854f0b","#412402"], start:["#5f5e5a","#2c2c2a","#ffffff"], goal:["#ef9f27","#854f0b","#412402"] };
+function sgTheme(){ const k = game && game.st && game.st.sgt; return SG_THEMES[k] ? k : "grass"; }
+function srand(seed){ let s = (seed >>> 0) || 7; return () => (s = (Math.imul(s, 1664525) + 1013904223) >>> 0) / 4294967296; }
+function sgGeo(cols, len){
+  const CW = 100, RH = 118, PX = 48, PY = 34;
+  const rows = Math.ceil((len + 1) / cols);
+  const W = cols * CW + PX * 2, H = PY * 2 + 74 + (rows - 1) * RH;
+  const pts = [];
+  for(let i = 0; i <= len; i++){
+    const row = Math.floor(i / cols), k = i % cols, col = row % 2 === 0 ? k : cols - 1 - k;
+    pts.push({ x:PX + col * CW + CW / 2, y:PY + 37 + row * RH, row, col });
+  }
+  let d = `M${pts[0].x} ${pts[0].y}`;
+  for(let i = 1; i <= len; i++){
+    const a = pts[i-1], b = pts[i];
+    if(a.row === b.row) d += ` L${b.x} ${b.y}`;
+    else { const bx = a.x + (a.col === cols - 1 ? 44 : -44); d += ` C${bx} ${a.y} ${bx} ${b.y} ${b.x} ${b.y}`; }
+  }
+  const lr = rows - 1, used = new Set(pts.filter(p => p.row === lr).map(p => p.col));
+  let free = null; for(let c = 0; c < cols; c++) if(!used.has(c)){ free = { x:PX + c * CW + CW / 2, y:PY + 37 + lr * RH }; break; }
+  return { CW, RH, PX, PY, W, H, rows, cols, pts, road:d, free };
+}
+function sgDeco(theme, x, y, r){
+  const t = r();
+  if(theme === "grass"){
+    if(t < .45) return `<rect x="${x-3}" y="${y+2}" width="6" height="11" fill="#7a4f1e"/><circle cx="${x}" cy="${y-6}" r="13" fill="#3f8f2a"/><circle cx="${x+8}" cy="${y-12}" r="8" fill="#55a83a"/>`;
+    if(t < .75) return `<circle cx="${x-6}" cy="${y}" r="4" fill="#f4c0d1"/><circle cx="${x+4}" cy="${y+3}" r="4" fill="#fff"/><circle cx="${x+1}" cy="${y-6}" r="4" fill="#fac775"/><circle cx="${x-6}" cy="${y}" r="1.5" fill="#d85a30"/>`;
+    return `<ellipse cx="${x}" cy="${y+4}" rx="20" ry="9" fill="#6fae47"/><ellipse cx="${x-6}" cy="${y}" rx="11" ry="8" fill="#5c9e39"/>`;
+  }
+  if(theme === "sea"){
+    if(t < .4) return `<path d="M${x} ${y+14} Q${x+3} ${y} ${x+1} ${y-12}" stroke="#8a5a2b" stroke-width="5" fill="none"/><ellipse cx="${x-9}" cy="${y-12}" rx="12" ry="4" fill="#2f9a4a" transform="rotate(-25 ${x-9} ${y-12})"/><ellipse cx="${x+11}" cy="${y-12}" rx="12" ry="4" fill="#3aa856" transform="rotate(25 ${x+11} ${y-12})"/><ellipse cx="${x+1}" cy="${y-17}" rx="4" ry="11" fill="#2f9a4a"/>`;
+    if(t < .7) return `<ellipse cx="${x}" cy="${y+2}" rx="24" ry="10" fill="#7cc6ea"/><path d="M${x-16} ${y+2} q6 -6 12 0 q6 -6 12 0" stroke="#fff" stroke-width="2" fill="none"/>`;
+    return `<path d="M${x-8} ${y+6} L${x} ${y-6} L${x+8} ${y+6} Z" fill="#f7c1c1"/><circle cx="${x+14}" cy="${y+4}" r="3" fill="#fff"/>`;
+  }
+  if(theme === "town"){
+    if(t < .55){ const h = 22 + Math.floor(r() * 18), w = 22; let win = "";
+      for(let yy = y + 10 - h + 5; yy < y + 6; yy += 8) for(let xx = x - w/2 + 4; xx < x + w/2 - 3; xx += 7) if(r() < .65) win += `<rect x="${xx}" y="${yy}" width="4" height="4" fill="#fac775"/>`;
+      return `<rect x="${x-w/2}" y="${y+10-h}" width="${w}" height="${h}" fill="#14162c"/>${win}`; }
+    if(t < .8) return `<line x1="${x}" y1="${y+12}" x2="${x}" y2="${y-12}" stroke="#14162c" stroke-width="3"/><circle cx="${x}" cy="${y-14}" r="5" fill="#fac775"/>`;
+    return `<circle cx="${x}" cy="${y}" r="1.8" fill="#fff"/><circle cx="${x+14}" cy="${y-6}" r="1.2" fill="#fff"/>`;
+  }
+  if(theme === "candy"){
+    if(t < .4) return `<line x1="${x}" y1="${y}" x2="${x}" y2="${y+16}" stroke="#fff" stroke-width="3"/><circle cx="${x}" cy="${y-4}" r="11" fill="#ed93b1"/><circle cx="${x}" cy="${y-4}" r="6" fill="none" stroke="#fff" stroke-width="2.5"/>`;
+    if(t < .75) return `<circle cx="${x}" cy="${y}" r="12" fill="#c58b5a"/><circle cx="${x}" cy="${y}" r="10" fill="#f4c0d1"/><circle cx="${x}" cy="${y}" r="4" fill="#ffd9ea"/><rect x="${x-6}" y="${y-6}" width="3" height="1.5" fill="#378add"/><rect x="${x+4}" y="${y+2}" width="3" height="1.5" fill="#639922"/><rect x="${x+1}" y="${y-8}" width="3" height="1.5" fill="#fac775"/>`;
+    return `<ellipse cx="${x}" cy="${y}" rx="9" ry="6" fill="#85b7eb"/><path d="M${x-9} ${y} l-7 -5 v10 Z M${x+9} ${y} l7 -5 v10 Z" fill="#85b7eb"/>`;
+  }
+  return "";
+}
+function sgBoardSvg(sg, geo, theme){
+  const T = SG_THEMES[theme], r = srand((sg.seq || 1) * 977 + theme.length * 31);
+  let bg = "";
+  if(T.bg){
+    bg += `<rect width="${geo.W}" height="${geo.H}" rx="18" fill="${T.bg}"/>`;
+    for(let k = 0; k < 6; k++) bg += `<ellipse cx="${Math.floor(r()*geo.W)}" cy="${Math.floor(r()*geo.H)}" rx="${60+Math.floor(r()*90)}" ry="${24+Math.floor(r()*30)}" fill="${T.patch}" opacity=".7"/>`;
+    if(theme === "town"){ for(let k = 0; k < 40; k++) bg += `<circle cx="${Math.floor(r()*geo.W)}" cy="${Math.floor(r()*geo.H)}" r="${(r()*1.4+.6).toFixed(1)}" fill="#fff" opacity=".7"/>`;
+      bg += `<circle cx="${geo.W-40}" cy="26" r="15" fill="#fde9a8"/><circle cx="${geo.W-34}" cy="22" r="13" fill="${T.bg}"/>`; }
+    // scenery between rows
+    for(let row = -1; row < geo.rows; row++){
+      const gy = row < 0 ? geo.PY - 6 : geo.PY + 37 + row * geo.RH + geo.RH / 2 + 2;
+      if(row >= 0 && row === geo.rows - 1) continue;
+      for(let c = 0; c < geo.cols; c++){
+        if(r() > (row < 0 ? .35 : .62)) continue;
+        const x = geo.PX + c * geo.CW + geo.CW / 2 + (r() - .5) * 46, y = gy + (r() - .5) * 8;
+        bg += sgDeco(theme, Math.round(x), Math.round(y), r);
+      }
+    }
+    if(geo.free) bg += ""; // dice sits there
+  }
+  const road = `<path d="${geo.road}" fill="none" stroke="${T.edge}" stroke-width="44" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="${geo.road}" fill="none" stroke="${T.road}" stroke-width="36" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="${geo.road}" fill="none" stroke="${T.line}" stroke-width="2.5" stroke-dasharray="7 9"/>`;
+  let tiles = "";
+  for(let i = 0; i <= sg.len; i++){
+    const p = geo.pts[i], e = sg.board[i] || "";
+    const kind = i === 0 ? "start" : i === sg.len ? "goal" : e;
+    const [top, side, tx] = SG_TILE[kind] || SG_TILE[""];
+    const w = i === sg.len ? 86 : 78, h = 56, x = p.x - w / 2, y = p.y - h / 2 - 3;
+    let lab;
+    if(i === 0) lab = `<text x="${p.x}" y="${p.y+3}" font-size="15" font-weight="800" fill="${tx}" text-anchor="middle">スタート</text>`;
+    else if(i === sg.len) lab = `<text x="${p.x}" y="${p.y-6}" font-size="18" text-anchor="middle">🏁</text><text x="${p.x}" y="${p.y+15}" font-size="15" font-weight="800" fill="${tx}" text-anchor="middle">ゴール</text>`;
+    else if(e) lab = `<text x="${x+6}" y="${y+13}" font-size="11" fill="${tx}" opacity=".75">${i}</text><text x="${p.x}" y="${p.y-2}" font-size="17" text-anchor="middle">${SG_EV[e].icon}</text><text x="${p.x}" y="${p.y+17}" font-size="13" font-weight="800" fill="${tx}" text-anchor="middle">${SG_EV[e].name}</text>`;
+    else lab = `<text x="${p.x}" y="${p.y+7}" font-size="20" font-weight="800" fill="${tx}" opacity=".55" text-anchor="middle">${i}</text>`;
+    tiles += `<g class="sgt" ${e && i > 0 && i < sg.len ? `data-ev="${e}"` : ""}>
+      <rect x="${x}" y="${y+8}" width="${w}" height="${h}" rx="11" fill="${side}"/>
+      <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="11" fill="${top}" stroke="${side}" stroke-width="1.5"/>${lab}</g>`;
+    if(i === sg.len) tiles += `<line x1="${x+w-10}" y1="${y+2}" x2="${x+w-10}" y2="${y-26}" stroke="#444441" stroke-width="2.5"/><path d="M${x+w-10} ${y-26} l18 6 l-18 6 Z" fill="#e24b4a"/>`;
+  }
+  return `<svg class="sgsvg" viewBox="0 0 ${geo.W} ${geo.H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="すごろくの盤面">${bg}${road}${tiles}</svg>`;
+}
+
+// ---------- shared board state on this device ----------
+let sgSkelKey = "", sgGeoNow = null, sgDisp = {}, sgDispSeq = null, sgResHide = null, sgDieKey = "", histSentFor = null;
+const colorOfN = n => SG_COLORS[game.sg.order.indexOf(n) % SG_COLORS.length];
+function sgCols(){
+  const b = $("board"); const w = (b ? b.clientWidth : 800) - (window.innerWidth >= 1100 ? 250 : 0);
+  return w >= 560 ? 8 : 6;
+}
+function pipsHtml(v){
+  const on = { 1:[4], 2:[0,8], 3:[0,4,8], 4:[0,2,6,8], 5:[0,2,4,6,8], 6:[0,2,3,5,6,8] }[v] || [];
+  return `<div class="pips">${Array.from({ length:9 }, (_,i) => `<i class="${on.includes(i) ? "on" : ""}"></i>`).join("")}</div>`;
+}
+function sgPlacePawns(){
+  const sg = game && game.sg, geo = sgGeoNow; if(!sg || !geo) return;
+  const at = {};
+  for(const n of sg.order){ const c = sgDisp[n] ?? sg.pos[n]; (at[c] = at[c] || []).push(n); }
+  for(const [c, ns] of Object.entries(at)){
+    const p = geo.pts[Math.max(0, Math.min(sg.len, +c))];
+    ns.forEach((n, k) => {
+      const el = document.querySelector(`.pawn[data-n="${CSS.escape(n)}"]`); if(!el) return;
+      const off = (k - (ns.length - 1) / 2) * 20;
+      el.style.left = ((p.x + off) / geo.W * 100) + "%";
+      el.style.top = ((p.y - 8) / geo.H * 100) + "%";
+      el.style.zIndex = String(10 + Math.round(p.y / 10));
+    });
+  }
+}
+// move pawns one square at a time
+setInterval(() => {
+  const sg = game && game.mode === "sugoroku" && game.sg; if(!sg || !sgGeoNow) return;
+  let moved = false;
+  for(const n of sg.order){
+    const t = sg.pos[n]; if(sgDisp[n] === undefined) sgDisp[n] = t;
+    if(sgDisp[n] !== t){
+      const dist = Math.abs(t - sgDisp[n]);
+      sgDisp[n] += Math.sign(t - sgDisp[n]) * (dist > 9 ? 3 : 1);
+      moved = true;
+      const el = document.querySelector(`.pawn[data-n="${CSS.escape(n)}"]`);
+      if(el){ el.classList.remove("hop"); void el.offsetWidth; el.classList.add("hop"); }
+    }
+  }
+  if(moved){ sgPlacePawns(); if(!document.hidden) tone(760, 0, .04, "triangle", .08); }
+}, 230);
+let sgResizeT = 0;
+window.addEventListener("resize", () => { clearTimeout(sgResizeT); sgResizeT = setTimeout(() => { if(game && game.mode === "sugoroku"){ sgSkelKey = ""; render(); } }, 200); });
+
+// ---------- everyone: react to state changes ----------
 function sgRulesHtml(){
   return `<div class="sgrules">
     <div><b>① 振る</b>　自分の番に「サイコロを振る」。出た目は自分にしか見えません 🎲</div>
@@ -1886,74 +2181,176 @@ function sgRulesHtml(){
   </div>`;
 }
 function sgShowRules(){ modal("ダウトすごろくの遊び方", sgRulesHtml(), [{ label:"わかった！", value:true, cls:"b-open" }]); }
+function fanfare(){ [523,659,784,1047].forEach((f,i) => tone(f, i * .13, .22, "square", .1)); tone(1047, .56, .6, "triangle", .18); }
 function sgOnUpdate(prev, sg){
-  if(sg.seq && rulesShownFor !== sg.seq && sg.phase !== "end"){
-    rulesShownFor = sg.seq;
-    if(!document.querySelector(".modal")) sgShowRules();
-  }
   if(sg.phase === "doubted" && sg.decl && sg.decl.n === myName) setTimeout(sgSelfReveal, 50);
+  if(sg.phase === "end" && histSentFor !== sg.seq && sg.order.includes(myName)){
+    histSentFor = sg.seq;
+    const list = myHist.filter(h => h.seq === sg.seq).map(h => ({ id:h.id, r:h.r, salt:h.salt })).slice(-60);
+    setTimeout(() => sgSend({ act:"hist", id:"h" + sg.seq, list }), 300);
+  }
   if(!prev) return;
-  if(sg.phase === "declared" && prev.phase !== "declared") tone(660,0,.08,"triangle",.2);
+  if(sg.phase === "declared" && prev.phase !== "declared"){ tone(660,0,.08,"triangle",.2); sgDieRoll(); }
   if(sg.phase === "doubted" && prev.phase !== "doubted") sfx.buzz();
   if(sg.phase === "result" && prev.phase !== "result" && sg.res){
     if(sg.res.kind === "lie") sfx.ng(); else if(sg.res.kind === "truth") sfx.ok(); else tone(520,0,.1,"sine",.2);
   }
-  if(sg.phase === "end" && prev.phase !== "end") { sfx.ok(); setTimeout(sfx.ok, 600); }
+  if(sg.phase === "end" && prev.phase !== "end"){ sgResHide = null; setTimeout(fanfare, 900); }
 }
+let dieRollUntil = 0;
+function sgDieRoll(){ dieRollUntil = Date.now() + 900; sgDieKey = ""; setTimeout(() => { sgDieKey = ""; if(game && game.sg) sgUpdateDie(game.sg); }, 950); }
+function sgUpdateDie(sg){
+  const el = $("sgDie"); if(!el) return;
+  const rollingNow = Date.now() < dieRollUntil;
+  let face = "?", cls = "", cap = "";
+  if(sg.phase === "roll"){ cls = "idle"; cap = `${esc(sgTurnName())} の番`; face = "🎲"; }
+  else if(sg.phase === "declared"){ cap = `「${sg.decl.v}」と宣言`; }
+  else if(sg.phase === "doubted"){ cls = "shake"; cap = "答え合わせ中…"; }
+  else if(sg.phase === "result" && sg.res){
+    if(sg.res.r){ face = sg.res.r; cls = sg.res.kind === "truth" ? "true" : "lie"; cap = sg.res.kind === "truth" ? "本当だった！" : "ウソだった！"; }
+    else if(sg.res.kind === "pass"){ cap = `${sg.res.v}マス進む`; }
+    else { cap = "答え合わせできず"; }
+  } else if(sg.phase === "end"){ cls = "idle"; face = "🏁"; cap = "ゴール！"; }
+  if(rollingNow){ cls = "roll"; face = "?"; }
+  const key = [face, cls, cap].join("|"); if(key === sgDieKey) return; sgDieKey = key;
+  el.className = "sgdie " + cls;
+  el.innerHTML = `<div class="dface">${typeof face === "number" ? pipsHtml(face) : `<span>${face}</span>`}</div><div class="dcap">${cap}</div>`;
+}
+function sgUpdateBubbles(sg){
+  document.querySelectorAll(".pawn").forEach(el => {
+    const n = el.dataset.n, b = el.querySelector(".bub"); let t = "", c = "";
+    if(sg.decl && (sg.phase === "declared" || sg.phase === "doubted") && n === sg.decl.n && Date.now() >= dieRollUntil){ t = `${sg.decl.v}！`; }
+    if(sg.phase === "doubted" && sg.doubt && n === sg.doubt.by){ t = "ダウト！"; c = "red"; }
+    el.classList.toggle("turn", sg.phase !== "end" && n === sgTurnName());
+    if(b.textContent !== t){ b.textContent = t; }
+    b.className = "bub" + (t ? " show" : "") + (c ? " " + c : "");
+  });
+}
+setInterval(() => { if(game && game.mode === "sugoroku" && game.sg && $("sgDie")){ sgUpdateDie(game.sg); sgUpdateBubbles(game.sg); } }, 300);
 
 // ---------- sugoroku render ----------
+function SCx(){ return (game && game.scoresAll && game.scoresAll.sugoroku) || {}; }
+function sgLegendHtml(){
+  return `<div class="sglegend">${Object.entries(SG_EV).map(([k,e]) => `<button class="lgi" data-ev="${k}"><span class="sw" style="background:${SG_TILE[k][0]};border-bottom:4px solid ${SG_TILE[k][1]}"></span><span><b>${e.icon} ${e.name}</b><small>${esc(e.desc)}</small></span></button>`).join("")}</div>`;
+}
 function renderSg(){
-  const g = game, sg = g.sg, board = $("board");
-  renderPeople();
-  if(!sg){
-    board.innerHTML = `<div class="qhead"><span class="badge">🎲 ダウトすごろく</span></div>
-      <div class="sgbanner">${role === "host" ? "右の「いまいる人でゲーム開始」を押してください" : "司会がゲームを始めるのを待っています"}<small>2〜6人で遊べます（おすすめは4人）</small></div>
-      <div class="sglog">
-        <div>① 自分の番が来たら、自分の画面でサイコロを振る（出た目は自分にしか見えない）</div>
-        <div>② 1〜6の好きな目を宣言する（嘘でもOK）</div>
-        <div>③ 怪しいと思ったら10秒以内に「ダウト！」。嘘がばれたら5マス戻る／本当ならダウトした人が3マス戻る</div>
-        <div>④ 最初に30マス目にゴールした人の勝ち</div>
+  const g = game, board = $("board");
+  document.body.classList.toggle("sg-on", !!g.sg);
+  let sg = g.sg;
+  const preview = !sg;
+  if(preview) sg = { seq:0, len:SG_LEN, order:[], pos:{}, dbl:{}, board:Array(SG_LEN + 1).fill(""), log:[], phase:"none" };
+  const theme = sgTheme(), cols = sgCols();
+  const key = [sg.seq, cols, theme, sg.order.join(","), sg.board.join("")].join("|");
+  if(key !== sgSkelKey){
+    sgSkelKey = key;
+    const geo = sgGeoNow = sgGeo(cols, sg.len);
+    if(sgDispSeq !== sg.seq){ sgDisp = {}; sgDispSeq = sg.seq; }
+    const pawns = sg.order.map(n => `<div class="pawn" data-n="${esc(n)}" style="--pc:${colorOfN(n)}" title="${esc(n)}"><span class="pb">${esc(n.slice(0,1))}</span><span class="bub"></span></div>`).join("");
+    const dieAt = geo.free ? `left:${geo.free.x / geo.W * 100}%;top:${geo.free.y / geo.H * 100}%` : "right:2%;bottom:2%";
+    board.innerHTML = `
+      <div class="qhead"><span class="badge">🎲 ダウトすごろく</span><span class="qno" id="sgWins"></span></div>
+      <div class="sgbar" id="sgBan"></div>
+      <div class="sgx">
+        <div class="sgmain">
+          <div class="sgstage theme-${theme}">
+            ${sgBoardSvg(sg, geo, theme)}
+            <div class="sgtoks">${pawns}</div>
+            ${preview ? `<div class="sgpv">盤面の見本（ゲームが始まるとマスの効果が置かれます）</div>` : `<div class="sgdie" id="sgDie" style="${dieAt}"></div>`}
+            <div class="sgres hidden" id="sgRes"></div>
+          </div>
+          ${sgLegendHtml()}
+        </div>
+        <div class="sgside" id="sgSide"></div>
       </div>`;
-    renderSgMe(); return;
+    sgDieKey = ""; sgResKey = "";
+    sgPlacePawns();
   }
-  const colorOf = n => SG_COLORS[sg.order.indexOf(n) % SG_COLORS.length];
-  const tokens = i => sg.order.filter(n => sg.pos[n] === i).map(n => `<span class="tok" style="background:${colorOf(n)}" title="${esc(n)}">${esc(n.slice(0,1))}</span>`).join("");
-  let cells = "";
-  for(let i = 0; i <= sg.len; i++){
-    const e = sg.board[i];
-    const cls = i === sg.len ? "goal" : (e ? "e-" + e : "");
-    const label = i === 0 ? "スタート" : i === sg.len ? "🏁 ゴール" : (e ? `<span class="ev">${SG_EV[e].icon}</span><span class="evn">${SG_EV[e].name}</span>` : "");
-    cells += `<div class="cell ${cls}" ${e ? `data-ev="${e}"` : ""}><span class="no">${i===0||i===sg.len?"":i}</span>${label}<div class="toks">${tokens(i)}</div></div>`;
-  }
-  // banner
-  let bcls = "", btxt = "", bsub = "";
-  const tn = sgTurnName();
-  if(sg.phase === "roll"){ btxt = `${esc(tn)} の番`; bsub = "サイコロを振って、出た目を宣言します"; }
-  else if(sg.phase === "declared"){ btxt = `${esc(sg.decl.n)}「${sg.decl.v} が出た！」`; bsub = `信じる？ ダウト？ あと${sg.left}秒（信じた人 ${(sg.trust||[]).length}/${sg.order.length - 1}）${sg.decl.dbl ? "・ばれたら10マス戻る！" : ""}`; }
-  else if(sg.phase === "doubted"){ bcls = "doubt"; btxt = `${esc(sg.doubt.by)}：ダウト！`; bsub = `${esc(sg.decl.n)} の本当の目を答え合わせ中…`; }
-  else if(sg.phase === "result" && sg.res){
-    const r = sg.res;
-    if(r.kind === "lie"){ bcls = "lie"; btxt = r.r === null ? `${esc(r.n)} は答え合わせできず…` : `嘘だった！ 本当の目は ${r.r}`; bsub = `${esc(r.n)} は${r.back}マス戻る`; }
-    else if(r.kind === "truth"){ bcls = "truth"; btxt = `本当だった！ 目は ${r.r}`; bsub = `${esc(r.by)} は3マス戻る／${esc(r.n)} は${r.v}マス進む`; }
-    else { btxt = `${esc(r.n)} は ${r.v} マス進む`; bsub = r.all ? "全員が信じた！" : "誰もダウトしなかった"; }
-    if(r.evText) bsub += `<br>${SG_EV[r.ev] ? SG_EV[r.ev].icon + " " : ""}${esc(r.evText)}`;
-  } else if(sg.phase === "end"){ bcls = "win"; btxt = `🏆 ${esc(sg.winner)} の勝ち！`; bsub = role === "host" ? "「いまいる人でゲーム開始」でもう一度遊べます" : "司会がもう一度始めるのを待っています"; }
-  const st = [...sg.order].sort((a,b) => sg.pos[b] - sg.pos[a]).map(n => `
-    <div class="st ${n===tn && sg.phase!=="end" ? "turn" : ""}"><span class="tok" style="background:${colorOf(n)}">${esc(n.slice(0,1))}</span>
-      <span>${esc(n)}${n===myName?"（あなた）":""}${sg.dbl[n] ? " <span class='small' style='color:var(--gold)'>✖2</span>" : ""}</span>
-      <span class="sp">${sg.pos[n]} / ${sg.len}</span></div>`).join("");
-  sgHostButtons();
   const wins = Object.entries(SCx()).filter(([,v]) => v > 0).map(([n,v]) => `${esc(n)} ${v}勝`).join("　");
-  board.innerHTML = `
-    <div class="qhead"><span class="badge">🎲 ダウトすごろく</span><span class="qno">${wins ? "通算：" + wins : ""}</span></div>
-    <div class="sgbanner ${bcls}">${btxt}<small>${bsub}</small></div>
-    <div class="sgboard">${cells}</div>
-    <div class="legend">${Object.entries(SG_EV).map(([k,e]) => `<button class="legbtn e-${k}" data-ev="${k}">${e.icon} ${e.name}</button>`).join("")}<button class="legbtn" data-rules="1">❓ 遊び方</button></div>
-    <div class="standings">${st}</div>
-    <div class="sglog">${sg.log.map(t => `<div>・${esc(t)}</div>`).join("")}</div>`;
+  $("sgWins").innerHTML = wins ? "通算：" + wins : "";
+  sgHostButtons();
+  // status bar
+  let bcls = "", btxt = "", bsub = "";
+  const rulesBtn = `<button class="small sgrbtn" data-rules="1">？ 遊び方</button>`;
+  if(preview){
+    btxt = role === "host" ? "右の「いまいる人でゲーム開始」を押してください" : "司会がゲームを始めるのを待っています";
+    bsub = "2〜6人で遊べます（おすすめは4人）";
+  } else {
+    const tn = sgTurnName();
+    if(sg.phase === "roll"){ btxt = `${esc(tn)} の番`; bsub = "サイコロを振って、出た目を宣言します"; }
+    else if(sg.phase === "declared"){
+      const dest = Math.min(sg.len, sg.pos[sg.decl.n] + sg.decl.v), de = sg.board[dest];
+      const hint = dest >= sg.len ? "🏁 ゴール" : de ? `${SG_EV[de].icon}${SG_EV[de].name}マス` : `${dest}マス目`;
+      btxt = `${esc(sg.decl.n)}「${sg.decl.v} が出た！」`;
+      bsub = `本当なら → ${hint}　｜　信じる？ ダウト？ あと${sg.left}秒（信じた人 ${(sg.trust||[]).length}/${sg.order.length - 1}）${sg.decl.dbl ? "・ばれたら10マス戻る！" : ""}`;
+    }
+    else if(sg.phase === "doubted"){ bcls = "doubt"; btxt = `${esc(sg.doubt.by)}：ダウト！`; bsub = `${esc(sg.decl.n)} の本当の目を答え合わせ中…`; }
+    else if(sg.phase === "result" && sg.res){
+      const r = sg.res;
+      if(r.kind === "lie"){ bcls = "lie"; btxt = r.r === null ? `${esc(r.n)} は答え合わせできず…` : `ウソだった！ 本当の目は ${r.r}`; bsub = `${esc(r.n)} は${r.back}マス戻る`; }
+      else if(r.kind === "truth"){ bcls = "truth"; btxt = `本当だった！ 目は ${r.r}`; bsub = `${esc(r.by)} は3マス戻る／${esc(r.n)} は${r.v}マス進む`; }
+      else { btxt = `${esc(r.n)} は ${r.v} マス進む`; bsub = r.all ? "全員が信じた！" : "誰もダウトしなかった"; }
+      if(r.evText) bsub += `　${SG_EV[r.ev] ? SG_EV[r.ev].icon + " " : ""}${esc(r.evText)}`;
+    } else if(sg.phase === "end"){ bcls = "win"; btxt = `🏆 ${esc(sg.winner)} の勝ち！`; bsub = role === "host" ? "「もう一度遊ぶ」で新しい盤面から始められます" : "司会がもう一度始めるのを待っています"; }
+  }
+  const resBtn = sg.phase === "end" && sgResHide === sg.seq ? `<button class="small sgrbtn" data-showres="1">🏆 結果を見る</button>` : "";
+  $("sgBan").className = "sgbar " + bcls;
+  $("sgBan").innerHTML = `<div class="sgbt">${btxt}<small>${bsub}</small></div><div class="sgbb">${resBtn}${rulesBtn}</div>`;
+  // side: players + log
+  if(!preview){
+    const lead = [...sg.order].sort((a,b) => sg.pos[b] - sg.pos[a])[0];
+    const st = [...sg.order].sort((a,b) => sg.pos[b] - sg.pos[a]).map(n => `
+      <div class="spl ${n === sgTurnName() && sg.phase !== "end" ? "turn" : ""}"><span class="pd2" style="background:${colorOfN(n)}">${esc(n.slice(0,1))}</span>
+        <span class="spn">${esc(n)}${n === myName ? "<small>（あなた）</small>" : ""}${n === lead && sg.pos[n] > 0 ? " 👑" : ""}${sg.dbl[n] ? " <span class='x2'>✖2</span>" : ""}${n === sgTurnName() && sg.phase !== "end" ? "<small class='tb'>手番</small>" : ""}</span>
+        <span class="sp">${sg.pos[n]}</span></div>`).join("");
+    $("sgSide").innerHTML = `<div class="sbox"><h4>参加者 <small>マス</small></h4>${st}</div>
+      <div class="sbox"><h4>ログ</h4><div class="sglog">${sg.log.map(t => `<div>・${esc(t)}</div>`).join("")}</div></div>`;
+    sgUpdateDie(sg); sgUpdateBubbles(sg); sgRenderResult(sg);
+  } else {
+    $("sgSide").innerHTML = `<div class="sbox"><h4>遊び方</h4><div class="sglog">
+      <div>① 自分の番に、自分の画面でサイコロを振る（出た目は自分にしか見えない）</div>
+      <div>② 1〜6の目を宣言する（ウソでもOK）</div>
+      <div>③ ほかの人は「信じる」か「ダウト！」</div>
+      <div>④ 最初にゴールした人の勝ち</div></div></div>`;
+  }
   renderSgMe();
 }
-function SCx(){ return (game && game.scoresAll && game.scoresAll.sugoroku) || {}; }
+// ---------- result screen ----------
+let sgResKey = "";
+function sgRenderResult(sg){
+  const el = $("sgRes"); if(!el) return;
+  const show = sg.phase === "end" && sgResHide !== sg.seq;
+  el.classList.toggle("hidden", !show);
+  el.parentElement.classList.toggle("showres", show);
+  if(!show){ sgResKey = ""; return; }
+  const key = JSON.stringify([sg.seq, sg.cnt, sg.pos, role]); if(key === sgResKey) return; sgResKey = key;
+  const cnt = sg.cnt || {};
+  const rank = [sg.winner, ...sg.order.filter(n => n !== sg.winner).sort((a,b) => sg.pos[b] - sg.pos[a])];
+  const C = n => cnt[n] || { d:0, c:0, ok:0, ng:0, l:null };
+  const pod = [rank[1], rank[0], rank[2]].map((n, k) => {
+    if(!n) return `<div class="pcol"></div>`;
+    const place = [2,1,3][k];
+    return `<div class="pcol p${place}">${place === 1 ? `<div class="crown">👑</div>` : ""}<div class="pav" style="background:${colorOfN(n)}">${esc(n.slice(0,1))}</div><div class="pnm">${esc(n)}</div><div class="pstep">${place}</div></div>`;
+  }).join("");
+  const rows = rank.map((n, i) => { const c = C(n); return `<tr class="${n === myName ? "me" : ""}"><td>${i+1}</td><td class="nm">${esc(n)}</td><td>${n === sg.winner ? "ゴール" : sg.pos[n]}</td><td>${c.d}</td><td>${c.l === null ? "—" : c.l}</td><td>${c.c}</td><td>${c.ok}</td><td>${c.ng}</td></tr>`; }).join("");
+  // awards
+  const best = (f, ok) => { let v = null, ns = []; for(const n of sg.order){ const x = f(C(n)); if(x === null || !ok(x)) continue; if(v === null || x > v){ v = x; ns = [n]; } else if(x === v) ns.push(n); } return { v, ns }; };
+  const aw = [];
+  const det = best(c => c.ok, x => x >= 1); if(det.ns.length) aw.push(`🔍 名探偵賞：${det.ns.map(esc).join("・")}（ダウト成功${det.v}回）`);
+  const hon = best(c => c.l === null || c.d === 0 ? null : -c.l, () => true); if(hon.ns.length) aw.push(`😇 正直者賞：${hon.ns.map(esc).join("・")}（ウソ${-hon.v}回）`);
+  const pf = best(c => c.l === null ? null : c.l - c.c, x => x >= 1); if(pf.ns.length) aw.push(`😎 ポーカーフェイス賞：${pf.ns.map(esc).join("・")}（バレなかったウソ${pf.v}回）`);
+  const w = C(sg.winner);
+  const sub = w.l === null ? "" : w.l === 0 ? "一度もウソをつかずにゴール！" : `ウソを${w.l}回ついて、バレたのは${w.c}回`;
+  const pending = sg.order.some(n => C(n).l === null);
+  const conf = Array.from({ length:28 }, (_,i) => `<i style="left:${(i * 37) % 100}%;background:${["#ef9f27","#5dcaa5","#ed93b1","#85b7eb","#fac775","#f09595"][i % 6]};animation-delay:${(i % 7) * .35}s;animation-duration:${2.6 + (i % 4) * .5}s"></i>`).join("");
+  el.innerHTML = `<div class="confetti">${conf}</div><div class="rbox">
+    <div class="rtitle">🏁 ゴール！ ${esc(sg.winner)} の勝ち</div>${sub ? `<div class="rsub">${sub}</div>` : ""}
+    <div class="podium">${pod}</div>
+    <div class="rtable"><table><tr><th>順位</th><th>名前</th><th>マス</th><th>宣言</th><th>ウソ</th><th>バレた</th><th>ダウト成功</th><th>ダウト失敗</th></tr>${rows}</table></div>
+    ${pending ? `<div class="rnote">「—」はウソの回数を集めきれなかった人です（途中で再読み込みした場合など）</div>` : ""}
+    ${aw.length ? `<div class="awards">${aw.map(a => `<span>${a}</span>`).join("")}</div>` : ""}
+    <div class="rbtns">${role === "host" ? `<button class="b-open" data-sgagain="1">🎲 もう一度遊ぶ</button><button data-sglobby="1">ロビーへ戻る</button>` : ""}<button data-hideres="1">盤面を見る</button></div>
+  </div>`;
+}
 function renderSgMe(){
   const el = $("sgMe"); if(!el) return;
   const sg = game && game.sg;
@@ -2014,15 +2411,15 @@ $("sgMe").addEventListener("pointerdown", e => {
   else if(k === "trust") sgTrust();
 });
 function sgMiniMap(sg){
-  const colorOf = n => SG_COLORS[sg.order.indexOf(n) % SG_COLORS.length];
   let c = "";
   for(let i = 0; i <= sg.len; i++){
     const e = sg.board[i], ps = sg.order.filter(n => sg.pos[n] === i);
-    const tok = ps.map(n => `<i style="background:${colorOf(n)}">${n === myName ? "★" : esc(n.slice(0,1))}</i>`).join("");
+    const tok = ps.map(n => `<i style="background:${colorOfN(n)}">${n === myName ? "★" : esc(n.slice(0,1))}</i>`).join("");
     c += `<span class="mm ${e ? "e-" + e : ""} ${i === sg.len ? "goal" : ""}" title="${i}">${tok || (e ? SG_EV[e].icon : (i === sg.len ? "🏁" : ""))}</span>`;
   }
   return `<div class="minimap">${c}</div>`;
 }
+let sgThemeKey = "";
 function sgHostButtons(){
   if(role !== "host") return;
   const sg = game.sg, running = sg && sg.phase !== "end";
@@ -2030,10 +2427,20 @@ function sgHostButtons(){
   $("bSgRestart").classList.toggle("hidden", !running);
   $("bSgForce").classList.toggle("hidden", !running);
   $("bSgSkip").classList.toggle("hidden", !running);
+  const th = sgTheme();
+  if(th !== sgThemeKey){ sgThemeKey = th; $("sgThemeChips").innerHTML = Object.entries(SG_THEMES).map(([k,v]) => `<button data-sgt="${k}" class="${k === th ? "on" : ""}">${v.name}</button>`).join(""); }
 }
+$("sgThemeChips").addEventListener("click", e => {
+  const b = e.target.closest("[data-sgt]"); if(!b || role !== "host") return;
+  game.st.sgt = b.dataset.sgt; commit();
+});
 $("board").addEventListener("click", e => {
   if(!game || game.mode !== "sugoroku") return;
   if(e.target.closest("[data-rules]")){ sgShowRules(); return; }
+  if(e.target.closest("[data-hideres]")){ sgResHide = game.sg && game.sg.seq; render(); return; }
+  if(e.target.closest("[data-showres]")){ sgResHide = null; sgResKey = ""; render(); return; }
+  if(e.target.closest("[data-sgagain]")){ sgStart(); return; }
+  if(e.target.closest("[data-sglobby]")){ if(role === "host"){ game.stage = "lobby"; commit(); } return; }
   const c = e.target.closest("[data-ev]"); if(!c) return;
   const ev = SG_EV[c.dataset.ev]; if(!ev) return;
   modal(`${ev.icon} ${ev.name}`, `<p style="margin:0">${esc(ev.desc)}</p>`);
@@ -2042,7 +2449,6 @@ $("bSgStart").onclick = sgStart;
 $("bSgSkip").onclick = sgSkip;
 $("bSgRestart").onclick = sgRestart;
 $("bSgForce").onclick = sgForce;
-
 
 // ===== practice mode: a room that lives only in this browser (no Firebase) =====
 const LocalNet = (() => {
@@ -2146,7 +2552,7 @@ setInterval(() => {
       if(Math.random() < L.lie){ do{ v = 1 + Math.floor(Math.random() * 6); }while(v === r); }
       const id = rid();
       botSecret[n] = { id, r };
-      if(processAct(n, { act:"declare", id, v, commit:"" })) commit();
+      if(processAct(n, { act:"declare", id, v, commit:"" })){ sgTruth[id] = r; commit(); }
     }
   } else if(sg.phase === "declared" && sg.decl){
     for(const b of practice.bots){
@@ -2877,6 +3283,12 @@ $("bgFile").onchange = async e => {
   }catch(err){ showWarn("背景画像を読み込めませんでした。"); }
   e.target.value = "";
 };
+let stThr = 0;
+[["stGlass","glass"],["stDim","dim"]].forEach(([id, k]) => {
+  const el = $(id);
+  el.addEventListener("input", () => { if(role !== "host") return; game.st[k] = +el.value; applyStage(true); const now = Date.now(); if(now - stThr > 400){ stThr = now; commit(); } });
+  el.addEventListener("change", () => { if(role !== "host") return; game.st[k] = +el.value; commit(); });
+});
 $("bgmChips").addEventListener("click", e => { const b = e.target.closest("[data-bgm]"); if(!b) return; game.st.bgm = b.dataset.bgm; commit(); applyStage(true); });
 $("bgmFile").onchange = e => {
   const f = e.target.files && e.target.files[0]; if(!f) return;
