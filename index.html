@@ -291,6 +291,49 @@ body.embed .layout > div:last-child{order:-1}
 .fbcount{font-size:12px;color:var(--muted);text-align:right}
 .pbadge{background:#1d3d6b;border-radius:999px;padding:4px 10px;font-size:13px;font-weight:800}
 
+/* sugoroku v2 */
+.cell .evn{font-size:10px;line-height:1.1;color:#eef0ff;text-align:center;font-weight:800}
+.cell[data-ev]{cursor:pointer}
+.legbtn{font-size:12px;padding:5px 10px;border-radius:999px}
+.legbtn.e-s{background:#1d3d6b}.legbtn.e-b{background:#4a1f2e}.legbtn.e-a{background:#1c4a3a}.legbtn.e-d{background:#4a3a14}
+.todo{background:#141836;border-radius:10px;padding:8px 10px;font-size:14px;margin-bottom:8px}
+.todo b{color:var(--gold)}
+.minimap{display:grid;grid-template-columns:repeat(16,minmax(0,1fr));gap:2px;margin-bottom:10px}
+.mm{height:22px;border-radius:4px;background:#2a3166;display:flex;align-items:center;justify-content:center;font-size:10px;gap:1px;overflow:hidden}
+.mm.e-s{background:#1d3d6b}.mm.e-b{background:#4a1f2e}.mm.e-a{background:#1c4a3a}.mm.e-d{background:#4a3a14}.mm.goal{background:#5a4a10}
+.mm i{font-style:normal;width:13px;height:13px;border-radius:50%;color:#111;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.desthint{text-align:center;color:var(--gold);font-weight:800;margin-bottom:8px}
+.trustrow{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.trustrow button{font-size:22px;padding:18px 6px}
+.btrust{background:#2a3166}
+.trustrow #bDoubt{width:auto;font-size:22px;padding:18px 6px;box-shadow:0 6px 0 #6b001b}
+.sgrules{display:flex;flex-direction:column;gap:8px;font-size:15px;line-height:1.6}
+.sgrules > div{background:#141836;border-radius:10px;padding:8px 10px}
+.sgrules .goal{background:#5a4a10;text-align:center;font-weight:800}
+
+/* moji battle */
+body.mode-moji .m-normal, body.mode-moji .m-mosaic, body.mode-moji .m-quiz, body.mode-moji .m-sg{display:none!important}
+body:not(.mode-moji) .m-mj{display:none!important}
+@media(max-width:860px){ body.mode-moji .layout > div:last-child{order:-1} body.mode-moji #mjMe{order:-1} }
+.mjrows{display:flex;flex-direction:column;gap:8px}
+.mjrow{display:flex;align-items:center;gap:10px;background:#141836;border-radius:12px;padding:8px 10px;flex-wrap:wrap}
+.mjrow.turn{outline:2px solid var(--gold)}
+.mjrow.out{opacity:.5}
+.mjn{min-width:90px;font-weight:800}
+.mjw{display:flex;gap:4px;flex-wrap:wrap}
+.mjb{width:30px;height:34px;border-radius:7px;background:#2a3166;display:inline-flex;align-items:center;justify-content:center;font-size:18px;font-weight:800}
+.mjb.open{background:var(--gold);color:#221}
+.mjb.big{width:38px;height:42px;font-size:22px}
+.mjb.mine{background:#3a4280;color:#cfd4ff}
+.mjmine{display:flex;gap:5px;flex-wrap:wrap;margin:6px 0 8px}
+.kanagrid{display:grid;grid-template-columns:repeat(11,minmax(0,1fr));grid-auto-flow:column;grid-template-rows:repeat(5,auto);gap:3px;direction:rtl}
+.kanagrid .kana{direction:ltr;text-align:center;background:#2a3166;border-radius:6px;padding:5px 0;font-weight:800;font-size:15px}
+.kanagrid .kana.used{background:#3a3a44;color:#777;text-decoration:line-through}
+.kanagrid .kana.last{background:var(--red);color:#fff}
+.kanagrid .kana.blank{background:transparent}
+.kanagrid.pick .kana{font-size:18px;padding:8px 0}
+.kanagrid.pick .kana.sel{background:var(--blue);color:#032}
+
 </style>
 </head>
 <body>
@@ -298,7 +341,7 @@ body.embed .layout > div:last-child{order:-1}
   <header>
     <h1>🎪 遊び場 <span style="font-size:.6em;letter-spacing:.04em">AsoViva</span></h1>
     <div class="modeseg hidden" id="modeSeg">
-      <button data-mode="normal">⚡ 普通</button><button data-mode="mosaic">🖼 モザイク</button><button data-mode="sugoroku">🎲 すごろく</button>
+      <button data-mode="normal">⚡ 普通</button><button data-mode="mosaic">🖼 画像</button><button data-mode="sugoroku">🎲 すごろく</button><button data-mode="moji">🔤 もじあて</button>
     </div>
     <div class="modelabel hidden" id="modeLabel"></div>
     <div class="hgroup">
@@ -334,8 +377,9 @@ body.embed .layout > div:last-child{order:-1}
         <div class="small muted" style="margin:0 0 6px">遊び方を選ぶ（あとで切り替えられます）</div>
         <div class="modes" id="modePick">
           <button data-mode="normal" class="on">⚡ 普通の早押し<small>約10分・2人〜</small></button>
-          <button data-mode="mosaic">🖼 モザイククイズ<small>約10分・2人〜</small></button>
+          <button data-mode="mosaic">🖼 画像クイズ<small>約10分・2人〜</small></button>
           <button data-mode="sugoroku">🎲 ダウトすごろく<small>約20分・2〜6人</small></button>
+          <button data-mode="moji">🔤 もじあてバトル<small>約15分・2〜8人</small></button>
         </div>
         <button class="b-open" id="asHost" style="width:100%;margin-top:10px;font-size:18px;padding:14px">部屋を立てる</button>
       </div>
@@ -394,21 +438,40 @@ body.embed .layout > div:last-child{order:-1}
             <div class="row" style="margin-top:8px"><button id="bLoad">この内容で1問目から始める</button></div>
           </details>
           <details class="sec2 m-mosaic" id="imgDetails">
-            <summary>画像と答え（共有前に！）</summary>
-            <p class="small muted" style="margin:8px 0">画像を選んで、1枚ずつ答えを入力します。ぼかした画像は参加者のスマホにも届きます（くっきりした画像は答え発表のあと）。</p>
+            <summary>画像と答え・見せ方（共有前に！）</summary>
+            <p class="small muted" style="margin:8px 0">画像を選んで、1枚ずつ答えと見せ方を決めます。参加者のスマホには「いま見えている状態」だけが届きます（全体は答え発表のあと）。シルエットは、背景が透明なPNG画像だときれいな影になります。部分ズームは📍で拡大する場所を選べます。</p>
+            <div class="row" style="margin-bottom:6px"><label>これから追加する画像の見せ方</label>
+              <select id="fxAll" style="width:auto"><option value="mosaic">モザイク</option><option value="sil">シルエット</option><option value="zoom">部分ズーム</option></select>
+              <button class="small" id="bFxAll">一覧を全部この見せ方に</button></div>
             <input type="file" id="imgFiles" accept="image/*" multiple>
             <div class="row" style="margin-top:8px"><label>ぼかしが弱くなる間隔</label>
               <select id="imgStep"><option value="5">5秒</option><option value="10" selected>10秒</option><option value="15">15秒</option><option value="0">自動にしない</option></select></div>
             <div class="thumbs" id="thumbs"></div>
             <div class="row" style="margin-top:8px"><button id="bImgLoad">1枚目から始める</button></div>
-            <p class="small muted" style="margin:8px 0 0">得点：ぼかし1〜2段階目＝3点、3〜4＝2点、5＝1点（先着〇人ルールのときは順位の点数）</p>
+            <p class="small muted" style="margin:8px 0 0">得点：1〜2段階目＝3点、3〜4＝2点、5＝1点（先着〇人ルールのときは順位の点数）</p>
           </details>
           <details class="sec2 m-sg" id="secSg" open>
             <summary>ダウトすごろく</summary>
-            <p class="small muted" style="margin:8px 0">いまいる司会と回答者の全員（2〜6人）で遊びます。</p>
+            <p class="small muted" style="margin:8px 0">いまいる司会と回答者の全員（2〜6人）で遊びます。始めたあとは自動で進むので、ボタンを押す必要はありません。</p>
             <div class="ctrlbar">
               <button class="b-open wide" id="bSgStart">🎲 いまいる人でゲーム開始</button>
-              <button id="bSgSkip" class="wide">今の人の番を飛ばす（抜けた人がいるとき）</button>
+              <button id="bSgForce" class="wide hidden">⏭ 次へ進める（止まったとき）</button>
+              <button id="bSgSkip" class="wide hidden">今の人の番を飛ばす（抜けた人がいるとき）</button>
+              <button id="bSgRestart" class="wide small hidden">↺ 最初からやり直す</button>
+            </div>
+          </details>
+          <details class="sec2 m-mj" id="secMj" open>
+            <summary>もじあてバトル</summary>
+            <div id="mjSetupBox">
+              <div class="row" style="margin-top:8px"><input id="mjTopic" maxlength="30" placeholder="お題（例：好きなアニメキャラ）" style="flex:1;width:auto"><button class="small" id="bMjRandom">🎲 ランダム</button></div>
+              <div class="row" style="margin-top:8px"><label>文字数</label><select id="mjMax"><option>5</option><option>6</option><option selected>7</option><option>8</option></select><label>まで</label>
+                <label class="toggle" style="margin-left:auto"><input type="checkbox" id="mjBonus" checked>当てたらもう1回</label></div>
+              <button class="b-open" id="bMjStart" style="width:100%;margin-top:8px">🔤 お題を出して始める</button>
+              <p class="small muted" style="margin:8px 0 0">いまいる司会と回答者の全員（2〜8人）で遊びます。全員が答えを書くと自動で始まります。</p>
+            </div>
+            <div class="ctrlbar" style="margin-top:8px">
+              <button id="bMjForce" class="wide hidden">⏭ 次へ進める</button>
+              <button id="bMjRestart" class="wide small hidden">↺ 最初からやり直す</button>
             </div>
           </details>
           <details class="sec2" id="secStage">
@@ -441,6 +504,7 @@ body.embed .layout > div:last-child{order:-1}
         </div>
 
         <div class="card m-sg" id="sgMe"></div>
+        <div class="card m-mj" id="mjMe"></div>
 
         <div class="card hidden" id="previewCard">
           <div class="row" style="justify-content:space-between"><h3 style="margin:0">回答者画面の見本</h3><button class="small" id="bPreview">横に表示</button></div>
@@ -491,11 +555,13 @@ const store = {
   set(k,v){ try{ localStorage.setItem("asobiba." + k, v); }catch(e){} },
   del(k){ try{ localStorage.removeItem("asobiba." + k); }catch(e){} }
 };
-const MODES = { normal:"⚡ 普通の早押し", mosaic:"🖼 モザイククイズ", sugoroku:"🎲 ダウトすごろく" };
+const MODES = { normal:"⚡ 普通の早押し", mosaic:"🖼 画像クイズ", sugoroku:"🎲 ダウトすごろく", moji:"🔤 もじあてバトル" };
+const isQuiz = m => m === "normal" || m === "mosaic";
 const MODE_DESC = {
   normal:"司会が問題を出します。分かったらすぐ押して、1番の人が答えます。",
-  mosaic:"ぼかした画像が少しずつはっきりします。早く当てるほど高得点です。",
-  sugoroku:"自分だけに見えるサイコロの目を宣言して進みます。嘘もOK。怪しいと思ったら「ダウト！」。"
+  mosaic:"モザイク・シルエット・拡大した画像が少しずつはっきりします。早く当てるほど高得点です。",
+  sugoroku:"自分だけに見えるサイコロの目を宣言して進みます。嘘もOK。怪しいと思ったら「ダウト！」、信じるなら「信じる」。",
+  moji:"お題に合う言葉をこっそり書き、順番に50音から1文字ずつ呼びます。全部の文字が開いたら脱落。最後まで残った人の勝ち。"
 };
 const RULES = {
   std:{ label:"標準", desc:"間違えた人は、その問題ではもう押せません。" },
@@ -669,7 +735,7 @@ let pendingPresence = null;
 let game = null, prevGame = null;
 let textQs = [];                        // host: normal-mode questions {t,a}
 let images = [];                        // host: mosaic images {url,a}
-const idxByMode = { normal:-1, mosaic:-1, sugoroku:-1 };
+const idxByMode = { normal:-1, mosaic:-1, sugoroku:-1, moji:-1 };
 let flyUntil = 0, myBuzzRound = null;
 const firstSeen = {};
 const PIX = [48, 28, 16, 9, 5];
@@ -688,7 +754,7 @@ if(isEmbed) document.body.classList.add("embed");
 function newGame(mode){
   return { v:3, stage:"lobby", mode, round:0, phase:"idle", order:[], cur:-1, wrong:[], result:null,
            q:{ idx:-1, total:0, text:"", ans:"", showText:true, showAns:false }, qn:0,
-           scoresAll:{ normal:{}, mosaic:{}, sugoroku:{} }, pts:{ ok:1, ng:0 }, img:null, sg:null,
+           scoresAll:{ normal:{}, mosaic:{}, sugoroku:{}, moji:{} }, pts:{ ok:1, ng:0 }, img:null, sg:null, mj:null,
            rule:{ t:"std", n:3, pp:[3,2,1] }, ruleSeq:0, locks:[], rest:{}, colors:{},
            st:{ bg:"night", bgm:"none", okMode:"fixed", ok:0, ngMode:"fixed", ng:0 },
            snd:{ ok:0, ng:0, okSeq:0, ngSeq:0 }, locked:false };
@@ -856,7 +922,7 @@ function handlePeers(){
       if(!(n in game.colors)){ game.colors[n] = Object.keys(game.colors).length; changed = true; }
     }
     if(!(myName in game.colors)){ game.colors[myName] = Object.keys(game.colors).length; changed = true; }
-    if(game.stage === "play" && game.mode !== "sugoroku" && (game.phase === "open" || game.phase === "answer")){
+    if(game.stage === "play" && isQuiz(game.mode) && (game.phase === "open" || game.phase === "answer")){
       const now = Date.now(), key = p => p.peer + ":" + game.round;
       const fresh = players().filter(p => p.presence.buzz === game.round && !game.order.some(o => o.p === p.peer));
       fresh.forEach(p => { if(!firstSeen[key(p)]) firstSeen[key(p)] = now; });
@@ -880,6 +946,17 @@ function handlePeers(){
         if(doneActs.has(k)) continue;
         doneActs.add(k);
         if(processAct(n, a)) changed = true;
+      }
+    }
+    if(game.mode === "moji" && game.mj){
+      for(const p of players()){
+        const a = p.presence.mj;
+        if(!a || typeof a !== "object" || typeof a.id !== "string" || typeof a.act !== "string") continue;
+        const n = p.presence.name.slice(0,12);
+        const k = "mj:" + n + ":" + a.act + ":" + a.id;
+        if(doneActs.has(k)) continue;
+        doneActs.add(k);
+        if(processMj(n, a)) changed = true;
       }
     }
     if(changed) commit(); else render();
@@ -908,8 +985,9 @@ function applyGame(g){
   prevGame = g ? JSON.parse(JSON.stringify(g)) : null;
   game = g;
   if(g && g.mode === "sugoroku" && g.sg) sgOnUpdate(prev && prev.sg, g.sg);
+  if(g && g.mode === "moji" && g.mj) mjOnUpdate(prev && prev.mj, g.mj);
   if(prev && g){
-    if(g.mode !== "sugoroku" && prev.mode === g.mode){
+    if(isQuiz(g.mode) && prev.mode === g.mode){
       if(g.round !== prev.round && g.phase === "open") sfx.open();
       else if(g.phase === "answer" && (prev.phase !== "answer" || prev.cur !== g.cur || prev.round !== g.round)) sfx.buzz();
     }
@@ -917,7 +995,7 @@ function applyGame(g){
       if(g.snd.okSeq !== prev.snd.okSeq) sfx.ok(g.snd.ok);
       if(g.snd.ngSeq !== prev.snd.ngSeq) sfx.ng(g.snd.ng);
     }
-    if(g.ruleSeq !== prev.ruleSeq && g.mode !== "sugoroku") bannerMsg(`回答権ルール：${ruleText(g)}`);
+    if(g.ruleSeq !== prev.ruleSeq && isQuiz(g.mode)) bannerMsg(`回答権ルール：${ruleText(g)}`);
     if(g.mode !== prev.mode) bannerMsg(`遊び方が「${MODES[g.mode]}」に変わりました`);
     if(g.stage === "play" && prev.stage === "lobby") bannerMsg("ゲーム開始！");
   }
@@ -944,7 +1022,7 @@ function pickSound(kind){
   game.snd[kind + "Seq"]++;
 }
 function hostOpen(){
-  if(game.mode === "sugoroku" || game.stage !== "play") return;
+  if(!isQuiz(game.mode) || game.stage !== "play") return;
   if(game.phase === "open" || game.phase === "answer") return;
   if(game.mode === "mosaic" && !game.img) return;
   game.round++; game.phase = "open"; game.order = []; game.cur = -1; game.wrong = []; game.result = null; game.q.showAns = false;
@@ -1003,7 +1081,7 @@ function hostNextPerson(){
   commit();
 }
 function hostGrant(name){
-  if(game.stage !== "play" || game.mode === "sugoroku") return;
+  if(game.stage !== "play" || !isQuiz(game.mode)) return;
   const p = players().find(x => x.presence.name.slice(0,12) === name);
   if(!p) return;
   if(game.phase === "idle" || game.phase === "result"){
@@ -1028,7 +1106,7 @@ function hostToggleLock(name){
   commit();
 }
 async function hostResetRights(){
-  if(game.mode === "sugoroku" || game.stage !== "play") return;
+  if(!isQuiz(game.mode) || game.stage !== "play") return;
   if(!(await confirmBox("回答権をリセットしますか？", "押した順をすべて消して、全員がもう一度押せる状態にします（得点はそのまま）。", "リセット"))) return;
   game.round++; game.order = []; game.cur = -1; game.wrong = []; game.result = null; game.q.showAns = false;
   if(game.phase !== "idle") game.phase = "open";
@@ -1048,12 +1126,14 @@ function setRule(t){
 function stepSec(){ return +$("imgStep").value || 0; }
 function setQuestion(i){
   game.q.idx = i; imgTick = 0; game.img = null; curImgUrl = null;
-  if(game.mode === "sugoroku"){ game.q.text = ""; game.q.ans = ""; game.q.total = 0; return; }
+  if(!isQuiz(game.mode)){ game.q.text = ""; game.q.ans = ""; game.q.total = 0; return; }
   if(game.mode === "mosaic"){
     game.q.total = images.length;
     if(i >= 0 && i < images.length){
-      curImgUrl = images[i].url; game.q.text = "この画像は何？"; game.q.ans = images[i].a;
-      game.img = { level:0, max:PIX.length, left:stepSec() || null, seq:game.qn };
+      curImgUrl = images[i].url; curFp = images[i].fp || { x:.5, y:.5 };
+      game.q.text = images[i].fx === "sil" ? "このシルエットは何？" : images[i].fx === "zoom" ? "拡大されているのは何？" : "この画像は何？";
+      game.q.ans = images[i].a;
+      game.img = { level:0, max:PIX.length, left:stepSec() || null, seq:game.qn, fx:images[i].fx || "mosaic" };
     } else { game.q.text = images.length && i >= 0 ? "全問終了！おつかれさまでした 🎉" : ""; game.q.ans = ""; }
   } else {
     game.q.total = textQs.length;
@@ -1100,7 +1180,8 @@ function loadQuestions(){
 }
 function addImages(){
   const files = Array.from($("imgFiles").files || []).filter(f => f.type.startsWith("image/"));
-  for(const f of files) images.push({ url:URL.createObjectURL(f), a:"" });
+  const fx = $("fxAll") ? $("fxAll").value : "mosaic";
+  for(const f of files) images.push({ url:URL.createObjectURL(f), a:"", fx: FX[fx] ? fx : "mosaic", fp:{ x:.5, y:.5 } });
   $("imgFiles").value = "";
   if(game && game.mode === "mosaic"){ game.q.total = images.length; commit(); }
   renderThumbs();
@@ -1121,27 +1202,96 @@ function renderThumbs(){
     <div class="thumb ${i===curIdx ? "cur" : ""}">
       <span class="no">${i+1}</span><img src="${q.url}" alt="">
       <input data-i="${i}" value="${esc(q.a)}" maxlength="120" placeholder="答えを入力" class="${q.a.trim() ? "" : "need"}" aria-label="${i+1}枚目の答え">
+      <select data-fx="${i}" style="width:auto;padding:4px;font-size:12px">${Object.entries(FX).map(([k,v]) => `<option value="${k}" ${q.fx===k?"selected":""}>${v}</option>`).join("")}</select>
+      ${q.fx === "zoom" ? `<button data-fp="${i}" title="拡大する場所">📍</button>` : ""}
       <button data-go="${i}">出す</button><button data-del="${i}" aria-label="削除">✕</button>
     </div>`).join("") || '<div class="small muted">まだ画像がありません</div>';
 }
 
-// ===== mosaic broadcast (host -> players) =====
+// ===== image effects (mosaic / silhouette / zoom) =====
+const FX = { mosaic:"モザイク", sil:"シルエット", zoom:"部分ズーム" };
+const SIL_AMT = [0, .15, .35, .6, .85];
+const ZOOM_SC = [8, 5, 3, 2, 1.4];
+const alphaCache = new Map();
+let curFp = { x:.5, y:.5 };
+function hasAlpha(img){
+  if(alphaCache.has(img.src)) return alphaCache.get(img.src);
+  let r = false;
+  try{
+    const c = document.createElement("canvas"); c.width = 64; c.height = 64;
+    const x = c.getContext("2d"); x.drawImage(img, 0, 0, 64, 64);
+    const d = x.getImageData(0, 0, 64, 64).data; let n = 0;
+    for(let i = 3; i < d.length; i += 4) if(d[i] < 200) n++;
+    r = n / 4096 > .03;
+  }catch(e){}
+  alphaCache.set(img.src, r); return r;
+}
+// draw one stage of the effect into a new canvas that fits maxW x maxH
+function imgFrame(img, fx, fp, level, clear, maxW, maxH){
+  const s = Math.min(maxW / img.naturalWidth, maxH / img.naturalHeight);
+  const w = Math.max(1, Math.round(img.naturalWidth * s)), h = Math.max(1, Math.round(img.naturalHeight * s));
+  const cv = document.createElement("canvas"); cv.width = w; cv.height = h;
+  const ctx = cv.getContext("2d");
+  const transparent = hasAlpha(img);
+  if(clear){
+    if(transparent){ ctx.fillStyle = "#e8eaf2"; ctx.fillRect(0, 0, w, h); }
+    ctx.drawImage(img, 0, 0, w, h); return { cv, pixel:false };
+  }
+  const lv = Math.min(level, 4);
+  if(fx === "zoom"){
+    const sc = ZOOM_SC[lv];
+    const sw = img.naturalWidth / sc, sh = img.naturalHeight / sc;
+    const sx = Math.max(0, Math.min(img.naturalWidth - sw, fp.x * img.naturalWidth - sw / 2));
+    const sy = Math.max(0, Math.min(img.naturalHeight - sh, fp.y * img.naturalHeight - sh / 2));
+    if(transparent){ ctx.fillStyle = "#e8eaf2"; ctx.fillRect(0, 0, w, h); }
+    ctx.drawImage(img, sx, sy, sw, sh, 0, 0, w, h);
+    return { cv, pixel:false };
+  }
+  if(fx === "sil"){
+    const amt = SIL_AMT[lv];
+    const off = document.createElement("canvas"); off.width = w; off.height = h;
+    const o = off.getContext("2d");
+    if(transparent){
+      o.drawImage(img, 0, 0, w, h);
+      o.globalCompositeOperation = "source-in"; o.fillStyle = "#0b0b10"; o.fillRect(0, 0, w, h);
+      o.globalCompositeOperation = "source-over";
+      ctx.fillStyle = "#e8eaf2"; ctx.fillRect(0, 0, w, h);
+      ctx.drawImage(off, 0, 0);
+      ctx.save(); ctx.globalAlpha = amt;
+      const tmp = document.createElement("canvas"); tmp.width = w; tmp.height = h; tmp.getContext("2d").drawImage(img, 0, 0, w, h);
+      ctx.drawImage(tmp, 0, 0); ctx.restore();
+    } else {
+      o.drawImage(img, 0, 0, w, h);
+      const id = o.getImageData(0, 0, w, h), d = id.data;
+      let sum = 0; for(let i = 0; i < d.length; i += 4) sum += d[i]*.299 + d[i+1]*.587 + d[i+2]*.114;
+      const th = sum / (d.length / 4);
+      for(let i = 0; i < d.length; i += 4){
+        const v = (d[i]*.299 + d[i+1]*.587 + d[i+2]*.114) < th ? 16 : 228;
+        d[i] = d[i+1] = d[i+2] = v; d[i+3] = 255;
+      }
+      ctx.putImageData(id, 0, 0);
+      ctx.save(); ctx.globalAlpha = amt; ctx.drawImage(img, 0, 0, w, h); ctx.restore();
+    }
+    return { cv, pixel:false };
+  }
+  // mosaic
+  const ps = PIX[lv];
+  const sw = Math.max(1, Math.ceil(w / ps)), sh = Math.max(1, Math.ceil(h / ps));
+  const small = document.createElement("canvas"); small.width = sw; small.height = sh;
+  small.getContext("2d").drawImage(img, 0, 0, sw, sh);
+  return { cv:small, pixel:true, w, h };
+}
+
+// ===== image broadcast (host -> players) =====
 let mzSent = "";
 function mosaicCanvas(clear){
   const img = imgCache.get(curImgUrl);
   if(!img || !img.complete || !img.naturalWidth) return null;
-  if(clear){
-    const s = Math.min(1, 720 / Math.max(img.naturalWidth, img.naturalHeight));
-    const cv = document.createElement("canvas"); cv.width = Math.round(img.naturalWidth * s); cv.height = Math.round(img.naturalHeight * s);
-    cv.getContext("2d").drawImage(img, 0, 0, cv.width, cv.height);
-    return cv.toDataURL("image/jpeg", .78);
-  }
-  const s = Math.min(960 / img.naturalWidth, 540 / img.naturalHeight);
-  const w = Math.round(img.naturalWidth * s), h = Math.round(img.naturalHeight * s);
-  const ps = PIX[Math.min(game.img.level, PIX.length-1)];
-  const cv = document.createElement("canvas"); cv.width = Math.max(1, Math.ceil(w / ps)); cv.height = Math.max(1, Math.ceil(h / ps));
-  cv.getContext("2d").drawImage(img, 0, 0, cv.width, cv.height);
-  return cv.toDataURL("image/png");
+  const fx = game.img.fx || "mosaic";
+  if(clear) return "c|" + imgFrame(img, fx, curFp, 0, true, 720, 720).cv.toDataURL("image/jpeg", .78);
+  const f = imgFrame(img, fx, curFp, game.img.level, false, fx === "zoom" ? 640 : 480, fx === "zoom" ? 640 : 480);
+  if(f.pixel) return "p|" + f.cv.toDataURL("image/png");
+  return "f|" + (fx === "sil" ? f.cv.toDataURL("image/png") : f.cv.toDataURL("image/jpeg", .78));
 }
 function sendMosaic(){
   if(role !== "host" || !room || !game || game.mode !== "mosaic" || !game.img || !curImgUrl) return;
@@ -1152,12 +1302,12 @@ function sendMosaic(){
   const data = mosaicCanvas(clear);
   if(!data) { imgCache.get(curImgUrl).addEventListener("load", () => sendMosaic(), { once:true }); return; }
   mzSent = key;
-  room.setMedia("mz", `${clear ? "c" : "p"}|${game.img.seq}|${data}`);
+  room.setMedia("mz", `${data.slice(0,1)}|${game.img.seq}|${data.slice(2)}`);
 }
 
 // ===== player action =====
 function buzz(){
-  if(role !== "player" || !game || game.stage !== "play" || game.mode === "sugoroku") return;
+  if(role !== "player" || !game || game.stage !== "play" || !isQuiz(game.mode)) return;
   if(Date.now() < flyUntil) return;
   const st = myState();
   if(st.k === "lock" || st.k === "rest") return;
@@ -1177,9 +1327,10 @@ function applyModeUI(){
   document.body.classList.toggle("mode-normal", m === "normal");
   document.body.classList.toggle("mode-mosaic", m === "mosaic");
   document.body.classList.toggle("mode-sugoroku", m === "sugoroku");
+  document.body.classList.toggle("mode-moji", m === "moji");
   document.querySelectorAll("#modeSeg button").forEach(b => b.classList.toggle("on", b.dataset.mode === m));
   $("modeLabel").textContent = MODES[m];
-  $("scoreTitle").textContent = "スコア（" + (m === "mosaic" ? "モザイク" : "普通") + "）";
+  $("scoreTitle").textContent = "スコア（" + (m === "mosaic" ? "画像" : "普通") + "）";
 }
 function render(){
   if(!role) return;
@@ -1192,6 +1343,7 @@ function render(){
   }
   if(g.stage === "lobby"){ renderLobby(); renderHost(); renderPlayer(); renderScores(g); return; }
   if(g.mode === "sugoroku"){ renderSg(); renderHost(); return; }
+  if(g.mode === "moji"){ renderMj(); renderHost(); return; }
   // rule strip
   const unit = g.mode === "mosaic" ? "枚" : "問";
   const left = g.q.total && g.q.idx >= 0 ? `残り${Math.max(0, g.q.total - g.q.idx - 1)}${unit}` : (g.q.idx >= 0 ? `第${g.q.idx+1}問` : "準備中");
@@ -1213,7 +1365,8 @@ function render(){
   const lvl = g.img ? (() => {
     const clear = g.phase === "result";
     const lft = !clear && g.phase === "open" && g.img.left ? `<b>次の段階まで ${g.img.left}秒</b>` : "";
-    return `<div class="lvl">ぼかし ${clear ? "なし" : `${g.img.level+1}/${g.img.max}段階目${g.rule.t === "first" ? "" : `・正解で${imgPoints(g.img.level)}点`}`} ${Array.from({length:g.img.max},(_,i)=>`<i class="${i<=g.img.level||clear?"on":""}"></i>`).join("")}${lft}</div>`;
+    const fxn = g.img.fx === "sil" ? "シルエット" : g.img.fx === "zoom" ? "ズーム" : "ぼかし";
+    return `<div class="lvl">${fxn} ${clear ? "答え発表" : `${g.img.level+1}/${g.img.max}段階目${g.rule.t === "first" ? "" : `・正解で${imgPoints(g.img.level)}点`}`} ${Array.from({length:g.img.max},(_,i)=>`<i class="${i<=g.img.level||clear?"on":""}"></i>`).join("")}${lft}</div>`;
   })() : "";
   board.innerHTML = `
     ${strip}
@@ -1274,24 +1427,19 @@ function drawMosaic(){
   let img = imgCache.get(curImgUrl);
   if(!img){ img = new Image(); img.onload = () => { drawMosaic(); sendMosaic(); }; img.src = curImgUrl; imgCache.set(curImgUrl, img); return; }
   if(!img.complete || !img.naturalWidth) return;
-  const s = Math.min(960 / img.naturalWidth, 540 / img.naturalHeight);
-  const w = Math.max(1, Math.round(img.naturalWidth * s)), h = Math.max(1, Math.round(img.naturalHeight * s));
+  const f = imgFrame(img, game.img.fx || "mosaic", curFp, game.img.level, game.phase === "result", 960, 540);
+  const w = f.pixel ? f.w : f.cv.width, h = f.pixel ? f.h : f.cv.height;
   cv.width = w; cv.height = h;
   const ctx = cv.getContext("2d");
-  if(game.phase === "result"){ ctx.drawImage(img, 0, 0, w, h); return; }
-  const ps = PIX[Math.min(game.img.level, PIX.length-1)];
-  const sw = Math.max(1, Math.ceil(w / ps)), sh = Math.max(1, Math.ceil(h / ps));
-  const off = document.createElement("canvas"); off.width = sw; off.height = sh;
-  off.getContext("2d").drawImage(img, 0, 0, sw, sh);
-  ctx.imageSmoothingEnabled = false;
-  ctx.drawImage(off, 0, 0, sw, sh, 0, 0, w, h);
+  ctx.imageSmoothingEnabled = !f.pixel;
+  ctx.drawImage(f.cv, 0, 0, f.cv.width, f.cv.height, 0, 0, w, h);
 }
 const mzImg = new Image(); let mzKey = "";
 function drawPlayerMosaic(){
   const cv = $("mzPlayer");
   if(!cv || !game || !game.img) return;
   const raw = mediaCache.mz || "";
-  const m = /^([pc])\|(\d+)\|(.*)$/s.exec(raw);
+  const m = /^([pcf])\|(\d+)\|(.*)$/s.exec(raw);
   const ctx = cv.getContext("2d");
   if(!m || +m[2] !== game.img.seq){
     ctx.fillStyle = "#000"; ctx.fillRect(0, 0, cv.width, cv.height);
@@ -1303,7 +1451,7 @@ function drawPlayerMosaic(){
     const W = 640, H = Math.max(1, Math.round(640 * mzImg.naturalHeight / mzImg.naturalWidth));
     c2.width = W; c2.height = H;
     const x = c2.getContext("2d");
-    x.imageSmoothingEnabled = m[1] === "c";
+    x.imageSmoothingEnabled = m[1] !== "p";
     x.drawImage(mzImg, 0, 0, W, H);
   };
   if(mzKey === raw && mzImg.complete && mzImg.naturalWidth) draw();
@@ -1337,7 +1485,7 @@ function renderHost(){
         <p class="small muted" style="margin:8px 0 0">開始前に、下の「問題リスト」や「画像と答え」を準備しておくとスムーズです。</p>`;
       $("bStart").onclick = () => { game.stage = "play"; commit(); };
       $("bLock").onclick = () => { game.locked = !game.locked; room.setMeta({ locked:game.locked }); commit(); };
-    } else if(game.mode === "sugoroku"){
+    } else if(!isQuiz(game.mode)){
       el.innerHTML = `<div class="ctrlbar"><button class="wide small" id="bToLobby">招待画面（ロビー）を出す</button></div>`;
       $("bToLobby").onclick = () => { game.stage = "lobby"; commit(); };
     } else {
@@ -1345,7 +1493,7 @@ function renderHost(){
         <button class="b-open wide" id="bOpen">出題スタート（ボタン解禁）<span class="kbd">Space</span></button>
         <button class="b-ok" id="bOk">⭕ 正解<span class="kbd">O</span></button>
         <button class="b-ng" id="bNg">❌ 不正解<span class="kbd">X</span></button>
-        ${game.mode === "mosaic" ? '<button id="bLevel">🔍 ぼかし−1<span class="kbd">B</span></button>' : ""}
+        ${game.mode === "mosaic" ? '<button id="bLevel">🔍 次の段階へ<span class="kbd">B</span></button>' : ""}
         <button id="bThrough">スルー（答え発表）</button>
         <button class="b-next ${game.mode === "mosaic" ? "" : "wide"}" id="bNext">${game.mode === "mosaic" ? "次の画像へ" : "次の問題へ"}<span class="kbd">N</span></button>
         <button class="peek wide" id="bPeek">👀 押している間だけ答えを表示</button>
@@ -1360,7 +1508,7 @@ function renderHost(){
     }
   }
   if(game.stage === "lobby"){ $("bLock").textContent = game.locked ? "🔓 参加の受付を再開する" : "🔒 参加を締め切る"; }
-  else if(game.mode !== "sugoroku"){
+  else if(isQuiz(game.mode)){
     const ph = game.phase;
     $("bOpen").disabled = ph === "open" || ph === "answer" || (game.mode === "mosaic" && !game.img);
     $("bOk").disabled = $("bNg").disabled = ph !== "answer";
@@ -1375,7 +1523,7 @@ function renderHost(){
     $("firstN").value = String(game.rule.n);
     $("firstPts").innerHTML = Array.from({length:game.rule.n}, (_,i) => `<label>${i+1}位</label><input class="ppin" type="number" min="0" max="9" data-pp="${i}" value="${game.rule.pp[i] ?? 1}">`).join("");
   }
-  $("rightsBar").classList.toggle("hidden", !(game.stage === "play" && game.mode !== "sugoroku"));
+  $("rightsBar").classList.toggle("hidden", !(game.stage === "play" && isQuiz(game.mode)));
   renderStageCtl();
 }
 let stageCtlKey = "";
@@ -1444,7 +1592,7 @@ function renderGuide(){
   el.innerHTML = `<h3>遊び方</h3>
     <div class="mchips">${Object.entries(MODES).map(([k,v]) => `<span class="mchip ${k===m?"on":""}">${v}${k===m?"（いまこれ）":""}</span>`).join("")}</div>
     <p>${esc(MODE_DESC[m])}</p>
-    ${m !== "sugoroku" ? `<p><b>回答権：${esc(ruleText())}</b> … ${esc(RULES[game.rule.t].desc)}</p>` : ""}
+    ${isQuiz(m) ? `<p><b>回答権：${esc(ruleText())}</b> … ${esc(RULES[game.rule.t].desc)}</p>` : ""}
     <p class="small muted">順番は、司会の画面に届いた順で決まります。</p>`;
 }
 
@@ -1464,7 +1612,7 @@ function renderPeople(){
   for(const [n,r] of online) knownPeople.set(n, r);
   const rows = [...knownPeople.entries()].sort((a,b) => (a[1]==="host"?-1:0) - (b[1]==="host"?-1:0) || (online.has(b[0]) - online.has(a[0])));
   $("peopleTitle").textContent = `参加者 ${online.size}人`;
-  const quiz = game && game.stage === "play" && game.mode !== "sugoroku";
+  const quiz = game && game.stage === "play" && isQuiz(game.mode);
   el.innerHTML = rows.map(([n,r]) => {
     const on = online.has(n);
     const locked = game && game.locks.includes(n);
@@ -1482,11 +1630,12 @@ function renderPeople(){
 const SG_LEN = 30, SG_TIME = 10, SG_REVEAL = 10, SG_SHOW = 4;
 const SG_COLORS = ["#4da3ff","#ff4d6d","#2ee59d","#ffcc33","#c58bff","#ff9a3c"];
 const SG_EV = {
-  s:{ icon:"🔄", name:"1位と交代" },
-  b:{ icon:"⬇", name:"ほかの全員−3" },
-  a:{ icon:"🔁", name:"もう一回" },
-  d:{ icon:"✖2", name:"次のダウト2倍" }
+  s:{ icon:"🔄", name:"1位と交代", desc:"止まった人と、いま1位の人の場所を入れ替えます（自分が1位なら何も起きません）。" },
+  b:{ icon:"⬇", name:"全員−3", desc:"止まった人以外の全員が3マス戻ります。" },
+  a:{ icon:"🔁", name:"もう1回", desc:"もう一度自分の番になります。" },
+  d:{ icon:"✖2", name:"ダウト×2", desc:"次の自分の宣言でうそがばれると、10マス戻ります（いつもは5マス）。" }
 };
+let trustedFor = null;
 const doneActs = new Set();
 let mySecret = null;          // {id, r, salt}
 let revealSentFor = null;
@@ -1535,13 +1684,20 @@ function processAct(n, a){
     if(sg.phase !== "roll" || n !== sgTurnName()) return false;
     const v = +a.v; if(!(v >= 1 && v <= 6)) return false;
     sg.decl = { id:String(a.id).slice(0,40), n, v, commit:String(a.commit || "").slice(0,64), dbl:!!sg.dbl[n] };
-    sg.doubt = null; sg.res = null; sg.phase = "declared"; sg.left = SG_TIME;
+    sg.doubt = null; sg.res = null; sg.trust = []; sg.phase = "declared"; sg.left = SG_TIME; sg.dl = Date.now() + SG_TIME * 1000;
     return true;
   }
   if(a.act === "doubt"){
     if(sg.phase !== "declared" || !sg.decl || a.id !== sg.decl.id || n === sg.decl.n || !sg.order.includes(n)) return false;
-    sg.doubt = { by:n }; sg.phase = "doubted"; sg.left = SG_REVEAL;
+    sg.doubt = { by:n }; sg.phase = "doubted"; sg.left = SG_REVEAL; sg.dl = Date.now() + SG_REVEAL * 1000;
     if(sg.decl.n === myName) setTimeout(sgSelfReveal, 300);
+    return true;
+  }
+  if(a.act === "trust"){
+    if(sg.phase !== "declared" || !sg.decl || a.id !== sg.decl.id || n === sg.decl.n || !sg.order.includes(n)) return false;
+    sg.trust = sg.trust || [];
+    if(!sg.trust.includes(n)) sg.trust.push(n);
+    if(sg.order.filter(x => x !== sg.decl.n).every(x => sg.trust.includes(x))) sgResolveNoDoubt();
     return true;
   }
   if(a.act === "reveal"){
@@ -1583,7 +1739,7 @@ function sgResolveDoubt(r){
 }
 function sgResolveNoDoubt(){
   const sg = game.sg, d = sg.decl;
-  sg.res = { kind:"pass", n:d.n, v:d.v };
+  sg.res = { kind:"pass", n:d.n, v:d.v, all:(sg.trust || []).length >= sg.order.length - 1 };
   sg.dbl[d.n] = false;
   sgLog(`${d.n} は「${d.v}」で進む`);
   sgAdvance(d.n, d.v);
@@ -1620,30 +1776,47 @@ function sgAdvance(n, v){
 }
 function sgShow(again){
   const sg = game.sg;
-  sg.phase = "result"; sg.left = SG_SHOW; sg.again = again;
+  sg.phase = "result"; sg.left = SG_SHOW; sg.dl = Date.now() + SG_SHOW * 1000; sg.again = again;
 }
 function sgNextTurn(again){
   const sg = game.sg;
   if(!again) sg.turn = (sg.turn + 1) % sg.order.length;
-  sg.phase = "roll"; sg.decl = null; sg.doubt = null; sg.res = null; sg.again = false; sg.left = 0;
+  sg.phase = "roll"; sg.decl = null; sg.doubt = null; sg.res = null; sg.again = false; sg.left = 0; sg.trust = [];
 }
-setInterval(() => {
+// host timer: based on the clock (deadline), so a slowed-down background tab still catches up
+function sgTick(){
   if(role !== "host" || !game || game.mode !== "sugoroku" || !game.sg) return;
   const sg = game.sg;
-  if(sg.phase === "declared"){
-    sg.left--;
-    if(sg.left <= 0) sgResolveNoDoubt();
+  if(!["declared","doubted","result"].includes(sg.phase) || !sg.dl) return;
+  const now = Date.now(), left = Math.max(0, Math.ceil((sg.dl - now) / 1000));
+  if(now >= sg.dl){
+    if(sg.phase === "declared") sgResolveNoDoubt();
+    else if(sg.phase === "doubted") sgResolveDoubt(null);
+    else sgNextTurn(sg.again);
     commit();
-  } else if(sg.phase === "doubted"){
-    sg.left--;
-    if(sg.left <= 0){ sgResolveDoubt(null); }
-    commit();
-  } else if(sg.phase === "result"){
-    sg.left--;
-    if(sg.left <= 0) sgNextTurn(sg.again);
-    commit();
-  }
-}, 1000);
+  } else if(left !== sg.left){ sg.left = left; commit(); }
+}
+function makeTicker(fn, ms){
+  try{
+    const w = new Worker(URL.createObjectURL(new Blob([`setInterval(()=>postMessage(0),${ms})`], { type:"text/javascript" })));
+    w.onmessage = fn; return;
+  }catch(e){}
+  setInterval(fn, ms);
+}
+makeTicker(sgTick, 400);
+function sgForce(){
+  if(role !== "host" || !game.sg) return;
+  const sg = game.sg;
+  if(sg.phase === "declared") sgResolveNoDoubt();
+  else if(sg.phase === "doubted") sgResolveDoubt(null);
+  else if(sg.phase === "result") sgNextTurn(sg.again);
+  else if(sg.phase === "roll"){ sgLog(`${sgTurnName()} の番を飛ばしました`); sgNextTurn(false); }
+  commit();
+}
+async function sgRestart(){
+  if(!(await confirmBox("最初からやり直しますか？", "いまのすごろくをやめて、新しい盤面で最初から始めます。", "やり直す"))) return;
+  sgStart();
+}
 
 // any participant: send an action (host applies directly)
 function sgSend(a){
@@ -1686,6 +1859,13 @@ function sgDoubt(){
   sgSend({ act:"doubt", id:sg.decl.id });
   tone(1200,0,.12); tone(1600,.1,.25);
 }
+function sgTrust(){
+  const sg = game && game.sg;
+  if(!sg || sg.phase !== "declared" || !sg.decl || sg.decl.n === myName || !sg.order.includes(myName)) return;
+  trustedFor = sg.decl.id;
+  sgSend({ act:"trust", id:sg.decl.id });
+  render();
+}
 function sgSelfReveal(){
   const sg = game && game.sg;
   if(!sg || sg.phase !== "doubted" || !sg.decl || sg.decl.n !== myName) return;
@@ -1695,7 +1875,22 @@ function sgSelfReveal(){
   sgSend({ act:"reveal", id:mySecret.id, r:mySecret.r, salt:mySecret.salt });
 }
 // everyone: react to state changes (sounds + auto reveal)
+let rulesShownFor = null;
+function sgRulesHtml(){
+  return `<div class="sgrules">
+    <div><b>① 振る</b>　自分の番に「サイコロを振る」。出た目は自分にしか見えません 🎲</div>
+    <div><b>② 宣言</b>　1〜6の目を宣言します。うそでもOK 🤫</div>
+    <div><b>③ ほかの人</b>　🙆「信じる」か 🙅「ダウト！」を選びます（10秒）<br><span class="muted small">うそがばれたら宣言した人が5マス戻る／本当ならダウトした人が3マス戻る。全員が信じたらすぐ進みます</span></div>
+    <div class="goal">30マス目に最初に着いた人の勝ち 🏁</div>
+    <div class="small muted">${Object.values(SG_EV).map(e => `${e.icon} ${e.name}：${e.desc}`).join("<br>")}</div>
+  </div>`;
+}
+function sgShowRules(){ modal("ダウトすごろくの遊び方", sgRulesHtml(), [{ label:"わかった！", value:true, cls:"b-open" }]); }
 function sgOnUpdate(prev, sg){
+  if(sg.seq && rulesShownFor !== sg.seq && sg.phase !== "end"){
+    rulesShownFor = sg.seq;
+    if(!document.querySelector(".modal")) sgShowRules();
+  }
   if(sg.phase === "doubted" && sg.decl && sg.decl.n === myName) setTimeout(sgSelfReveal, 50);
   if(!prev) return;
   if(sg.phase === "declared" && prev.phase !== "declared") tone(660,0,.08,"triangle",.2);
@@ -1727,32 +1922,33 @@ function renderSg(){
   for(let i = 0; i <= sg.len; i++){
     const e = sg.board[i];
     const cls = i === sg.len ? "goal" : (e ? "e-" + e : "");
-    const label = i === 0 ? "S" : i === sg.len ? "🏁" : (e ? `<span class="ev">${SG_EV[e].icon}</span>` : "");
-    cells += `<div class="cell ${cls}"><span class="no">${i===0||i===sg.len?"":i}</span>${label}<div class="toks">${tokens(i)}</div></div>`;
+    const label = i === 0 ? "スタート" : i === sg.len ? "🏁 ゴール" : (e ? `<span class="ev">${SG_EV[e].icon}</span><span class="evn">${SG_EV[e].name}</span>` : "");
+    cells += `<div class="cell ${cls}" ${e ? `data-ev="${e}"` : ""}><span class="no">${i===0||i===sg.len?"":i}</span>${label}<div class="toks">${tokens(i)}</div></div>`;
   }
   // banner
   let bcls = "", btxt = "", bsub = "";
   const tn = sgTurnName();
   if(sg.phase === "roll"){ btxt = `${esc(tn)} の番`; bsub = "サイコロを振って、出た目を宣言します"; }
-  else if(sg.phase === "declared"){ btxt = `${esc(sg.decl.n)}「${sg.decl.v} が出た！」`; bsub = `ダウト受付中 あと${sg.left}秒${sg.decl.dbl ? "（ばれたら10マス戻る！）" : ""}`; }
+  else if(sg.phase === "declared"){ btxt = `${esc(sg.decl.n)}「${sg.decl.v} が出た！」`; bsub = `信じる？ ダウト？ あと${sg.left}秒（信じた人 ${(sg.trust||[]).length}/${sg.order.length - 1}）${sg.decl.dbl ? "・ばれたら10マス戻る！" : ""}`; }
   else if(sg.phase === "doubted"){ bcls = "doubt"; btxt = `${esc(sg.doubt.by)}：ダウト！`; bsub = `${esc(sg.decl.n)} の本当の目を答え合わせ中…`; }
   else if(sg.phase === "result" && sg.res){
     const r = sg.res;
     if(r.kind === "lie"){ bcls = "lie"; btxt = r.r === null ? `${esc(r.n)} は答え合わせできず…` : `嘘だった！ 本当の目は ${r.r}`; bsub = `${esc(r.n)} は${r.back}マス戻る`; }
     else if(r.kind === "truth"){ bcls = "truth"; btxt = `本当だった！ 目は ${r.r}`; bsub = `${esc(r.by)} は3マス戻る／${esc(r.n)} は${r.v}マス進む`; }
-    else { btxt = `${esc(r.n)} は ${r.v} マス進む`; bsub = "誰もダウトしなかった"; }
+    else { btxt = `${esc(r.n)} は ${r.v} マス進む`; bsub = r.all ? "全員が信じた！" : "誰もダウトしなかった"; }
     if(r.evText) bsub += `<br>${SG_EV[r.ev] ? SG_EV[r.ev].icon + " " : ""}${esc(r.evText)}`;
   } else if(sg.phase === "end"){ bcls = "win"; btxt = `🏆 ${esc(sg.winner)} の勝ち！`; bsub = role === "host" ? "「いまいる人でゲーム開始」でもう一度遊べます" : "司会がもう一度始めるのを待っています"; }
   const st = [...sg.order].sort((a,b) => sg.pos[b] - sg.pos[a]).map(n => `
     <div class="st ${n===tn && sg.phase!=="end" ? "turn" : ""}"><span class="tok" style="background:${colorOf(n)}">${esc(n.slice(0,1))}</span>
       <span>${esc(n)}${n===myName?"（あなた）":""}${sg.dbl[n] ? " <span class='small' style='color:var(--gold)'>✖2</span>" : ""}</span>
       <span class="sp">${sg.pos[n]} / ${sg.len}</span></div>`).join("");
+  sgHostButtons();
   const wins = Object.entries(SCx()).filter(([,v]) => v > 0).map(([n,v]) => `${esc(n)} ${v}勝`).join("　");
   board.innerHTML = `
     <div class="qhead"><span class="badge">🎲 ダウトすごろく</span><span class="qno">${wins ? "通算：" + wins : ""}</span></div>
     <div class="sgbanner ${bcls}">${btxt}<small>${bsub}</small></div>
     <div class="sgboard">${cells}</div>
-    <div class="legend">${Object.values(SG_EV).map(e => `<span>${e.icon} ${e.name}</span>`).join("")}</div>
+    <div class="legend">${Object.entries(SG_EV).map(([k,e]) => `<button class="legbtn e-${k}" data-ev="${k}">${e.icon} ${e.name}</button>`).join("")}<button class="legbtn" data-rules="1">❓ 遊び方</button></div>
     <div class="standings">${st}</div>
     <div class="sglog">${sg.log.map(t => `<div>・${esc(t)}</div>`).join("")}</div>`;
   renderSgMe();
@@ -1765,7 +1961,14 @@ function renderSgMe(){
   const inGame = sg.order.includes(myName);
   if(!inGame){ el.innerHTML = `<h3>あなたの操作</h3><div class="muted">観戦中です。次のゲームから参加できます。</div>`; el.dataset.h = ""; return; }
   const myTurn = sgTurnName() === myName;
-  let h = `<h3>あなたの操作（${sg.pos[myName]} / ${sg.len}マス${sg.dbl[myName] ? "・次の宣言は✖2" : ""}）</h3>`;
+  let todo = "";
+  if(sg.phase === "roll") todo = myTurn ? "サイコロを振って、目を宣言する" : `${sgTurnName()} の宣言を待つ`;
+  else if(sg.phase === "declared") todo = sg.decl.n === myName ? "みんなの反応を待つ" : "「信じる」か「ダウト！」を選ぶ";
+  else if(sg.phase === "doubted") todo = "答え合わせを待つ";
+  else if(sg.phase === "result") todo = "結果を確認";
+  let h = `<h3>あなたの操作（${sg.pos[myName]} / ${sg.len}マス${sg.dbl[myName] ? "・次の宣言は✖2" : ""}）</h3>
+    ${todo ? `<div class="todo">いまやること：<b>${esc(todo)}</b></div>` : ""}
+    ${sgMiniMap(sg)}`;
   if(sg.phase === "end"){
     h += `<div class="big">${sg.winner === myName ? "🏆 あなたの勝ち！" : `${esc(sg.winner)} の勝ち`}</div>`;
   } else if(sg.phase === "roll" && myTurn){
@@ -1784,9 +1987,16 @@ function renderSgMe(){
     if(sg.decl.n === myName){
       h += `<div class="big">「${sg.decl.v}」と宣言しました</div><div class="muted small" style="text-align:center;margin-top:6px">ダウトされるかドキドキ…</div>`;
     } else {
-      h += `<div class="small muted" style="text-align:center;margin-bottom:8px">${esc(sg.decl.n)} の「${sg.decl.v}」は嘘だと思う？（10秒以内）</div>
-        <button id="bDoubt" data-sg="doubt">ダウト！</button>
-        <div class="small muted" style="text-align:center;margin-top:8px">スペースキーでも押せます。外れたら自分が3マス戻ります</div>`;
+      const dest = Math.min(sg.len, sg.pos[sg.decl.n] + sg.decl.v), de = sg.board[dest];
+      const hint = dest >= sg.len ? "🏁 ゴールしてしまう！" : de ? `${SG_EV[de].icon}「${SG_EV[de].name}」マスに止まる` : `${dest}マス目（何もないマス）に止まる`;
+      h += `<div style="text-align:center;margin:6px 0 2px">${esc(sg.decl.n)}「<b style="font-size:22px">${sg.decl.v}</b>」が出た！</div>
+        <div class="desthint">本当なら → ${hint}</div>`;
+      if(trustedFor === sg.decl.id){
+        h += `<div class="big" style="margin-top:8px">🙆 信じました</div><div class="small muted" style="text-align:center">ほかの人を待っています</div>`;
+      } else {
+        h += `<div class="trustrow"><button class="btrust" data-sg="trust">🙆 信じる</button><button id="bDoubt" data-sg="doubt">🙅 ダウト！</button></div>
+        <div class="small muted" style="text-align:center;margin-top:8px">10秒以内に選んでね。ダウトが外れたら自分が3マス戻ります</div>`;
+      }
     }
   } else if(sg.phase === "doubted"){
     h += `<div class="big">${sg.decl.n === myName ? "ダウトされた！ 答え合わせ中…" : `${esc(sg.doubt.by)} がダウト！ 答え合わせ中…`}</div>`;
@@ -1801,9 +2011,37 @@ $("sgMe").addEventListener("pointerdown", e => {
   if(k === "roll") sgRoll();
   else if(k === "decl") sgDeclare(+b.dataset.v);
   else if(k === "doubt") sgDoubt();
+  else if(k === "trust") sgTrust();
+});
+function sgMiniMap(sg){
+  const colorOf = n => SG_COLORS[sg.order.indexOf(n) % SG_COLORS.length];
+  let c = "";
+  for(let i = 0; i <= sg.len; i++){
+    const e = sg.board[i], ps = sg.order.filter(n => sg.pos[n] === i);
+    const tok = ps.map(n => `<i style="background:${colorOf(n)}">${n === myName ? "★" : esc(n.slice(0,1))}</i>`).join("");
+    c += `<span class="mm ${e ? "e-" + e : ""} ${i === sg.len ? "goal" : ""}" title="${i}">${tok || (e ? SG_EV[e].icon : (i === sg.len ? "🏁" : ""))}</span>`;
+  }
+  return `<div class="minimap">${c}</div>`;
+}
+function sgHostButtons(){
+  if(role !== "host") return;
+  const sg = game.sg, running = sg && sg.phase !== "end";
+  $("bSgStart").classList.toggle("hidden", !!running);
+  $("bSgRestart").classList.toggle("hidden", !running);
+  $("bSgForce").classList.toggle("hidden", !running);
+  $("bSgSkip").classList.toggle("hidden", !running);
+}
+$("board").addEventListener("click", e => {
+  if(!game || game.mode !== "sugoroku") return;
+  if(e.target.closest("[data-rules]")){ sgShowRules(); return; }
+  const c = e.target.closest("[data-ev]"); if(!c) return;
+  const ev = SG_EV[c.dataset.ev]; if(!ev) return;
+  modal(`${ev.icon} ${ev.name}`, `<p style="margin:0">${esc(ev.desc)}</p>`);
 });
 $("bSgStart").onclick = sgStart;
 $("bSgSkip").onclick = sgSkip;
+$("bSgRestart").onclick = sgRestart;
+$("bSgForce").onclick = sgForce;
 
 
 // ===== practice mode: a room that lives only in this browser (no Firebase) =====
@@ -1883,7 +2121,8 @@ function planOnce(key, fn){ if(!(key in botPlan)) botPlan[key] = fn(); return bo
 setInterval(() => {
   if(!practice || role !== "host" || !game || game.stage !== "play") return;
   const L = BOT_LV[practice.lv] || BOT_LV.normal, now = Date.now();
-  if(game.mode !== "sugoroku"){
+  if(game.mode === "moji"){ botMoji(L, now); return; }
+  if(isQuiz(game.mode)){
     if(game.phase !== "open" && game.phase !== "answer") return;
     for(const b of practice.bots){
       const at = planOnce(`q:${game.round}:${b.id}`, () => Math.random() < L.skip ? -1 : now + rnd(L.min, L.max) * 1000);
@@ -1914,10 +2153,10 @@ setInterval(() => {
       if(b.name === sg.decl.n || !sg.order.includes(b.name)) continue;
       const key = `d:${sg.decl.id}:${b.id}`;
       const p = L.doubt + (sg.decl.v >= 5 ? .15 : 0);
-      const at = planOnce(key, () => Math.random() < p ? now + rnd(1500, 7000) : -1);
-      if(at > 0 && now >= at){
-        botPlan[key] = -2;
-        if(processAct(b.name, { act:"doubt", id:sg.decl.id })) commit();
+      const plan = planOnce(key, () => Math.random() < p ? { t:now + rnd(1500, 7000), act:"doubt" } : { t:now + rnd(800, 2500), act:"trust" });
+      if(plan && plan.t && now >= plan.t){
+        botPlan[key] = { t:0 };
+        if(processAct(b.name, { act:plan.act, id:sg.decl.id })) commit();
         break;
       }
     }
@@ -1937,6 +2176,371 @@ function togglePreview(){
   if(box.firstChild){ box.innerHTML = ""; $("bPreview").textContent = "横に表示"; return; }
   box.innerHTML = `<iframe src="${location.pathname}?practice=1&embed=1" title="回答者画面の見本"></iframe>`;
   $("bPreview").textContent = "隠す";
+}
+
+// ===== もじあてバトル =====
+const MJ_ROWS = [["あ","い","う","え","お"],["か","き","く","け","こ"],["さ","し","す","せ","そ"],["た","ち","つ","て","と"],["な","に","ぬ","ね","の"],
+  ["は","ひ","ふ","へ","ほ"],["ま","み","む","め","も"],["や","","ゆ","","よ"],["ら","り","る","れ","ろ"],["わ","","を","","ん"],["ー","","","",""]];
+const MJ_KANA = MJ_ROWS.flat().filter(Boolean);
+const MJ_SET = new Set(MJ_KANA);
+const MJ_TOPICS = {
+  "食べ物":["おにぎり","からあげ","すし","らーめん","かれー","たこやき","ぎょうざ","てんぷら","うどん","そば","おでん","ぷりん","けーき","ぱんけーき","やきとり"],
+  "動物":["らいおん","きりん","ぞう","うさぎ","ぱんだ","ぺんぎん","いるか","くじら","ねこ","いぬ","さる","かば","こあら","ひつじ","からす"],
+  "乗り物":["でんしゃ","ばす","じてんしゃ","ひこうき","ふね","たくしー","ろけっと","しんかんせん","ばいく","へりこぷたー","とらっく","よっと"],
+  "国":["にほん","あめりか","ふらんす","いたりあ","ちゅうごく","かなだ","ぶらじる","いんど","すぺいん","どいつ","めきしこ","たい"],
+  "スポーツ":["さっかー","やきゅう","てにす","すもう","すいえい","ばれー","じゅうどう","すきー","ごるふ","らぐびー","たっきゅう","ぼくしんぐ"],
+  "学校にあるもの":["こくばん","つくえ","いす","ちょーく","ろうか","たいいくかん","きょうしつ","としょしつ","かだん","ぷーる","ちゃいむ"],
+  "色":["あか","あお","きいろ","みどり","むらさき","ぴんく","しろ","くろ","おれんじ","みずいろ","ちゃいろ","はいいろ","きんいろ"],
+  "冬のもの":["こたつ","ゆき","みかん","てぶくろ","まふらー","すとーぶ","ゆきだるま","おしるこ","なべ","かいろ","すけーと"],
+  "好きなアニメキャラ":[], "推しの声優":[], "アニメのタイトル":[]
+};
+const MJ_GENERAL = Object.values(MJ_TOPICS).flat();
+const MJ_FREQ = "いうんかしたとなるきくこのまてにすつらりれおあはもせそみめよやわけさひほふへちろねぬゆむをえー".split("");
+let myMj = null;          // { seq, word, disp, salt }
+let mjSel = null;         // selected kana before confirming
+const mjReported = new Set();
+const botMj = {};
+
+function mjNorm(s){
+  s = String(s || "").normalize("NFKC").replace(/\s/g, "");
+  s = s.replace(/[ァ-ヶ]/g, c => String.fromCharCode(c.charCodeAt(0) - 0x60));
+  s = s.normalize("NFD").replace(/[゙゚]/g, "").normalize("NFC");
+  const small = { "ぁ":"あ","ぃ":"い","ぅ":"う","ぇ":"え","ぉ":"お","っ":"つ","ゃ":"や","ゅ":"ゆ","ょ":"よ","ゎ":"わ","ゕ":"か","ゖ":"け" };
+  s = s.replace(/[ぁぃぅぇぉっゃゅょゎゕゖ]/g, c => small[c]).replace(/[〜～\-－−]/g, "ー");
+  return s;
+}
+const mjDisp = s => String(s || "").normalize("NFKC").replace(/\s/g, "").replace(/[ァ-ヶ]/g, c => String.fromCharCode(c.charCodeAt(0) - 0x60));
+function mjLog(t){ game.mj.log.unshift(t); game.mj.log = game.mj.log.slice(0, 6); }
+function mjAlive(){ const mj = game.mj; return mj.order.filter(n => mj.ps[n] && !mj.ps[n].out); }
+function mjTurnName(){ const mj = game.mj; return mj ? mj.order[mj.turn] : null; }
+
+// ----- host -----
+function mjSetup(){
+  if(role !== "host") return;
+  const topic = ($("mjTopic").value.trim() || Object.keys(MJ_TOPICS)[Math.floor(Math.random() * 8)]).slice(0, 30);
+  const max = +$("mjMax").value || 7;
+  const names = [myName];
+  for(const p of players()){ const n = p.presence.name.slice(0,12); if(!names.includes(n) && !(room && room.local && n === "あなた（見本）")) names.push(n); }
+  if(names.length < 2){ showWarn("もじあてバトルは2人以上で遊べます。"); setTimeout(() => showWarn(""), 3000); return; }
+  const order = names.slice(0, 8).sort(() => Math.random() - .5);
+  const ps = {}; order.forEach(n => ps[n] = { len:0, commit:"", ready:false, open:[], let:{}, out:false });
+  game.mj = { seq:(game.mj ? game.mj.seq + 1 : 1), phase:"write", topic, max, bonus:$("mjBonus").checked, order, turn:0,
+              called:[], ps, pend:null, last:null, log:[], winners:[], n:0 };
+  mjLog(`お題「${topic}」・${max}文字まで。答えを書いてください`);
+  game.stage = "play";
+  commit();
+}
+function mjBegin(force){
+  const mj = game.mj; if(!mj || mj.phase !== "write") return;
+  if(force) mj.order = mj.order.filter(n => mj.ps[n].ready);
+  if(mj.order.length < 2 || mj.order.some(n => !mj.ps[n].ready)) return;
+  mj.phase = "play"; mj.turn = 0;
+  mjLog(`スタート！ 順番：${mj.order.join(" → ")}`);
+}
+function processMj(n, a){
+  const mj = game.mj; if(!mj) return false;
+  if(a.act === "word"){
+    if(mj.phase !== "write" || !mj.ps[n] || mj.ps[n].ready) return false;
+    const len = +a.len; if(!(len >= 1 && len <= mj.max)) return false;
+    Object.assign(mj.ps[n], { len, commit:String(a.commit || "").slice(0,64), ready:true });
+    if(mj.order.every(x => mj.ps[x].ready)) mjBegin(false);
+    return true;
+  }
+  if(a.act === "call"){
+    if(mj.phase !== "play" || mj.pend || n !== mjTurnName()) return false;
+    const k = String(a.k || ""); if(!MJ_SET.has(k) || mj.called.includes(k)) return false;
+    mj.called.push(k);
+    mj.pend = { id:String(a.id).slice(0,40), k, by:n, need:mjAlive(), got:{}, dl:Date.now() + 8000 };
+    return true;
+  }
+  if(a.act === "hit"){
+    const p = mj.pend; if(!p || a.id !== p.id || !p.need.includes(n) || p.got[n]) return false;
+    const len = mj.ps[n].len;
+    p.got[n] = [...new Set((Array.isArray(a.pos) ? a.pos : []).map(Number).filter(x => Number.isInteger(x) && x >= 0 && x < len))];
+    if(p.need.every(x => p.got[x])) mjApply();
+    return true;
+  }
+  if(a.act === "final"){
+    if(mj.phase !== "end" || !mj.ps[n] || mj.ps[n].word !== undefined) return false;
+    mjVerify(n, String(a.word || "").slice(0, 20), String(a.salt || ""), String(a.disp || "").slice(0, 20));
+    return false;
+  }
+  return false;
+}
+async function mjVerify(n, word, salt, disp){
+  const mj = game.mj, ps = mj.ps[n];
+  let ok = word.length === ps.len;
+  if(ok && ps.commit) ok = (await sha256(`${word}:${salt}:${mj.seq}`)) === ps.commit;
+  if(game.mj !== mj) return;
+  ps.word = disp || word; ps.ok = ok;
+  commit();
+}
+function mjApply(){
+  const mj = game.mj, p = mj.pend; if(!p) return;
+  mj.n++;
+  const hits = {};
+  for(const n of p.need){
+    const pos = p.got[n] || [];
+    const ps = mj.ps[n];
+    pos.forEach(i => { if(!ps.open.includes(i)){ ps.open.push(i); ps.let[i] = p.k; } });
+    if(pos.length) hits[n] = pos.length;
+    if(ps.open.length >= ps.len && !ps.out){ ps.out = true; ps.outAt = mj.n; }
+  }
+  const hitOthers = Object.keys(hits).some(n => n !== p.by);
+  const names = Object.keys(hits);
+  mjLog(`${p.by}「${p.k}」→ ${names.length ? names.map(n => `${n}に${hits[n]}つ`).join("、") : "だれにも当たらず"}`);
+  const outs = p.need.filter(n => mj.ps[n].out);
+  if(outs.length) mjLog(`💥 ${outs.join("・")} が脱落！`);
+  mj.last = { k:p.k, by:p.by, hits, outs };
+  mj.pend = null;
+  const alive = mjAlive();
+  if(alive.length <= 1){
+    mj.phase = "end";
+    mj.winners = alive.length ? alive : mj.order.filter(n => mj.ps[n].outAt === mj.n);
+    mj.winners.forEach(n => SC()[n] = (SC()[n] || 0) + 1);
+    mjLog(`🏆 ${mj.winners.join("・")} の勝ち！`);
+    return;
+  }
+  if(!(mj.bonus && hitOthers && !mj.ps[p.by].out)){
+    let t = mj.turn;
+    for(let i = 0; i < mj.order.length; i++){ t = (t + 1) % mj.order.length; if(!mj.ps[mj.order[t]].out) break; }
+    mj.turn = t;
+  } else mjLog(`${p.by} はもう1回！`);
+  if(mj.ps[mj.order[mj.turn]].out){
+    let t = mj.turn;
+    for(let i = 0; i < mj.order.length; i++){ t = (t + 1) % mj.order.length; if(!mj.ps[mj.order[t]].out) break; }
+    mj.turn = t;
+  }
+}
+function mjTick(){
+  if(role !== "host" || !game || game.mode !== "moji" || !game.mj) return;
+  const p = game.mj.pend;
+  if(p && Date.now() >= p.dl){ mjApply(); commit(); }
+}
+makeTicker(mjTick, 500);
+function mjForce(){
+  const mj = game.mj; if(!mj) return;
+  if(mj.phase === "write") mjBegin(true);
+  else if(mj.pend) mjApply();
+  else if(mj.phase === "play"){
+    mjLog(`${mjTurnName()} の番を飛ばしました`);
+    let t = mj.turn;
+    for(let i = 0; i < mj.order.length; i++){ t = (t + 1) % mj.order.length; if(!mj.ps[mj.order[t]].out) break; }
+    mj.turn = t;
+  }
+  commit();
+}
+async function mjRestart(){
+  if(!(await confirmBox("最初からやり直しますか？", "いまのもじあてバトルをやめて、お題を決め直します。", "やり直す"))) return;
+  game.mj = null; commit();
+}
+
+// ----- everyone -----
+function mjSend(a){
+  if(role === "host"){
+    const key = "mj:" + myName + ":" + a.act + ":" + a.id;
+    if(doneActs.has(key)) return;
+    doneActs.add(key);
+    if(processMj(myName, a)) commit();
+  } else setPresence({ mj:a });
+}
+async function mjSubmit(){
+  const mj = game && game.mj; if(!mj || mj.phase !== "write") return;
+  const raw = $("mjWord").value, w = mjNorm(raw);
+  const err = $("mjErr");
+  if(!w){ err.textContent = "答えを入力してください"; return; }
+  if(w.length > mj.max){ err.textContent = `${mj.max}文字以内にしてください（いま${w.length}文字）`; return; }
+  const bad = [...w].find(c => !MJ_SET.has(c));
+  if(bad){ err.textContent = `「${bad}」は使えません。ひらがな・カタカナで書いてください`; return; }
+  const salt = rid() + rid();
+  myMj = { seq:mj.seq, word:w, disp:mjDisp(raw).slice(0, w.length), salt };
+  try{ sessionStorage.setItem("asoviva.mj", JSON.stringify(myMj)); }catch(e){}
+  const commitH = await sha256(`${w}:${salt}:${mj.seq}`);
+  mjSend({ act:"word", id:"w" + mj.seq, len:w.length, commit:commitH });
+  render();
+}
+function mjCall(){
+  const mj = game && game.mj;
+  if(!mj || mj.phase !== "play" || mj.pend || mjTurnName() !== myName || !mjSel || mj.called.includes(mjSel)) return;
+  mjSend({ act:"call", k:mjSel, id:rid() });
+  mjSel = null; render();
+}
+let mjRulesFor = null;
+function mjRulesHtml(){
+  return `<div class="sgrules">
+    <div><b>① 書く</b>　お題に合う言葉を、自分のスマホにこっそり書きます（ひらがな・カタカナ）✍</div>
+    <div><b>② 呼ぶ</b>　順番に、50音から1文字ずつ呼びます。その文字が入っている人は、その文字が全員に開きます 🔤</div>
+    <div><b>③ もう1回</b>　ほかの人の文字を当てたら、続けてもう1回呼べます 🔁</div>
+    <div><b>④ 脱落</b>　自分の言葉の文字が全部開いたら脱落 💥</div>
+    <div class="goal">最後まで残った人の勝ち 🏆</div>
+    <div class="small muted">濁点・小さい字は区別しません（「は」で「ば・ぱ」も、「や」で「ゃ」も開きます）。</div>
+  </div>`;
+}
+function mjOnUpdate(prev, mj){
+  if(!mj) return;
+  if(mj.seq && mjRulesFor !== mj.seq && mj.phase === "write"){
+    mjRulesFor = mj.seq;
+    if(!document.querySelector(".modal")) modal("もじあてバトルの遊び方", mjRulesHtml(), [{ label:"わかった！", value:true, cls:"b-open" }]);
+  }
+  if(!myMj || myMj.seq !== mj.seq){
+    try{ const s = JSON.parse(sessionStorage.getItem("asoviva.mj") || "null"); if(s && s.seq === mj.seq) myMj = s; }catch(e){}
+  }
+  // report hits for a call
+  const p = mj.pend;
+  if(p && p.need.includes(myName) && !(p.got && p.got[myName]) && myMj && myMj.seq === mj.seq && !mjReported.has(p.id)){
+    mjReported.add(p.id);
+    const pos = []; [...myMj.word].forEach((c, i) => { if(c === p.k) pos.push(i); });
+    mjSend({ act:"hit", id:p.id, pos });
+  }
+  if(mj.phase === "end" && mj.ps[myName] && mj.ps[myName].word === undefined && myMj && myMj.seq === mj.seq && !mjReported.has("f" + mj.seq)){
+    mjReported.add("f" + mj.seq);
+    mjSend({ act:"final", id:"f" + mj.seq, word:myMj.word, salt:myMj.salt, disp:myMj.disp });
+  }
+  if(prev && mj.last && (!prev.last || prev.last.k !== mj.last.k || prev.last.by !== mj.last.by)){
+    if(mj.last.outs && mj.last.outs.length) sfx.ng(2);
+    else if(Object.keys(mj.last.hits).length) sfx.ok(2);
+    else tone(300,0,.15,"sine",.2);
+  }
+  if(prev && prev.phase !== "end" && mj.phase === "end"){ sfx.ok(1); }
+}
+
+// ----- render -----
+function mjBoxes(n, big){
+  const mj = game.mj, ps = mj.ps[n];
+  if(!ps.ready) return `<span class="muted small">${mj.phase === "write" ? "書いています…" : "参加していません"}</span>`;
+  let h = "";
+  for(let i = 0; i < ps.len; i++){
+    const open = ps.open.includes(i);
+    const ch = mj.phase === "end" && ps.word !== undefined ? [...ps.word][i] : (open ? ps.let[i] : "");
+    h += `<b class="mjb ${open ? "open" : ""} ${big ? "big" : ""}">${esc(ch || "")}</b>`;
+  }
+  return h;
+}
+function renderMj(){
+  const mj = game.mj, board = $("board");
+  renderPeople(); mjHostButtons();
+  if(!mj){
+    board.innerHTML = `<div class="qhead"><span class="badge">🔤 もじあてバトル</span></div>
+      <div class="sgbanner">${role === "host" ? "右の「もじあてバトル」でお題を決めて始めてください" : "司会がお題を決めるのを待っています"}<small>2〜8人で遊べます</small></div>${mjRulesHtml()}`;
+    renderMjMe(); return;
+  }
+  const tn = mjTurnName();
+  let stat = "";
+  if(mj.phase === "write") stat = `答えを書いています（${mj.order.filter(n => mj.ps[n].ready).length}/${mj.order.length}人）`;
+  else if(mj.phase === "play") stat = mj.pend ? `${esc(mj.pend.by)}「${esc(mj.pend.k)}」！ 確認中…` : `${esc(tn)} の番`;
+  else stat = `🏆 ${esc(mj.winners.join("・"))} の勝ち！`;
+  const rows = mj.order.map(n => {
+    const ps = mj.ps[n];
+    const mark = mj.phase === "end" && ps.word !== undefined ? (ps.ok ? '<span class="small" style="color:var(--green)">✓ 本物</span>' : '<span class="small" style="color:var(--red)">✗ 不一致</span>') : "";
+    return `<div class="mjrow ${ps.out ? "out" : ""} ${n === tn && mj.phase === "play" ? "turn" : ""}">${avHtml(avatarOf(n), 28, n)}<span class="mjn">${esc(n)}${n === myName ? "（あなた）" : ""}</span>
+      <span class="mjw">${mjBoxes(n)}</span>${ps.out ? '<span class="tag lock">脱落</span>' : ""}${mark}</div>`;
+  }).join("");
+  const last = mj.last ? mj.last.k : "";
+  const grid = MJ_ROWS.map(r => r.map(k => k ? `<span class="kana ${mj.called.includes(k) ? "used" : ""} ${k === last ? "last" : ""}">${k}</span>` : `<span class="kana blank"></span>`).join("")).join("");
+  board.innerHTML = `
+    <div class="rulestrip"><span>🔤 もじあてバトル</span><span>お題：<b>${esc(mj.topic)}</b></span><span>${mj.max}文字まで</span><span>${mj.bonus ? "当てたらもう1回" : "1回で交代"}</span></div>
+    <div class="sgbanner ${mj.phase === "end" ? "win" : ""}">${stat}</div>
+    <div class="mjrows">${rows}</div>
+    <div class="kanagrid">${grid}</div>
+    <div class="legend"><button class="legbtn" data-mjrules="1">❓ 遊び方</button></div>
+    <div class="sglog">${mj.log.map(t => `<div>・${esc(t)}</div>`).join("")}</div>`;
+  renderMjMe();
+}
+function renderMjMe(){
+  const el = $("mjMe"); if(!el) return;
+  const mj = game && game.mj;
+  let h = "";
+  if(!mj) h = `<h3>あなたの操作</h3><div class="muted small">お題が出ると、ここで答えを書きます。</div>`;
+  else if(!mj.ps[myName]) h = `<h3>あなたの操作</h3><div class="muted">観戦中です。次のゲームから参加できます。</div>`;
+  else {
+    const ps = mj.ps[myName], tn = mjTurnName();
+    let todo = "";
+    if(mj.phase === "write") todo = ps.ready ? "ほかの人を待つ" : "お題に合う言葉を書く";
+    else if(mj.phase === "play") todo = ps.out ? "観戦（脱落しました）" : mj.pend ? "確認中" : tn === myName ? "50音から1文字選んで呼ぶ" : `${tn} の番を待つ`;
+    else todo = "結果を確認";
+    h = `<h3>あなたの操作</h3><div class="todo">お題：<b>${esc(mj.topic)}</b><br>いまやること：<b>${esc(todo)}</b></div>`;
+    if(mj.phase === "write" && !ps.ready){
+      h += `<input id="mjWord" maxlength="20" placeholder="例：${esc((MJ_TOPICS[mj.topic] || MJ_GENERAL)[0] || "からあげ")}" style="font-size:20px;letter-spacing:.1em">
+        <div class="small muted" style="margin-top:4px">${mj.max}文字まで。ひらがな・カタカナ（カタカナは自動でひらがなに）。自分の端末の外には出ません。</div>
+        <div class="small" id="mjErr" style="color:#ffc2d0;min-height:1.2em"></div>
+        <button class="b-open" data-mj="submit" style="width:100%;font-size:18px;padding:12px">これで決定</button>`;
+    } else if(myMj && myMj.seq === mj.seq){
+      const disp = [...myMj.disp], word = [...myMj.word];
+      h += `<div class="small muted">あなたの答え（黄色＝開いた文字）</div><div class="mjmine">${word.map((c, i) => `<b class="mjb big ${ps.open.includes(i) ? "open" : "mine"}">${esc(disp[i] || c)}</b>`).join("")}</div>`;
+    }
+    if(mj.phase === "play" && !ps.out && tn === myName && !mj.pend){
+      h += `<div class="kanagrid pick">${MJ_ROWS.map(r => r.map(k => k ? `<button data-k="${k}" class="kana ${mj.called.includes(k) ? "used" : ""} ${mjSel === k ? "sel" : ""}" ${mj.called.includes(k) ? "disabled" : ""}>${k}</button>` : `<span class="kana blank"></span>`).join("")).join("")}</div>
+        <button class="b-ng" data-mj="call" style="width:100%;font-size:20px;padding:14px;margin-top:8px" ${mjSel ? "" : "disabled"}>${mjSel ? `「${mjSel}」を呼ぶ` : "文字を選んでください"}</button>`;
+    }
+    if(ps.out && mj.phase === "play") h += `<div class="big muted" style="margin-top:8px">💥 脱落… 最後まで見守ろう</div>`;
+    if(mj.phase === "end") h += `<div class="big" style="margin-top:8px">${mj.winners.includes(myName) ? "🏆 あなたの勝ち！" : `${esc(mj.winners.join("・"))} の勝ち`}</div>`;
+  }
+  const focused = document.activeElement && document.activeElement.id === "mjWord";
+  if(el.dataset.h !== h && !focused){ el.innerHTML = h; el.dataset.h = h; }
+}
+function mjHostButtons(){
+  if(role !== "host") return;
+  const mj = game.mj, running = mj && mj.phase !== "end";
+  $("mjSetupBox").classList.toggle("hidden", !!running);
+  $("bMjForce").classList.toggle("hidden", !running);
+  $("bMjRestart").classList.toggle("hidden", !running);
+  $("bMjForce").textContent = mj && mj.phase === "write" ? "⏭ そろった人だけで始める" : "⏭ 次へ進める（止まったとき）";
+}
+$("mjMe").addEventListener("pointerdown", e => {
+  const k = e.target.closest("[data-k]");
+  if(k && !k.disabled){ mjSel = k.dataset.k; renderMjMe(); return; }
+  const b = e.target.closest("[data-mj]"); if(!b) return;
+  if(b.dataset.mj === "submit") mjSubmit();
+  if(b.dataset.mj === "call") mjCall();
+});
+$("mjMe").addEventListener("keydown", e => { if(e.key === "Enter" && e.target.id === "mjWord") mjSubmit(); });
+$("board").addEventListener("click", e => { if(game && game.mode === "moji" && e.target.closest("[data-mjrules]")) modal("もじあてバトルの遊び方", mjRulesHtml()); });
+$("bMjStart").onclick = mjSetup;
+$("bMjForce").onclick = mjForce;
+$("bMjRestart").onclick = mjRestart;
+$("bMjRandom").onclick = () => { const t = Object.keys(MJ_TOPICS); $("mjTopic").value = t[Math.floor(Math.random() * t.length)]; };
+
+// ----- CPU -----
+function botMoji(L, now){
+  const mj = game.mj; if(!mj || !practice) return;
+  const isBot = n => practice.bots.some(b => b.name === n);
+  let changed = false;
+  if(mj.phase === "write"){
+    for(const b of practice.bots){
+      if(!mj.ps[b.name] || mj.ps[b.name].ready) continue;
+      const list = (MJ_TOPICS[mj.topic] && MJ_TOPICS[mj.topic].length ? MJ_TOPICS[mj.topic] : MJ_GENERAL).filter(w => w.length <= mj.max);
+      const w = mjNorm(list[Math.floor(Math.random() * list.length)] || "ねこ");
+      botMj[b.name] = { seq:mj.seq, word:w };
+      if(processMj(b.name, { act:"word", len:w.length, commit:"" })) changed = true;
+    }
+  }
+  const p = mj.pend;
+  if(p){
+    for(const n of p.need){
+      if(!isBot(n) || p.got[n]) continue;
+      const w = (botMj[n] && botMj[n].seq === mj.seq) ? botMj[n].word : "";
+      const pos = []; [...w].forEach((c, i) => { if(c === p.k) pos.push(i); });
+      if(processMj(n, { act:"hit", id:p.id, pos })) changed = true;
+    }
+  } else if(mj.phase === "play" && isBot(mjTurnName())){
+    const n = mjTurnName();
+    const key = `mj:${mj.seq}:${mj.n}:${n}`;
+    const at = planOnce(key, () => now + rnd(900, 2000));
+    if(at > 0 && now >= at){
+      botPlan[key] = -2;
+      const left = MJ_FREQ.filter(k => !mj.called.includes(k));
+      const pool = practice.lv === "strong" ? left.slice(0, 6) : practice.lv === "normal" ? left.slice(0, 14) : left;
+      const k = pool[Math.floor(Math.random() * pool.length)] || MJ_KANA.find(x => !mj.called.includes(x));
+      if(k && processMj(n, { act:"call", k, id:rid() })) changed = true;
+    }
+  }
+  if(mj.phase === "end"){
+    for(const b of practice.bots){
+      const ps = mj.ps[b.name];
+      if(ps && ps.word === undefined && botMj[b.name] && botMj[b.name].seq === mj.seq && !ps._v){ ps._v = 1; processMj(b.name, { act:"final", word:botMj[b.name].word, salt:"", disp:botMj[b.name].word }); }
+    }
+  }
+  if(changed) commit();
 }
 
 // ===== feedback =====
@@ -2203,14 +2807,46 @@ $("scores").addEventListener("click", e => {
   const b = e.target.closest("button[data-adj]"); if(!b || role !== "host") return;
   const n = b.getAttribute("data-n"); SC()[n] = (SC()[n]||0) + (+b.getAttribute("data-adj")); commit();
 });
+$("thumbs").addEventListener("change", e => {
+  const s = e.target.closest("[data-fx]"); if(!s) return;
+  const i = +s.dataset.fx; if(!images[i]) return;
+  images[i].fx = s.value; s.blur();
+  if(game && game.mode === "mosaic" && i === game.q.idx && game.phase !== "result"){ game.q.idx = i - 1; hostNext(); }
+  else renderThumbs();
+});
+$("bFxAll").onclick = () => {
+  const fx = $("fxAll").value;
+  images.forEach(x => x.fx = fx);
+  renderThumbs();
+};
+async function pickFocus(i){
+  const q = images[i]; if(!q) return;
+  let fp = Object.assign({}, q.fp || { x:.5, y:.5 });
+  const p = modal("拡大する場所を選ぶ", `<p class="small muted" style="margin:0 0 8px">画像の上で、最初に拡大して見せたい場所をタップしてください。</p>
+    <div style="position:relative;display:inline-block;max-width:100%"><img id="fpImg" src="${q.url}" style="max-width:100%;max-height:50vh;display:block;border-radius:8px;cursor:crosshair">
+    <span id="fpMark" style="position:absolute;width:26px;height:26px;margin:-13px 0 0 -13px;border:3px solid #ffcc33;border-radius:50%;pointer-events:none"></span></div>`,
+    [{ label:"やめる", value:false }, { label:"決定", value:true, cls:"b-open" }]);
+  const root = $("modalRoot").lastElementChild;
+  const im = root.querySelector("#fpImg"), mk = root.querySelector("#fpMark");
+  const place = () => { mk.style.left = (fp.x * 100) + "%"; mk.style.top = (fp.y * 100) + "%"; };
+  place();
+  im.onclick = e => { const r = im.getBoundingClientRect(); fp = { x:(e.clientX - r.left) / r.width, y:(e.clientY - r.top) / r.height }; place(); };
+  if(await p){
+    q.fp = fp;
+    if(game && game.mode === "mosaic" && i === game.q.idx){ curFp = fp; mzSent = ""; commit(); }
+    renderThumbs();
+  }
+}
 $("thumbs").addEventListener("input", e => {
+  if(!e.target.matches("input[data-i]")) return;
   const i = +e.target.getAttribute("data-i"); if(isNaN(i) || !images[i]) return;
   images[i].a = e.target.value.slice(0,120);
   e.target.classList.toggle("need", !images[i].a.trim());
   if(game && game.mode === "mosaic" && i === game.q.idx){ game.q.ans = images[i].a; commit(); }
 });
 $("thumbs").addEventListener("click", e => {
-  const go = e.target.closest("[data-go]"), del = e.target.closest("[data-del]");
+  const go = e.target.closest("[data-go]"), del = e.target.closest("[data-del]"), fpb = e.target.closest("[data-fp]");
+  if(fpb){ pickFocus(+fpb.dataset.fp); return; }
   if(go){
     if(game.mode !== "mosaic") switchMode("mosaic");
     game.q.idx = +go.getAttribute("data-go") - 1; hostNext();
@@ -2261,6 +2897,7 @@ $("buzz").addEventListener("pointerdown", e => { e.preventDefault(); buzz(); });
 document.addEventListener("keydown", e => {
   if(e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA" || e.target.tagName === "SELECT" || e.repeat) return;
   if(document.querySelector(".modal")) return;
+  if(game && game.mode === "moji") return;
   if(game && game.mode === "sugoroku" && game.stage === "play"){
     if(e.code === "Space"){ e.preventDefault(); sgDoubt(); }
     return;
