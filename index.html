@@ -6,7 +6,7 @@
 <title>遊び場 AsoViva</title>
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@500;800&family=M+PLUS+Rounded+1c:wght@500;800&display=swap" rel="stylesheet">
 <style>
 
 :root{
@@ -438,6 +438,236 @@ body.mode-sugoroku.sg-on #peopleCard{display:none}
 .sgstage.showres{min-height:min(860px,calc(100vh - 140px))}
 @media(max-width:600px){ .sgstage.showres{min-height:720px} .sgres{padding:8px} }
 
+/* ================= TILE THEME (dark industrial + white tiles) ================= */
+:root{ --tile:#f1efe8; --tile2:#e3e0d6; --tile3:#d5d2c7; --ink:#2c2c2a; --ink2:#6b6a64; --tline:#c9c6bb; --acc:#e8742a; --tblue:#2f7fd6; --tdark:#2c2c2a; }
+body{font-family:"M PLUS 1p","M PLUS Rounded 1c",system-ui,sans-serif;
+  background-color:#26272b;
+  background-image:linear-gradient(rgba(38,39,43,.55),rgba(20,21,24,.9)),repeating-linear-gradient(135deg,rgba(255,255,255,.025) 0 2px,transparent 2px 22px),linear-gradient(90deg,#2f3034 0 12%,#26272b 12% 70%,#2f3034 70%);
+  background-attachment:fixed}
+button{border-radius:3px}
+input,textarea,select{border-radius:2px}
+/* header = dark status bar */
+header{background:#1d1e21;margin:-16px -16px 14px;padding:10px 16px;border-bottom:2px solid #3a3b40;position:sticky;top:0;z-index:40}
+h1{font-weight:800;letter-spacing:.04em}
+h1 span{color:var(--acc)}
+.roomcode{background:#2a2b2f;border:1px solid #44454b;border-radius:3px}
+.roomcode b{color:var(--acc)}
+.hbtn{background:#2a2b2f;border:1px solid #44454b;border-radius:3px;color:#eee}
+#bHdrLobby{background:var(--tblue);border-color:var(--tblue);color:#fff;margin-left:auto}
+.modelabel{background:#2a2b2f;border:1px solid #44454b;border-radius:3px;border-left:4px solid var(--acc);margin-left:8px}
+#bHdrLobby:not(.hidden) + .modelabel{margin-left:8px}
+#bHdrLobby.hidden + .modelabel{margin-left:auto}
+
+/* tiles */
+.card{--gold:#c97a0a;--text:var(--ink);--muted:var(--ink2);--panel2:var(--tile2);--line:var(--tline);
+  background:rgba(241,239,232,var(--cardA,1));color:var(--ink);border:none;border-radius:3px;box-shadow:0 3px 0 rgba(0,0,0,.35);position:relative}
+.modal .card,.volpop{background:var(--tile)}
+.volpop{--text:var(--ink);--muted:var(--ink2);color:var(--ink)}
+.card h3{color:var(--ink);font-size:19px;font-weight:800;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.card h3[data-en]::after{content:attr(data-en);font-size:11px;letter-spacing:.12em;color:#9a988f;font-weight:500}
+.card input,.card textarea,.card select{background:#fff;color:var(--ink);border:1px solid var(--tline)}
+.card button,.volpop button{background:var(--tile3);color:var(--ink)}
+.card button:hover{filter:brightness(.96)}
+.card .b-open,.b-open{background:var(--tblue);color:#fff}
+.card .b-ok,.b-ok{background:#1f9e6a;color:#fff}
+.card .b-ng,.b-ng{background:#d8433f;color:#fff}
+.card .b-next,.b-next{background:#2c2c2a;color:#fff}
+.b-dark,.card .b-dark{background:#2c2c2a;color:#fff}
+.b-white,.card .b-white{background:#fff;color:var(--ink)}
+.kbd{border-color:rgba(255,255,255,.5);color:inherit;opacity:.75}
+details summary{color:var(--ink)}
+.sec2{border-top:1px solid var(--tline)}
+.badge{background:#2c2c2a;color:#fff;border-radius:2px}
+.badge.open{background:var(--acc);color:#fff}
+.chip,.mchip,.prow .tag,.av,.avbtn{background:var(--tile3);color:var(--ink)}
+.prow .tag.host{background:#2c2c2a;color:#fff}
+.srow,.thumb,.st,.startbox,.todo,.mjrow,.sgrules > div,.emojigrid button,.slot,.ocard,.answerer{background:var(--tile2);color:var(--ink)}
+.srow .pt,.st .sp{color:#c25a14}
+.srow.me{outline-color:var(--tblue)}
+.answerer .who{color:var(--ink)}
+.answerer.hot{background:#d8433f;color:#fff}.answerer.hot .who,.answerer.hot .lbl{color:#fff}
+.answerer.ok,.ocard.ok{background:#1f9e6a;color:#fff}.answerer.ok .lbl{color:#e1f5ee}
+.ocard.big{background:#2c2c2a;color:#fff;border-left:5px solid var(--acc)}
+.ocard.big .rk{color:#d3d1c7}
+.ocard.ng{opacity:.55}
+.ans{background:#e1f5ee;border-color:#5dcaa5;color:#04342c}
+.rulestrip{background:#2c2c2a;color:#eee;border:none;border-radius:2px;border-left:4px solid var(--acc)}
+.rulestrip b{color:#fac775}
+.lvl i{background:var(--tile3)}.lvl i.on{background:var(--acc)}.lvl b{color:#c25a14}
+.noimg{border-color:var(--tline)}
+.ps-wait{background:#2c2c2a;color:#eee}
+.ps-lock{background:#5f5e5a;color:#fff}
+.peek{background:var(--tile2)}
+.modes button.on{background:#dbe9f8;border-color:var(--tblue)}
+.mm{background:var(--tile3)}
+.kanagrid .kana{background:var(--tile3);color:var(--ink)}
+.kanagrid .kana.used{background:#bdbab0;color:#8a887f}
+.mjb{background:#2c2c2a;color:#fff}
+.mjb.mine{background:#5f5e5a;color:#fff}
+.btrust{background:var(--tile3)}
+.sglog{color:var(--ink2)}
+.rulebtns button.on,.chips button.on,.bgchips button.on{background:var(--tblue)!important;color:#fff!important}
+.guide{color:var(--ink)}
+.desthint{color:var(--ink)}
+.foot{color:#9a988f}
+.warn{border-radius:3px}
+/* dark islands inside tiles keep light text */
+.sgbanner,.sgbar,.sgres,.sgpv,.sgdie .dcap,.myband,.pbadge{--text:#f1efe8;--muted:#c8c6be}
+.sgbanner,.sgbar{background:#2c2c2a;color:#f1efe8;border-radius:2px;border-left:5px solid var(--acc)}
+.sgbanner.truth,.sgbar.truth{color:#032}.sgbanner.win,.sgbar.win{color:#221}
+.sgrbtn{background:rgba(255,255,255,.18)!important;color:inherit!important}
+.sbox,.lgi{background:var(--tile2);border-color:var(--tline);color:var(--ink)}
+.lgi small{color:var(--ink2)}
+.spl.turn{background:#faeeda;outline-color:var(--acc)}
+.spl .sp{color:#c25a14}
+.rtable td{color:#f1efe8}
+.sgstage.theme-bg{background:rgba(0,0,0,.08)}
+/* ===== start screen ===== */
+#start{max-width:1080px;margin:24px auto}
+.sthero{color:#f1efe8;margin:10px 0 18px;border-left:6px solid var(--acc);padding-left:14px}
+.stk{font-size:12px;letter-spacing:.3em;color:#9a988f}
+.stt{font-size:clamp(30px,5vw,52px);font-weight:800;line-height:1.1}
+.stt span{color:var(--acc);font-size:.55em;letter-spacing:.06em}
+.sts{color:#c8c6be;font-size:14px;margin-top:4px}
+.stgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media(max-width:860px){.stgrid{grid-template-columns:1fr}}
+.stcol{display:flex;flex-direction:column;gap:12px}
+.tilec{padding:16px}
+.tilec.acc{border-top:4px solid var(--acc)}
+.tilec.blue{background:var(--tblue);color:#fff;--text:#fff;--muted:#e6f1fb}
+.tilec.blue h3{color:#fff}.tilec.blue h3::after{color:#cfe2f6}
+.tilec.blue #roomInfo{color:#fff}
+.tilec.dark{background:#2c2c2a;color:#f1efe8;--text:#f1efe8;--muted:#b4b2a9;outline:1px solid #5f5e5a}
+.tilec.dark h3{color:#fff}.tilec.dark h3::after{color:#888780}
+.tilec.dark select{background:#444441;color:#fff;border-color:#5f5e5a}
+.tilec.dark label{color:#b4b2a9}
+
+/* ===== room lobby (hub) ===== */
+body.in-lobby .layout{grid-template-columns:minmax(0,1fr)}
+body.in-lobby .layout > div:last-child{display:none!important}
+body.in-lobby #board{background:transparent;box-shadow:none;padding:0;color:#f1efe8}
+body.in-lobby .foot{display:none}
+body.in-lobby .wrap{max-width:1500px}
+.hub{display:grid;grid-template-columns:210px minmax(0,1fr) 300px;gap:16px;align-items:start;min-height:calc(100vh - 120px)}
+@media(max-width:1000px){.hub{grid-template-columns:minmax(0,1fr);min-height:0}.hubL{order:2}.hubR{order:3}}
+.hubL{display:flex;flex-direction:column;gap:12px}
+.ring{--pct:0%;width:96px;height:96px;border-radius:50%;background:conic-gradient(var(--acc) var(--pct),#4a4b50 0);display:flex;align-items:center;justify-content:center;position:relative}
+.ring::before{content:"";position:absolute;inset:8px;border-radius:50%;background:#1d1e21}
+.ring b,.ring span{position:relative}
+.ring b{font-size:38px;font-weight:800;line-height:1}
+.ring span{font-size:12px;margin:14px 0 0 2px}
+.mstrips{display:flex;flex-direction:column;gap:4px}
+.ms{display:flex;align-items:center;gap:8px;background:rgba(29,30,33,.88);border-left:4px solid var(--tblue);padding:5px 8px;font-size:14px;font-weight:800;color:#f1efe8}
+.ms .mn{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ms small{color:#9a988f;font-weight:500}
+.ms em{font-style:normal;font-size:11px;background:var(--acc);color:#fff;padding:1px 6px}
+.ms em.on{background:#1f9e6a}
+.news{background:#1d1e21;border:1px solid var(--acc)}
+.news .nh{background:var(--acc);color:#fff;font-size:11px;font-weight:800;letter-spacing:.2em;padding:2px 8px}
+.news .nb{padding:8px;font-size:13px;line-height:1.6;color:#e3e0d6}
+.hubC{min-width:0;display:flex;flex-direction:column;gap:10px}
+.car{position:relative}
+.track{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:14px 18%;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.track::-webkit-scrollbar{display:none}
+.gcard{flex:0 0 64%;scroll-snap-align:center;position:relative;background:var(--tile);color:var(--ink);border-top:5px solid var(--acc);padding:20px 18px 18px;min-height:330px;display:flex;flex-direction:column;cursor:pointer;
+  transition:transform .25s,opacity .25s;transform:scale(.88);opacity:.5;box-shadow:0 4px 0 rgba(0,0,0,.4);overflow:hidden}
+.gcard.center{transform:none;opacity:1}
+.gcard .gic{font-size:64px;line-height:1;margin:10px 0 12px}
+.gcard .gjp{font-size:clamp(24px,3vw,34px);font-weight:800}
+.gcard .gen{font-size:12px;letter-spacing:.2em;color:#9a988f;margin-top:2px}
+.gcard .gds{font-size:14px;line-height:1.7;color:var(--ink2);margin-top:12px;max-width:34em}
+.gcard .gwm{position:absolute;right:-10px;bottom:-24px;font-size:170px;opacity:.09;pointer-events:none}
+.gcard .gtag{position:absolute;top:12px;right:12px;background:#2c2c2a;color:#fff;font-size:12px;padding:2px 8px}
+.gcard .gsel{position:absolute;top:12px;left:12px;background:var(--acc);color:#fff;font-size:12px;font-weight:800;padding:2px 8px;display:none}
+.gcard.picked .gsel{display:block}
+body.role-host .gcard .gsel{display:none!important}
+.hub .car-ar{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:44px;height:44px;border-radius:50%;padding:0;font-size:28px;line-height:1;background:#1d1e21;color:#fff;border:1px solid #5f5e5a}
+.car-ar.l{left:4px}.car-ar.r{right:4px}
+.dots{display:flex;justify-content:center;gap:8px}
+.dots i{width:26px;height:4px;background:#5f5e5a;cursor:pointer}
+.dots i.on{background:var(--acc)}
+.carhint{text-align:center;font-size:12px;color:#9a988f}
+.gobox{display:flex;flex-direction:column;align-items:center;gap:8px}
+.hub .gobtn{background:var(--tblue);color:#fff;font-size:20px;padding:14px 40px;border-left:6px solid var(--acc);box-shadow:0 4px 0 #174c86}
+.hub .lockbtn{background:transparent;color:#c8c6be;font-size:13px;font-weight:500;border:1px solid #5f5e5a;padding:6px 12px}
+.gowait{background:#1d1e21;border-left:5px solid var(--acc);padding:12px 18px;font-size:16px;color:#e3e0d6}
+.gowait b{color:#fff}
+.hubR{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.hub .tl{position:relative;text-align:left;background:var(--tile);color:var(--ink);padding:12px;min-height:84px;display:flex;flex-direction:column;justify-content:flex-start;overflow:hidden;box-shadow:0 3px 0 rgba(0,0,0,.4)}
+.tl b{font-size:24px;font-weight:800;line-height:1.1}
+.tl small{font-size:11px;letter-spacing:.12em;color:#9a988f;font-weight:500;margin-top:4px}
+.tl i{position:absolute;right:8px;bottom:2px;font-style:normal;font-size:38px;opacity:.2}
+.tl.wide{grid-column:1/3;min-height:96px}
+.tl.acc{border-top:4px solid var(--acc)}
+.hub .tl.blue{background:var(--tblue);color:#fff}.tl.blue small{color:#cfe2f6}
+.hub .tl.dark{background:#2c2c2a;color:#fff;outline:1px solid #5f5e5a}.tl.dark small{color:#888780}
+@media(max-width:1000px){ .gcard{flex-basis:84%;min-height:280px} .track{padding:10px 8%} .car-ar{display:none} .hubR .tl{min-height:64px} .tl b{font-size:19px} }
+/* sheets */
+.sheet .card{max-width:620px}
+.mlist{display:flex;flex-direction:column;gap:6px}
+.mlist .ms{background:var(--tile2);color:var(--ink)}
+.invite{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.invite .bigcode{color:var(--ink)}
+.recgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:600px){.recgrid{grid-template-columns:1fr}}
+.recsec{background:var(--tile2);padding:10px}
+.recsec .rh{font-weight:800;margin-bottom:6px;border-bottom:2px solid var(--acc);padding-bottom:4px}
+.rr{display:flex;align-items:center;gap:8px;padding:3px 0;font-size:14px}
+.rr span{width:18px;color:var(--ink2)}
+.rr b{flex:1}
+.rr em{font-style:normal;font-weight:800;color:#c25a14}
+.sheet #secStage{border:none}
+
+/* ===== host answer card ===== */
+.anscard{background:#faeeda;border:2px dashed #ba7517;padding:8px 10px;color:#412402}
+.anscard .ah{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:11px;letter-spacing:.1em;color:#854f0b;font-weight:800}
+.anscard .abtns{display:flex;gap:4px}
+.anscard .abtns button{padding:3px 8px;font-size:12px;background:#2c2c2a;color:#fff}
+.anscard .av2{font-size:22px;font-weight:800;margin-top:4px;color:#b4a58a;word-break:break-all}
+.anscard .av2.shown{color:#412402;font-size:26px}
+.anscard .an{font-size:11px;color:#854f0b;margin-top:4px;line-height:1.5}
+
+/* ===== phone quiz: picture on top, big buzz fixed at the bottom ===== */
+@media(max-width:860px){
+  body.role-player.mode-normal .layout > div:last-child,
+  body.role-player.mode-mosaic .layout > div:last-child{order:0}
+  body.role-player:not(.in-lobby).mode-normal #playerPanel,
+  body.role-player:not(.in-lobby).mode-mosaic #playerPanel{position:fixed;left:8px;right:8px;bottom:8px;z-index:45;padding:8px;display:flex;flex-direction:column;gap:6px;box-shadow:0 -4px 18px rgba(0,0,0,.45)}
+  body.role-player:not(.in-lobby).mode-normal #playerPanel .myband,
+  body.role-player:not(.in-lobby).mode-mosaic #playerPanel .myband{display:none}
+  body.role-player:not(.in-lobby).mode-normal #playerPanel .pstate,
+  body.role-player:not(.in-lobby).mode-mosaic #playerPanel .pstate{margin-top:0!important;min-height:36px;padding:6px;font-size:15px}
+  body.role-player:not(.in-lobby).mode-normal #playerPanel .pstate .ic,
+  body.role-player:not(.in-lobby).mode-mosaic #playerPanel .pstate .ic{font-size:18px}
+  body.role-player:not(.in-lobby).mode-normal .buzzwrap,
+  body.role-player:not(.in-lobby).mode-mosaic .buzzwrap{padding:0}
+  body.role-player:not(.in-lobby).mode-normal .buzzwrap .small,
+  body.role-player:not(.in-lobby).mode-mosaic .buzzwrap .small{display:none}
+  body.role-player:not(.in-lobby).mode-normal #buzz,
+  body.role-player:not(.in-lobby).mode-mosaic #buzz{width:100%;height:110px;border-radius:12px;font-size:34px;box-shadow:0 7px 0 #6b001b}
+  body.role-player:not(.in-lobby).mode-normal #main,
+  body.role-player:not(.in-lobby).mode-mosaic #main{padding-bottom:190px}
+  body.role-player.mode-mosaic #mzPlayer{max-height:calc(100vh - 340px)}
+  body.role-player:not(.in-lobby).mode-normal .fbbtn,
+  body.role-player:not(.in-lobby).mode-mosaic .fbbtn{display:none}
+}
+.fbbtn{background:#1d1e21;border:1px solid #5f5e5a;border-radius:3px;color:#f1efe8}
+.bgchips button{border-radius:3px}
+header{box-shadow:0 0 0 100vmax #1d1e21;clip-path:inset(0 -100vmax)}
+@media(max-width:600px){
+  header{flex-wrap:wrap;gap:6px;padding:8px 10px}
+  h1{font-size:18px}
+  .modelabel{font-size:12px;padding:3px 8px;margin-right:0}
+  .hgroup{width:100%;display:flex;align-items:center;gap:6px;flex-wrap:nowrap}
+  .roomcode{white-space:nowrap;padding:3px 8px;margin-right:0;font-size:12px}
+  .roomcode b{font-size:18px}
+  .hbtn{white-space:nowrap;padding:5px 9px}
+  #connText{display:none}
+  .hub .hubL{display:grid;grid-template-columns:80px minmax(0,1fr);gap:10px;align-items:start}
+  .hub .ring{width:76px;height:76px}.hub .ring b{font-size:30px}
+  .hub .news{grid-column:1/3}
+}
+
 </style>
 </head>
 <body>
@@ -447,6 +677,7 @@ body.mode-sugoroku.sg-on #peopleCard{display:none}
     <div class="modeseg hidden" id="modeSeg">
       <button data-mode="normal">⚡ 普通</button><button data-mode="mosaic">🖼 画像</button><button data-mode="sugoroku">🎲 すごろく</button><button data-mode="moji">🔤 もじあて</button>
     </div>
+    <button class="hbtn hidden" id="bHdrLobby">← ロビーへ戻る</button>
     <div class="modelabel hidden" id="modeLabel"></div>
     <div class="hgroup">
       <div class="roomcode hidden" id="roomBadge">部屋 <b id="roomCodeTxt">----</b> <button id="bInvite" class="small" title="招待画面">招待</button></div>
@@ -466,45 +697,44 @@ body.mode-sugoroku.sg-on #peopleCard{display:none}
   </section>
 
   <!-- start -->
-  <section id="start" class="card hidden">
-    <h2>ようこそ！</h2>
-    <p class="muted small" style="margin:0 0 14px">プロフィール画像と名前を決めて、部屋を立てるか、部屋コードで入ってください。</p>
-    <div class="avpick">
-      <button class="avbtn" id="avBtn" title="プロフィール画像を変える">🐱</button>
-      <input id="nameIn" maxlength="12" placeholder="名前（例：たろう）">
-    </div>
-    <div class="small muted" style="margin-top:4px">← 丸を押すとアイコンや自分の画像に変えられます</div>
-    <div id="rejoinBox" class="hidden" style="margin-top:12px"><button id="bRejoin" style="width:100%;background:#1d3d6b"></button></div>
-    <div class="startgrid">
-      <div class="startbox">
-        <h3>🎤 部屋を立てる（司会）</h3>
-        <div class="small muted" style="margin:0 0 6px">遊び方を選ぶ（あとで切り替えられます）</div>
-        <div class="modes" id="modePick">
-          <button data-mode="normal" class="on">⚡ 普通の早押し<small>約10分・2人〜</small></button>
-          <button data-mode="mosaic">🖼 画像クイズ<small>約10分・2人〜</small></button>
-          <button data-mode="sugoroku">🎲 ダウトすごろく<small>約20分・2〜6人</small></button>
-          <button data-mode="moji">🔤 もじあてバトル<small>約15分・2〜8人</small></button>
+  <section id="start" class="hidden">
+    <div class="sthero"><div class="stk">WELCOME TO</div><div class="stt">遊び場 <span>AsoViva</span></div><div class="sts">友達と画面共有で遊ぶ、早押し＆パーティーゲーム</div></div>
+    <div class="stgrid">
+      <div class="card tilec acc">
+        <h3 data-en="PROFILE">プロフィール</h3>
+        <div class="avpick">
+          <button class="avbtn" id="avBtn" title="プロフィール画像を変える">🐱</button>
+          <input id="nameIn" maxlength="12" placeholder="名前（例：たろう）">
         </div>
-        <button class="b-open" id="asHost" style="width:100%;margin-top:10px;font-size:18px;padding:14px">部屋を立てる</button>
+        <div class="small muted" style="margin-top:6px">丸を押すと、アイコンや自分の画像に変えられます</div>
+        <div id="rejoinBox" class="hidden" style="margin-top:10px"><button id="bRejoin" class="b-dark" style="width:100%"></button></div>
       </div>
-      <div class="startbox">
-        <h3>🔴 部屋に入る（回答者）</h3>
-        <div class="small muted" style="margin:0 0 6px">司会から聞いた4けたの部屋コード</div>
-        <input id="codeIn" inputmode="numeric" maxlength="4" placeholder="例：4821" style="font-size:28px;letter-spacing:.3em;text-align:center">
-        <div class="small" id="roomInfo" style="min-height:1.5em;margin-top:6px;color:var(--muted)"></div>
-        <button class="player" id="asPlayer" style="width:100%;margin-top:6px;font-size:18px;padding:14px;background:linear-gradient(160deg,#8f3b5a,#5e2340)">入室する</button>
+      <div class="card tilec blue">
+        <h3 data-en="JOIN ROOM">部屋に入る</h3>
+        <input id="codeIn" inputmode="numeric" maxlength="4" placeholder="部屋番号 4けた" style="font-size:28px;letter-spacing:.3em;text-align:center">
+        <div class="small" id="roomInfo" style="min-height:1.5em;margin-top:6px"></div>
+        <button class="b-white" id="asPlayer" style="width:100%;margin-top:6px;font-size:18px;padding:14px">入室する</button>
+      </div>
+      <div class="stcol">
+        <div class="card tilec">
+          <h3 data-en="CREATE · 司会">部屋を作る</h3>
+          <div class="small muted" style="margin:0 0 8px">ゲームは部屋に入ったあと、ロビーで選びます</div>
+          <div class="modes hidden" id="modePick">
+            <button data-mode="normal" class="on">⚡</button><button data-mode="mosaic">🖼</button><button data-mode="sugoroku">🎲</button><button data-mode="moji">🔤</button>
+          </div>
+          <button class="b-open" id="asHost" style="width:100%;font-size:17px;padding:12px">部屋を作る</button>
+        </div>
+        <div class="card tilec dark">
+          <h3 data-en="PRACTICE · CPU">ひとりで練習</h3>
+          <div class="row">
+            <label>CPU</label><select id="botN"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option></select>
+            <label>強さ</label><select id="botLv"><option value="weak">弱い</option><option value="normal" selected>普通</option><option value="strong">強い</option></select>
+          </div>
+          <button id="asPractice" class="b-white" style="width:100%;margin-top:8px">練習を始める</button>
+        </div>
       </div>
     </div>
-    <div class="startbox" style="margin-top:14px">
-      <h3>🤖 1人で試す（練習モード）</h3>
-      <div class="small muted" style="margin:0 0 8px">CPUを相手に、上で選んだ遊び方を1人で試せます。通信しないので、友達は入れません。</div>
-      <div class="row">
-        <label>CPUの人数</label><select id="botN"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option></select>
-        <label>強さ</label><select id="botLv"><option value="weak">弱い</option><option value="normal" selected>普通</option><option value="strong">強い</option></select>
-        <button id="asPractice" style="margin-left:auto;background:#1d3d6b">練習を始める</button>
-      </div>
-    </div>
-    <div class="small" id="startMsg" style="margin-top:10px;color:#ffc2d0;min-height:1.4em"></div>
+    <div class="small" id="startMsg" style="margin-top:10px;color:#ffc2d0;min-height:1.4em;text-align:center"></div>
   </section>
 
   <!-- main -->
@@ -514,7 +744,7 @@ body.mode-sugoroku.sg-on #peopleCard{display:none}
       <div style="display:flex;flex-direction:column;gap:16px">
         <!-- host -->
         <div class="card hidden" id="hostPanel">
-          <h3>司会の操作</h3>
+          <h3 data-en="HOST CONTROL">司会の操作</h3>
           <div id="hostMain"></div>
           <details class="sec2 m-quiz" id="secRule">
             <summary>回答権のルール</summary>
@@ -616,7 +846,7 @@ body.mode-sugoroku.sg-on #peopleCard{display:none}
         <div class="card m-mj" id="mjMe"></div>
 
         <div class="card hidden" id="previewCard">
-          <div class="row" style="justify-content:space-between"><h3 style="margin:0">回答者画面の見本</h3><button class="small" id="bPreview">横に表示</button></div>
+          <div class="row" style="justify-content:space-between"><h3 style="margin:0" data-en="PREVIEW">回答者画面の見本</h3><button class="small" id="bPreview">横に表示</button></div>
           <p class="small muted" style="margin:6px 0 0">「あなた（見本）」として回答者の画面を表示します。押すボタンも実際に使えます。</p>
           <div id="previewBox"></div>
         </div>
@@ -624,7 +854,7 @@ body.mode-sugoroku.sg-on #peopleCard{display:none}
         <div class="card guide hidden" id="guide"></div>
 
         <div class="card" id="peopleCard">
-          <h3 id="peopleTitle">参加者</h3>
+          <h3 id="peopleTitle" data-en="MEMBER">参加者</h3>
           <div class="people" id="people"></div>
           <div class="row m-quiz hidden" id="rightsBar" style="margin-top:10px">
             <button class="small" id="bRightsReset">回答権をリセット</button>
@@ -633,7 +863,7 @@ body.mode-sugoroku.sg-on #peopleCard{display:none}
         </div>
 
         <div class="card m-quiz">
-          <h3 id="scoreTitle">スコア</h3>
+          <h3 id="scoreTitle" data-en="SCORE">スコア</h3>
           <div class="scores" id="scores"><div class="muted small">まだ参加者がいません</div></div>
         </div>
       </div>
@@ -643,7 +873,7 @@ body.mode-sugoroku.sg-on #peopleCard{display:none}
 </div>
 
 <div class="card volpop hidden" id="volPop">
-  <h3 style="margin:0">音量（この端末だけ）</h3>
+  <h3 style="margin:0" data-en="VOLUME">音量（この端末だけ）</h3>
   <label>BGM <input type="range" id="volBgm" min="0" max="100" step="1"></label>
   <label>効果音 <input type="range" id="volSfx" min="0" max="100" step="1"></label>
 </div>
@@ -680,6 +910,7 @@ const RULES = {
 const PALETTE = ["#4da3ff","#ff6b8a","#2ee59d","#ffcc33","#c58bff","#ff9a3c","#5fd3e6","#b9e05a"];
 const EMOJIS = ["🐱","🐶","🦊","🐼","🐸","🦁","🐧","🐙","🐰","🐻","🐯","🐨","🦄","🐲","🦖","🐳","🦉","🐝","🍣","🍙","🍩","🍓","⚡","🔥","🌙","⭐","🎮","🎲","🎸","⚽"];
 const BGS = {
+  factory:{ name:"工場", css:"linear-gradient(rgba(38,39,43,.55),rgba(20,21,24,.9)),repeating-linear-gradient(135deg,rgba(255,255,255,.025) 0 2px,transparent 2px 22px),linear-gradient(90deg,#2f3034 0 12%,#26272b 12% 70%,#2f3034 70%)" },
   night:{ name:"夜空", css:"radial-gradient(1200px 600px at 50% -10%,#2a2f6b 0%,#0f1226 60%)" },
   ocean:{ name:"深海", css:"radial-gradient(1200px 700px at 30% -10%,#0f5c7a 0%,#06202e 65%)" },
   forest:{ name:"森", css:"radial-gradient(1200px 700px at 70% -10%,#1f6b45 0%,#0a1f16 65%)" },
@@ -860,11 +1091,11 @@ const isEmbed = qs.get("embed") === "1" && qs.get("practice") === "1";
 if(isEmbed) document.body.classList.add("embed");
 
 function newGame(mode){
-  return { v:3, stage:"lobby", mode, round:0, phase:"idle", order:[], cur:-1, wrong:[], result:null,
+  return { v:3, stage:"lobby", mode, sel:mode, round:0, phase:"idle", order:[], cur:-1, wrong:[], result:null,
            q:{ idx:-1, total:0, text:"", ans:"", showText:true, showAns:false }, qn:0,
            scoresAll:{ normal:{}, mosaic:{}, sugoroku:{}, moji:{} }, pts:{ ok:1, ng:0 }, img:null, sg:null, mj:null,
            rule:{ t:"std", n:3, pp:[3,2,1] }, ruleSeq:0, locks:[], rest:{}, colors:{},
-           st:{ bg:"night", bgm:"none", okMode:"fixed", ok:0, ngMode:"fixed", ng:0, glass:25, dim:45, sgt:"grass" },
+           st:{ bg:"factory", bgm:"none", okMode:"fixed", ok:0, ngMode:"fixed", ng:0, glass:0, dim:45, sgt:"grass" },
            snd:{ ok:0, ng:0, okSeq:0, ngSeq:0 }, locked:false };
 }
 const SC = () => game.scoresAll[game.mode];
@@ -961,8 +1192,8 @@ async function leaveRoom(){
 let stageKey = "";
 function applyStage(force){
   const st = (game && game.st) || { bg:"night", bgm:"none" };
-  let bg = BGS[st.bg] ? BGS[st.bg].css : BGS.night.css;
-  const dimA = Math.max(0, Math.min(.9, (st.dim ?? 45) / 100)), glass = Math.max(0, Math.min(100, st.glass ?? 25));
+  let bg = BGS[st.bg] ? BGS[st.bg].css : BGS.factory.css;
+  const dimA = Math.max(0, Math.min(.9, (st.dim ?? 45) / 100)), glass = Math.max(0, Math.min(100, st.glass ?? 0));
   if(st.bg === "custom" && mediaCache.bg) bg = `linear-gradient(rgba(10,12,30,${dimA}),rgba(10,12,30,${Math.min(.95, dimA + .15)})), url("${mediaCache.bg}") center/cover fixed`;
   document.body.style.setProperty("--cardA", String(1 - glass / 100 * .8));
   const key = st.bg + "|" + st.bgm + "|" + dimA + "|" + glass + "|" + (st.bg === "custom" ? (mediaCache.bg || "").length : 0);
@@ -1439,7 +1670,11 @@ function applyModeUI(){
   document.body.classList.toggle("mode-sugoroku", m === "sugoroku");
   document.body.classList.toggle("mode-moji", m === "moji");
   document.querySelectorAll("#modeSeg button").forEach(b => b.classList.toggle("on", b.dataset.mode === m));
-  $("modeLabel").textContent = MODES[m];
+  const inLobby = !!game && game.stage === "lobby";
+  document.body.classList.toggle("in-lobby", inLobby);
+  if(!inLobby) lbBuilt = false;
+  $("modeLabel").textContent = inLobby ? "🏠 ロビー（ゲーム選択）" : MODES[m];
+  $("bHdrLobby").classList.toggle("hidden", !(role === "host" && game && !inLobby));
   $("scoreTitle").textContent = "スコア（" + (m === "mosaic" ? "画像" : "普通") + "）";
 }
 function render(){
@@ -1507,30 +1742,6 @@ function orderHtml(g){
   }).join("");
   return `<div class="ordrow">${cards}</div>${g.phase === "open" ? '<div class="small muted">受付中：まだ押せます</div>' : ""}`;
 }
-function renderLobby(){
-  const g = game;
-  const ps = [{ n: hosts()[0] ? hosts()[0].presence.name : (role === "host" ? myName : "司会"), host:true }].concat(players().map(p => ({ n:p.presence.name.slice(0,12) })));
-  const slots = [];
-  for(let i = 0; i < 8; i++){
-    const p = ps[i];
-    if(p) slots.push(`<div class="slot" style="border-top-color:${colorOf(p.n)}">${avHtml(avatarOf(p.n), 48, p.n)}<div class="nm">${esc(p.n)}${p.n===myName?"（あなた）":""}</div><div class="st2">${p.host ? "司会" : "● 参加中"}</div></div>`);
-    else slots.push(`<div class="slot empty">空き</div>`);
-  }
-  $("board").innerHTML = `<div class="lobby">
-    <div class="rulestrip"><span>ロビー</span><span>遊び方：<b>${MODES[g.mode]}</b></span><span>${g.locked ? "🔒 参加締め切り中" : "🟢 参加受付中"}</span></div>
-    ${room && room.local ? `<div class="sgbanner">🤖 練習モード<small>CPUと1人で試せます。友達は入れません（本番は「部屋を立てる」から）</small></div>` : `<div class="lobbytop">
-      <div><div class="muted small">部屋コード</div><div class="bigcode">${esc(roomCode)}</div>
-        <div class="row" style="margin-top:8px"><button class="small" id="bCopyLink">参加リンクをコピー</button></div>
-        <div class="small muted" style="margin-top:6px">サイトを開いてコードを入れるか、QRコードを読み取ると入れます</div></div>
-      <div id="qrbox"></div>
-    </div>`}
-    <div class="slots">${slots.join("")}</div>
-    ${role === "player" ? '<div class="sgbanner">司会がゲームを始めるのを待っています<small>右上の「退出」でいつでも抜けられます</small></div>' : ""}
-  </div>`;
-  if(!(room && room.local)) fillQR();
-  const cl = $("bCopyLink");
-  if(cl) cl.onclick = () => { try{ navigator.clipboard.writeText(joinLink()); cl.textContent = "コピーしました"; setTimeout(() => { if($("bCopyLink")) $("bCopyLink").textContent = "参加リンクをコピー"; }, 1500); }catch(e){} };
-}
 function drawMosaic(){
   const cv = $("mosaic");
   if(!cv || !curImgUrl || !game || !game.img) return;
@@ -1596,8 +1807,8 @@ function renderHost(){
       $("bStart").onclick = () => { game.stage = "play"; commit(); };
       $("bLock").onclick = () => { game.locked = !game.locked; room.setMeta({ locked:game.locked }); commit(); };
     } else if(!isQuiz(game.mode)){
-      el.innerHTML = `<div class="ctrlbar"><button class="wide small" id="bToLobby">招待画面（ロビー）を出す</button></div>`;
-      $("bToLobby").onclick = () => { game.stage = "lobby"; commit(); };
+      el.innerHTML = `<div class="ctrlbar"><button class="wide small" id="bToLobby">← ロビーへ戻る（ゲーム選択）</button></div>`;
+      $("bToLobby").onclick = backToLobby;
     } else {
       el.innerHTML = `<div class="ctrlbar">
         <button class="b-open wide" id="bOpen">出題スタート（ボタン解禁）<span class="kbd">Space</span></button>
@@ -1606,15 +1817,19 @@ function renderHost(){
         ${game.mode === "mosaic" ? '<button id="bLevel">🔍 次の段階へ<span class="kbd">B</span></button>' : ""}
         <button id="bThrough">スルー（答え発表）</button>
         <button class="b-next ${game.mode === "mosaic" ? "" : "wide"}" id="bNext">${game.mode === "mosaic" ? "次の画像へ" : "次の問題へ"}<span class="kbd">N</span></button>
-        <button class="peek wide" id="bPeek">👀 押している間だけ答えを表示</button>
-        <button class="wide small" id="bToLobby">招待画面（ロビー）を出す</button></div>`;
+        <div class="anscard wide" id="ansCard">
+          <div class="ah"><span>ANSWER · 司会だけ</span><span class="abtns"><button class="small" id="bAnsShow">表示</button><button class="small" id="bPeekWin">別窓カンペ</button></span></div>
+          <div class="av2" id="ansVal">●●●（伏せています）</div>
+          <div class="an">参加者の画面には出ません。Discordで画面全体を共有していると映るので、共有は「このタブだけ」にして別窓カンペで見るのが安全です</div>
+        </div>
+        <button class="wide small" id="bToLobby">← ロビーへ戻る（ゲーム選択）</button></div>`;
       $("bOpen").onclick = hostOpen; $("bOk").onclick = hostOk; $("bNg").onclick = hostNg;
       $("bThrough").onclick = hostThrough; $("bNext").onclick = hostNext;
       if($("bLevel")) $("bLevel").onclick = hostLevel;
-      $("bToLobby").onclick = () => { game.stage = "lobby"; commit(); };
-      const peek = $("bPeek");
-      peek.addEventListener("pointerdown", () => { peek.textContent = game && game.q.ans ? "答え：" + game.q.ans : "（答えが登録されていません）"; });
-      ["pointerup","pointerleave","pointercancel"].forEach(ev => peek.addEventListener(ev, () => { peek.textContent = "👀 押している間だけ答えを表示"; }));
+      $("bToLobby").onclick = backToLobby;
+      ansShown = false;
+      $("bAnsShow").onclick = () => { ansShown = !ansShown; paintAns(); };
+      $("bPeekWin").onclick = openPeekWin;
     }
   }
   if(game.stage === "lobby"){ $("bLock").textContent = game.locked ? "🔓 参加の受付を再開する" : "🔒 参加を締め切る"; }
@@ -1640,7 +1855,7 @@ let stageCtlKey = "";
 function renderStageCtl(){
   const st = game.st, key = JSON.stringify(st);
   if(key === stageCtlKey) return; stageCtlKey = key;
-  if(document.activeElement !== $("stGlass")) $("stGlass").value = String(st.glass ?? 25);
+  if(document.activeElement !== $("stGlass")) $("stGlass").value = String(st.glass ?? 0);
   if(document.activeElement !== $("stDim")) $("stDim").value = String(st.dim ?? 45);
   $("bgChips").innerHTML = Object.entries(BGS).map(([k,v]) => `<button class="bgchip ${st.bg===k?"on":""}" data-bg="${k}" title="${v.name}" style="background:${v.css}"></button>`).join("") +
     (mediaCache.bg ? `<button class="bgchip ${st.bg==="custom"?"on":""}" data-bg="custom" title="自分の画像" style="background:url('${mediaCache.bg}') center/cover"></button>` : "");
@@ -1701,7 +1916,7 @@ function renderGuide(){
   if(role !== "player" || !game){ el.classList.add("hidden"); return; }
   el.classList.remove("hidden");
   const m = game.mode;
-  el.innerHTML = `<h3>遊び方</h3>
+  el.innerHTML = `<h3 data-en="GUIDE">遊び方</h3>
     <div class="mchips">${Object.entries(MODES).map(([k,v]) => `<span class="mchip ${k===m?"on":""}">${v}${k===m?"（いまこれ）":""}</span>`).join("")}</div>
     <p>${esc(MODE_DESC[m])}</p>
     ${isQuiz(m) ? `<p><b>回答権：${esc(ruleText())}</b> … ${esc(RULES[game.rule.t].desc)}</p>` : ""}
@@ -1737,6 +1952,42 @@ function renderPeople(){
       <span class="tag ${tcls}">${tag}</span>${ctl}</div>`;
   }).join("");
 }
+
+// ===== host-only answer card + peek window =====
+let ansShown = false, peekWin = null;
+function curAns(){ return game && game.q && game.q.ans ? game.q.ans : ""; }
+function paintAns(){
+  const v = $("ansVal"), b = $("bAnsShow");
+  if(v){
+    const a = curAns();
+    v.textContent = ansShown ? (a || "（答えが登録されていません）") : "●●●（伏せています）";
+    v.classList.toggle("shown", ansShown);
+    b.textContent = ansShown ? "隠す" : "表示";
+  }
+  if(peekWin && !peekWin.closed){
+    try{
+      const d = peekWin.document, g = game;
+      const qn = g && g.q && g.q.idx >= 0 ? `第${g.q.idx + 1}問` : "準備中";
+      const html = `<div style="font:800 14px sans-serif;color:#854f0b;letter-spacing:.08em">ANSWER · 司会だけ　${qn}</div><div style="font:800 38px sans-serif;color:#412402;margin-top:10px;word-break:break-all">${esc(curAns() || "（答えなし）")}</div>`;
+      if(d.body && d.body.dataset.h !== html){ d.body.dataset.h = html; d.body.innerHTML = html; }
+    }catch(e){}
+  }
+}
+function openPeekWin(){
+  if(!peekWin || peekWin.closed){
+    peekWin = window.open("", "asoviva_peek", "width=420,height=220");
+    if(!peekWin){ modal("別窓を開けませんでした", '<p style="margin:0">ブラウザのポップアップ許可を確認してください。</p>'); return; }
+    try{
+      peekWin.document.title = "カンペ（司会だけ）";
+      peekWin.document.body.style.cssText = "margin:0;padding:18px;background:#faeeda";
+    }catch(e){}
+  }
+  try{ peekWin.focus(); }catch(e){}
+  if(peekWin.document.body) peekWin.document.body.dataset.h = "";
+  paintAns();
+}
+let ansKey = "";
+setInterval(() => { const k = game ? (game.q && game.q.idx) + "|" + curAns() : ""; if(k !== ansKey){ ansKey = k; ansShown = false; } paintAns(); }, 400);
 
 // ---------- dice sugoroku ----------
 const SG_LEN = 30, SG_TIME = 10, SG_REVEAL = 10, SG_SHOW = 4;
@@ -2354,16 +2605,16 @@ function sgRenderResult(sg){
 function renderSgMe(){
   const el = $("sgMe"); if(!el) return;
   const sg = game && game.sg;
-  if(!sg){ el.innerHTML = `<h3>あなたの操作</h3><div class="muted small">ゲームが始まるとここで操作します。</div>`; el.dataset.h = ""; return; }
+  if(!sg){ el.innerHTML = `<h3 data-en="YOUR ACTION">あなたの操作</h3><div class="muted small">ゲームが始まるとここで操作します。</div>`; el.dataset.h = ""; return; }
   const inGame = sg.order.includes(myName);
-  if(!inGame){ el.innerHTML = `<h3>あなたの操作</h3><div class="muted">観戦中です。次のゲームから参加できます。</div>`; el.dataset.h = ""; return; }
+  if(!inGame){ el.innerHTML = `<h3 data-en="YOUR ACTION">あなたの操作</h3><div class="muted">観戦中です。次のゲームから参加できます。</div>`; el.dataset.h = ""; return; }
   const myTurn = sgTurnName() === myName;
   let todo = "";
   if(sg.phase === "roll") todo = myTurn ? "サイコロを振って、目を宣言する" : `${sgTurnName()} の宣言を待つ`;
   else if(sg.phase === "declared") todo = sg.decl.n === myName ? "みんなの反応を待つ" : "「信じる」か「ダウト！」を選ぶ";
   else if(sg.phase === "doubted") todo = "答え合わせを待つ";
   else if(sg.phase === "result") todo = "結果を確認";
-  let h = `<h3>あなたの操作（${sg.pos[myName]} / ${sg.len}マス${sg.dbl[myName] ? "・次の宣言は✖2" : ""}）</h3>
+  let h = `<h3 data-en="YOUR ACTION">あなたの操作（${sg.pos[myName]} / ${sg.len}マス${sg.dbl[myName] ? "・次の宣言は✖2" : ""}）</h3>
     ${todo ? `<div class="todo">いまやること：<b>${esc(todo)}</b></div>` : ""}
     ${sgMiniMap(sg)}`;
   if(sg.phase === "end"){
@@ -2856,15 +3107,15 @@ function renderMjMe(){
   const el = $("mjMe"); if(!el) return;
   const mj = game && game.mj;
   let h = "";
-  if(!mj) h = `<h3>あなたの操作</h3><div class="muted small">お題が出ると、ここで答えを書きます。</div>`;
-  else if(!mj.ps[myName]) h = `<h3>あなたの操作</h3><div class="muted">観戦中です。次のゲームから参加できます。</div>`;
+  if(!mj) h = `<h3 data-en="YOUR ACTION">あなたの操作</h3><div class="muted small">お題が出ると、ここで答えを書きます。</div>`;
+  else if(!mj.ps[myName]) h = `<h3 data-en="YOUR ACTION">あなたの操作</h3><div class="muted">観戦中です。次のゲームから参加できます。</div>`;
   else {
     const ps = mj.ps[myName], tn = mjTurnName();
     let todo = "";
     if(mj.phase === "write") todo = ps.ready ? "ほかの人を待つ" : "お題に合う言葉を書く";
     else if(mj.phase === "play") todo = ps.out ? "観戦（脱落しました）" : mj.pend ? "確認中" : tn === myName ? "50音から1文字選んで呼ぶ" : `${tn} の番を待つ`;
     else todo = "結果を確認";
-    h = `<h3>あなたの操作</h3><div class="todo">お題：<b>${esc(mj.topic)}</b><br>いまやること：<b>${esc(todo)}</b></div>`;
+    h = `<h3 data-en="YOUR ACTION">あなたの操作</h3><div class="todo">お題：<b>${esc(mj.topic)}</b><br>いまやること：<b>${esc(todo)}</b></div>`;
     if(mj.phase === "write" && !ps.ready){
       h += `<input id="mjWord" maxlength="20" placeholder="例：${esc((MJ_TOPICS[mj.topic] || MJ_GENERAL)[0] || "からあげ")}" style="font-size:20px;letter-spacing:.1em">
         <div class="small muted" style="margin-top:4px">${mj.max}文字まで。ひらがな・カタカナ（カタカナは自動でひらがなに）。自分の端末の外には出ません。</div>
@@ -2998,6 +3249,189 @@ async function openFeedback(){
 }
 $("bFeedback").onclick = openFeedback;
 
+// ===== room lobby (game select carousel) =====
+const MODE_EN = { normal:"QUICK BUZZ", mosaic:"PICTURE QUIZ", sugoroku:"DOUBT SUGOROKU", moji:"MOJI BATTLE" };
+const MODE_ICON = { normal:"⚡", mosaic:"🖼", sugoroku:"🎲", moji:"🔤" };
+const MODE_TAG = { normal:"2人〜・約10分", mosaic:"2人〜・約10分", sugoroku:"2〜6人・約20分", moji:"2〜8人・約15分" };
+const MODE_NAME = { normal:"普通の早押し", mosaic:"画像クイズ", sugoroku:"ダウトすごろく", moji:"もじあてバトル" };
+const LOBBY_NEWS = "ダウトすごろくが道のある盤面になり、結果発表と景色テーマが追加されました。";
+const MODE_KEYS = Object.keys(MODE_NAME);
+let lbBuilt = false, lbCenter = 0, lbSelSent = null, lbSelT = 0, lbSeenSel = null, lbTouching = false;
+
+function lobbyMembers(){
+  const hn = hosts()[0] ? hosts()[0].presence.name : (role === "host" ? myName : null);
+  const ps = [];
+  if(hn) ps.push({ n:hn, host:true });
+  players().forEach(p => ps.push({ n:p.presence.name.slice(0, 12) }));
+  return ps;
+}
+function renderLobby(){
+  const g = game, board = $("board");
+  if(!lbBuilt){
+    lbBuilt = true; lbSeenSel = null;
+    const cards = MODE_KEYS.map(m => `
+      <div class="gcard" data-mode="${m}">
+        <span class="gtag">${MODE_TAG[m]}</span>
+        <span class="gsel">司会が選択中</span>
+        <div class="gic">${MODE_ICON[m]}</div>
+        <div class="gjp">${MODE_NAME[m]}</div>
+        <div class="gen">${MODE_EN[m]}</div>
+        <div class="gds">${esc(MODE_DESC[m])}</div>
+        <div class="gwm">${MODE_ICON[m]}</div>
+      </div>`).join("");
+    const local = room && room.local;
+    board.innerHTML = `<div class="hub">
+      <div class="hubL">
+        <div class="ring" id="lbRing"><b id="lbCount">0</b><span>人</span></div>
+        <div class="mstrips" id="lbMembers"></div>
+        <div class="news"><div class="nh">NEWS</div><div class="nb">${esc(LOBBY_NEWS)}</div></div>
+      </div>
+      <div class="hubC">
+        <div class="car">
+          <button class="car-ar l" id="lbPrev" aria-label="前のゲーム">‹</button>
+          <div class="track" id="lbTrack">${cards}</div>
+          <button class="car-ar r" id="lbNext" aria-label="次のゲーム">›</button>
+        </div>
+        <div class="dots" id="lbDots">${MODE_KEYS.map(() => "<i></i>").join("")}</div>
+        <div class="carhint">← 横にスライドしてゲームを選ぶ →</div>
+        <div class="gobox" id="lbGo"></div>
+      </div>
+      <div class="hubR">
+        <button class="tl wide acc" data-lt="invite"><b>招待</b><small>${local ? "PRACTICE · 練習中" : "INVITE · QR"}</small><i>📨</i></button>
+        <button class="tl" data-lt="member"><b>参加者</b><small>MEMBER</small><i>👥</i></button>
+        <button class="tl" data-lt="stage"><b>${role === "host" ? "演出" : "音量"}</b><small>${role === "host" ? "STAGE" : "VOLUME"}</small><i>${role === "host" ? "🎵" : "🔊"}</i></button>
+        <button class="tl wide blue" data-lt="record"><b>成績</b><small>RECORD · 通算スコア</small><i>🏆</i></button>
+        <button class="tl" data-lt="help"><b>遊び方</b><small>HOW TO PLAY</small><i>❔</i></button>
+        <button class="tl dark" data-lt="exit"><b>退出</b><small>EXIT</small><i>🚪</i></button>
+      </div>
+    </div>`;
+    const tr = $("lbTrack");
+    tr.addEventListener("scroll", () => requestAnimationFrame(lbOnScroll), { passive:true });
+    tr.addEventListener("pointerdown", () => { lbTouching = true; });
+    window.addEventListener("pointerup", () => { lbTouching = false; });
+    $("lbPrev").onclick = () => lbGo(lbCenter - 1);
+    $("lbNext").onclick = () => lbGo(lbCenter + 1);
+    tr.addEventListener("click", e => { const c = e.target.closest(".gcard"); if(c) lbGo(MODE_KEYS.indexOf(c.dataset.mode)); });
+    $("lbDots").addEventListener("click", e => { const i = [...$("lbDots").children].indexOf(e.target); if(i >= 0) lbGo(i); });
+    board.querySelector(".hubR").addEventListener("click", e => { const t = e.target.closest("[data-lt]"); if(t) lobbyTile(t.dataset.lt); });
+    const start = Math.max(0, MODE_KEYS.indexOf(g.sel || g.mode));
+    requestAnimationFrame(() => { lbGo(start, true); });
+  }
+  // members + ring
+  const ms = lobbyMembers();
+  $("lbCount").textContent = ms.length;
+  $("lbRing").style.setProperty("--pct", Math.min(100, ms.length / 8 * 100) + "%");
+  $("lbMembers").innerHTML = ms.map(p => `<div class="ms" style="border-left-color:${colorOf(p.n)}">${avHtml(avatarOf(p.n), 24, p.n)}<span class="mn">${esc(p.n)}${p.n === myName ? "<small>（あなた）</small>" : ""}</span>${p.host ? "<em>司会</em>" : ""}</div>`).join("");
+  // host selection marker
+  const sel = g.sel || g.mode;
+  document.querySelectorAll(".gcard").forEach(c => c.classList.toggle("picked", c.dataset.mode === sel));
+  if(role !== "host" && sel !== lbSeenSel){ lbSeenSel = sel; if(!lbTouching) lbGo(MODE_KEYS.indexOf(sel)); }
+  lbPaintGo();
+}
+function lbPaintGo(){
+  const m = MODE_KEYS[lbCenter], go = $("lbGo"); if(!go) return;
+  const html = role === "host"
+    ? `<button class="gobtn" id="bPlay">${MODE_ICON[m]} ${MODE_NAME[m]} で遊ぶ</button><button class="lockbtn" id="bLock2">${game.locked ? "🔒 参加締め切り中（押すと再開）" : "🟢 参加受付中（押すと締め切る）"}</button>`
+    : `<div class="gowait">司会がゲームを選んでいます… <b>${MODE_ICON[game.sel || game.mode]} ${MODE_NAME[game.sel || game.mode]}</b></div>`;
+  if(go.dataset.h === html) return;
+  go.dataset.h = html; go.innerHTML = html;
+  if($("bPlay")) $("bPlay").onclick = () => lobbyPlay(MODE_KEYS[lbCenter]);
+  if($("bLock2")) $("bLock2").onclick = () => { game.locked = !game.locked; if(room.setMeta) room.setMeta({ locked:game.locked }); commit(); };
+}
+function lbGo(i, instant){
+  const tr = $("lbTrack"); if(!tr) return;
+  i = Math.max(0, Math.min(MODE_KEYS.length - 1, i));
+  const c = tr.children[i];
+  tr.scrollTo({ left:c.offsetLeft - (tr.clientWidth - c.offsetWidth) / 2, behavior:instant ? "auto" : "smooth" });
+  lbSetCenter(i);
+}
+function lbOnScroll(){
+  const tr = $("lbTrack"); if(!tr) return;
+  const mid = tr.scrollLeft + tr.clientWidth / 2;
+  let best = 0, bd = 1e9;
+  [...tr.children].forEach((c, i) => { const d = Math.abs(c.offsetLeft + c.offsetWidth / 2 - mid); if(d < bd){ bd = d; best = i; } });
+  lbSetCenter(best);
+}
+function lbSetCenter(i){
+  lbCenter = i;
+  document.querySelectorAll(".gcard").forEach((c, k) => c.classList.toggle("center", k === i));
+  [...($("lbDots") || { children:[] }).children].forEach((d, k) => d.classList.toggle("on", k === i));
+  lbPaintGo();
+  if(role === "host" && game && game.stage === "lobby"){
+    const m = MODE_KEYS[i];
+    if(m !== lbSelSent){
+      clearTimeout(lbSelT);
+      lbSelT = setTimeout(() => { if(game && game.stage === "lobby" && game.sel !== m){ lbSelSent = m; game.sel = m; commit(); } }, 300);
+    }
+  }
+}
+function lobbyPlay(m){
+  if(role !== "host" || !MODES[m]) return;
+  if(game.mode !== m){ game.mode = m; resetRound(); setQuestion(idxByMode[m]); }
+  game.sel = m; game.stage = "play";
+  commit();
+}
+function backToLobby(){ if(role === "host" && game){ game.sel = game.mode; game.stage = "lobby"; commit(); } }
+
+// ----- sheets (tile pop-ups) -----
+function openSheet(title, en, bodyHtml, node){
+  const root = $("modalRoot");
+  const wrap = document.createElement("div"); wrap.className = "modal sheet";
+  wrap.innerHTML = `<div class="card"><h3 data-en="${esc(en)}">${esc(title)}</h3><div class="mbody"></div><div class="mrow"><button class="b-open">閉じる</button></div></div>`;
+  const body = wrap.querySelector(".mbody");
+  if(bodyHtml) body.innerHTML = bodyHtml;
+  let back = null;
+  if(node){ back = { p:node.parentNode, nx:node.nextSibling }; body.appendChild(node); if(node.tagName === "DETAILS") node.open = true; }
+  const close = () => { if(node && back) back.p.insertBefore(node, back.nx); wrap.remove(); };
+  wrap.querySelector(".mrow button").onclick = close;
+  wrap.addEventListener("pointerdown", e => { if(e.target === wrap) close(); });
+  root.appendChild(wrap);
+  return wrap;
+}
+function lobbyTile(k){
+  if(k === "exit"){ $("bLeave").click(); return; }
+  if(k === "stage"){
+    if(role === "host") openSheet("演出", "STAGE · 背景・BGM・効果音", "", $("secStage"));
+    else $("volPop").classList.toggle("hidden");
+    return;
+  }
+  if(k === "invite"){ showInvite(); return; }
+  if(k === "member"){
+    const ms = lobbyMembers();
+    openSheet("参加者", "MEMBER", `<div class="mlist">${ms.map(p => `<div class="ms" style="border-left-color:${colorOf(p.n)}">${avHtml(avatarOf(p.n), 30, p.n)}<span class="mn">${esc(p.n)}${p.n === myName ? "<small>（あなた）</small>" : ""}</span>${p.host ? "<em>司会</em>" : "<em class='on'>参加中</em>"}</div>`).join("")}</div>
+      <p class="small muted" style="margin:10px 0 0">${game.locked ? "🔒 いまは参加を締め切っています" : "🟢 いまは参加を受け付けています"}（最大8人）</p>`);
+    return;
+  }
+  if(k === "record"){
+    const sa = game.scoresAll || {};
+    const sec = m => {
+      const e = Object.entries(sa[m] || {}).filter(([,v]) => v).sort((a,b) => b[1] - a[1]);
+      const unit = m === "sugoroku" || m === "moji" ? "勝" : "点";
+      return `<div class="recsec"><div class="rh">${MODE_ICON[m]} ${MODE_NAME[m]}</div>${e.length ? e.map(([n,v],i) => `<div class="rr"><span>${i+1}</span>${avHtml(avatarOf(n), 22, n)}<b>${esc(n)}</b><em>${v}${unit}</em></div>`).join("") : '<div class="small muted">まだ記録がありません</div>'}</div>`;
+    };
+    openSheet("成績", "RECORD · この部屋の通算", `<div class="recgrid">${MODE_KEYS.map(sec).join("")}</div>`);
+    return;
+  }
+  if(k === "help"){
+    const m = MODE_KEYS[lbCenter] || game.mode;
+    openSheet(`${MODE_NAME[m]}の遊び方`, `HOW TO PLAY · ${MODE_EN[m]}`, `<p style="margin:0;line-height:1.8">${esc(MODE_DESC[m])}</p><p class="small muted">人数・時間のめやす：${MODE_TAG[m]}</p>`);
+  }
+}
+function showInvite(){
+  if(room && room.local){
+    openSheet("練習モード", "PRACTICE", `<p style="margin:0">CPUと1人で試しています。友達は入れません。<br>本番は、最初の画面の「部屋を作る」から始めてください。</p>`);
+    return;
+  }
+  const w = openSheet("招待", "INVITE · QR", `<div class="invite">
+    <div><div class="small muted">部屋番号</div><div class="bigcode">${esc(roomCode)}</div>
+      <button class="small" id="bCopyLink2">参加リンクをコピー</button>
+      <div class="small muted" style="margin-top:8px">サイトを開いて部屋番号を入れるか、QRコードを読み取ると入れます</div></div>
+    <div id="qrbox"></div></div>`);
+  fillQR();
+  const cl = w.querySelector("#bCopyLink2");
+  cl.onclick = () => { try{ navigator.clipboard.writeText(joinLink()); cl.textContent = "コピーしました"; }catch(e){} };
+}
+
 // ===== avatar picker =====
 function paintAvBtn(){
   const b = $("avBtn");
@@ -3122,7 +3556,7 @@ async function begin(r, rejoin, opts){
   $("start").classList.add("hidden"); $("main").classList.remove("hidden");
   if(r === "host"){
     $("hostPanel").classList.remove("hidden");
-    $("modeSeg").classList.remove("hidden");
+    $("modeLabel").classList.remove("hidden");
     let restored = null;
     if(rejoin){ try{ restored = JSON.parse(store.get("host." + code) || "null"); }catch(e){} }
     if(restored && restored.game && restored.game.v === 3){
@@ -3153,7 +3587,7 @@ async function beginPractice(r, opts){
   if(r === "host"){
     store.set("name", n);
     $("hostPanel").classList.remove("hidden");
-    $("modeSeg").classList.remove("hidden");
+    $("modeLabel").classList.remove("hidden");
     $("previewCard").classList.remove("hidden");
     game = newGame(pickMode);
     $("qList").value = store.get("q") || "";
@@ -3176,10 +3610,8 @@ $("asPlayer").onclick = () => begin("player");
 
 // ===== header =====
 $("bLeave").onclick = leaveRoom;
-$("bInvite").onclick = () => {
-  if(role === "host" && game){ game.stage = "lobby"; commit(); return; }
-  modal("招待", `<p style="margin:0">部屋コード <b style="font-size:28px;color:var(--gold)">${esc(roomCode)}</b></p><p class="small muted">参加リンク：${esc(joinLink())}</p>`);
-};
+$("bInvite").onclick = showInvite;
+$("bHdrLobby").onclick = backToLobby;
 $("bVol").onclick = () => $("volPop").classList.toggle("hidden");
 $("volBgm").value = volOf("bgm", 40); $("volSfx").value = volOf("sfx", 80);
 $("volBgm").oninput = e => { store.set("vol.bgm", e.target.value); applyVolumes(); };
