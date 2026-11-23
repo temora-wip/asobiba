@@ -667,6 +667,39 @@ header{box-shadow:0 0 0 100vmax #1d1e21;clip-path:inset(0 -100vmax)}
   .hub .ring{width:76px;height:76px}.hub .ring b{font-size:30px}
   .hub .news{grid-column:1/3}
 }
+.cropgrid{display:grid;grid-template-columns:minmax(0,1fr) 90px;gap:10px;align-items:start}
+.cropfr{border:2px solid #2c2c2a;background:#444441;cursor:grab;touch-action:none;margin-top:4px}
+.cropfr:active{cursor:grabbing}
+.rng1{display:flex;align-items:center;gap:6px;font-size:12px;margin-top:4px}
+.rng1 input{padding:0;min-width:0;flex:1}
+.rng span:last-child{min-width:2em;text-align:right}
+/* lobby rule panel */
+.rulepanel{background:var(--tile);color:var(--ink);padding:12px 14px;box-shadow:0 3px 0 rgba(0,0,0,.4);border-left:5px solid var(--acc)}
+.rph{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.rph b{font-size:18px}.rph small{font-size:11px;letter-spacing:.08em;color:#9a988f;flex:1}
+.hub .rdbtn,.hub .rdbtn2{background:#2c2c2a;color:#fff;font-size:13px;padding:5px 12px}
+.hub .rdbtn2{margin-top:12px;position:relative;z-index:2}
+.rrow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:5px 0;border-top:1px solid var(--tline)}
+.rrow .rk{width:130px;font-size:13px;color:var(--ink2);font-weight:800}
+.hub .rc{background:#fff;color:var(--ink);border:1px solid var(--tline);padding:4px 10px;font-size:13px}
+.hub .rc.on{background:var(--tblue);color:#fff;border-color:var(--tblue)}
+.hub .rc:disabled{opacity:1;cursor:default}
+.hub .rc:disabled:not(.on){opacity:.55}
+.rrow input{flex:1;min-width:140px;width:auto;background:#fff;color:var(--ink);border:1px solid var(--tline);padding:6px 8px;font-size:14px}
+.rrow .rv{font-weight:800}
+.rnote2{font-size:12px;color:var(--ink2);margin-top:6px;line-height:1.6}
+@media(max-width:600px){.rrow .rk{width:100%}}
+.rbook{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.rbook div{display:grid;grid-template-columns:80px minmax(0,1fr);gap:8px;background:var(--tile2);padding:8px 10px;font-size:14px;line-height:1.6}
+.rbook b{color:#c25a14}
+/* quiz champion */
+.champ{background:#2c2c2a;color:#fff;border-left:6px solid var(--acc);padding:14px 16px;text-align:center}
+.champ .ct{font-size:clamp(24px,3.5vw,36px);font-weight:800;color:#fac775}
+.champ .cs{font-size:14px;color:#d3d1c7;margin:4px 0 10px}
+/* moji: padded boxes */
+.mjb.pad{background:transparent;border:1px dashed #b4b2a9;opacity:.5}
+.sheet .card{max-height:90vh;overflow:auto}
+.rng{grid-template-columns:110px auto minmax(0,1fr) auto}
 
 </style>
 </head>
@@ -815,9 +848,24 @@ header{box-shadow:0 0 0 100vmax #1d1e21;clip-path:inset(0 -100vmax)}
             <div class="small muted" style="margin-top:8px">背景（全員に反映）</div>
             <div class="bgchips" id="bgChips"></div>
             <div class="row" style="margin-top:6px"><input type="file" id="bgFile" accept="image/*" style="font-size:12px"></div>
+            <div id="cropBox" class="cropbox hidden">
+              <div class="small muted" style="margin:8px 0 4px">表示範囲：枠の中をドラッグで位置、つまみで大きさ（全員に反映）</div>
+              <div class="cropgrid">
+                <div><div class="small"><b>💻 PC用（横長の画面）</b></div><div class="cropfr" id="cropPc" data-k="pc" style="aspect-ratio:16/9"></div>
+                  <div class="rng1"><span>大きさ</span><input type="range" id="cropZpc" data-k="pc" min="100" max="300" step="5"></div></div>
+                <div><div class="small"><b>📱 スマホ用（縦長）</b></div><div class="cropfr" id="cropSp" data-k="sp" style="aspect-ratio:9/19"></div>
+                  <div class="rng1"><span>大きさ</span><input type="range" id="cropZsp" data-k="sp" min="100" max="300" step="5"></div></div>
+              </div>
+              <button class="small" id="bCropReset" style="margin-top:6px">中央に戻す</button>
+            </div>
             <div class="rng"><label>枠の透け具合</label><span>見やすさ</span><input type="range" id="stGlass" min="0" max="100" step="5"><span>背景</span></div>
             <div class="rng"><label>背景画像の暗さ</label><span>明るく</span><input type="range" id="stDim" min="0" max="90" step="5"><span>暗く</span></div>
             <div class="small muted">透かすほど背景がよく見え、文字は読みにくくなります（全員に反映）</div>
+            <div class="small muted" style="margin-top:12px">音量（全員に反映。各自の🔊音量とかけ合わせます）</div>
+            <div class="rng"><label>BGM</label><span></span><input type="range" id="hvBgm" data-hv="bgm" min="0" max="100" step="5"><span id="hvBgmT"></span></div>
+            <div class="rng"><label>正解音</label><span></span><input type="range" id="hvOk" data-hv="ok" min="0" max="100" step="5"><span id="hvOkT"></span></div>
+            <div class="rng"><label>不正解音</label><span></span><input type="range" id="hvNg" data-hv="ng" min="0" max="100" step="5"><span id="hvNgT"></span></div>
+            <div class="rng"><label>その他の音</label><span></span><input type="range" id="hvFx" data-hv="fx" min="0" max="100" step="5"><span id="hvFxT"></span></div>
             <div class="small muted" style="margin-top:10px">BGM（内蔵曲は全員の端末で流れます）</div>
             <div class="chips" id="bgmChips"></div>
             <div class="row" style="margin-top:6px"><label>手持ちの曲（司会のPCだけ）</label><input type="file" id="bgmFile" accept="audio/*" style="font-size:12px"></div>
@@ -928,6 +976,8 @@ function ac(){
     if(!actx){
       actx = new (window.AudioContext||window.webkitAudioContext)();
       sfxGain = actx.createGain(); bgmGain = actx.createGain();
+      okGain = actx.createGain(); ngGain = actx.createGain(); fxGain = actx.createGain();
+      [okGain, ngGain, fxGain].forEach(g => g.connect(sfxGain));
       sfxGain.connect(actx.destination); bgmGain.connect(actx.destination);
       applyVolumes();
     }
@@ -936,11 +986,15 @@ function ac(){
   return actx;
 }
 function volOf(k, def){ const v = store.get("vol." + k); return v === null ? def : +v; }
+let okGain = null, ngGain = null, fxGain = null, toneDest = null;
+let hostVol = { bgm:100, ok:100, ng:100, fx:100 };   // set by the host for everyone (演出)
 function applyVolumes(){
+  const hv = k => Math.max(0, Math.min(100, hostVol[k] ?? 100)) / 100;
   const b = volOf("bgm", 40) / 100, s = volOf("sfx", 80) / 100;
-  if(bgmGain) bgmGain.gain.value = b * 0.5;
+  if(bgmGain) bgmGain.gain.value = b * 0.5 * hv("bgm");
   if(sfxGain) sfxGain.gain.value = s;
-  const ha = $("hostAudio"); if(ha) ha.volume = b;
+  if(okGain){ okGain.gain.value = hv("ok"); ngGain.gain.value = hv("ng"); fxGain.gain.value = hv("fx"); }
+  const ha = $("hostAudio"); if(ha) ha.volume = Math.min(1, b * hv("bgm"));
 }
 function tone(freq, start, dur, type="square", vol=.15, to=null, dest=null){
   const a = ac(); if(!a) return;
@@ -949,7 +1003,7 @@ function tone(freq, start, dur, type="square", vol=.15, to=null, dest=null){
   if(to) o.frequency.exponentialRampToValueAtTime(to, a.currentTime+start+dur);
   g.gain.setValueAtTime(vol, a.currentTime+start);
   g.gain.exponentialRampToValueAtTime(.001, a.currentTime+start+dur);
-  o.connect(g).connect(dest || sfxGain); o.start(a.currentTime+start); o.stop(a.currentTime+start+dur+.02);
+  o.connect(g).connect(dest || toneDest || fxGain || sfxGain); o.start(a.currentTime+start); o.stop(a.currentTime+start+dur+.02);
 }
 const OK_SOUNDS = [
   { name:"ピンポン", play(){ tone(988,0,.25,"sine",.3); tone(784,.25,.5,"sine",.3); } },
@@ -969,8 +1023,8 @@ const sfx = {
   buzz(){ tone(1200,0,.12); tone(1600,.1,.25); },
   open(){ tone(660,0,.08,"triangle",.2); },
   tick(){ tone(880,0,.06,"triangle",.15); },
-  ok(i){ (OK_SOUNDS[i] || OK_SOUNDS[0]).play(); },
-  ng(i){ (NG_SOUNDS[i] || NG_SOUNDS[0]).play(); }
+  ok(i){ ac(); toneDest = okGain; try{ (OK_SOUNDS[i] || OK_SOUNDS[0]).play(); } finally { toneDest = null; } },
+  ng(i){ ac(); toneDest = ngGain; try{ (NG_SOUNDS[i] || NG_SOUNDS[0]).play(); } finally { toneDest = null; } }
 };
 document.addEventListener("pointerdown", ac, {once:true});
 
@@ -1095,7 +1149,7 @@ function newGame(mode){
            q:{ idx:-1, total:0, text:"", ans:"", showText:true, showAns:false }, qn:0,
            scoresAll:{ normal:{}, mosaic:{}, sugoroku:{}, moji:{} }, pts:{ ok:1, ng:0 }, img:null, sg:null, mj:null,
            rule:{ t:"std", n:3, pp:[3,2,1] }, ruleSeq:0, locks:[], rest:{}, colors:{},
-           st:{ bg:"factory", bgm:"none", okMode:"fixed", ok:0, ngMode:"fixed", ng:0, glass:0, dim:45, sgt:"grass" },
+           cfg:{ ...CFG_DEF }, st:{ vol:{ bgm:100, ok:100, ng:100, fx:100 }, bgPos:null, bg:"factory", bgm:"none", okMode:"fixed", ok:0, ngMode:"fixed", ng:0, glass:0, dim:45, sgt:"grass" },
            snd:{ ok:0, ng:0, okSeq:0, ngSeq:0 }, locked:false };
 }
 const SC = () => game.scoresAll[game.mode];
@@ -1112,6 +1166,8 @@ function onRoomError(){
   if(siteOpen !== false) showWarn("部屋との接続が切れました。再読み込みすると、同じ部屋に戻れます。");
 }
 function showWarn(msg){ const w = $("warnBox"); if(msg){ w.textContent = msg; w.classList.remove("hidden"); } else w.classList.add("hidden"); }
+const CFG_DEF = { sgLen:30, sgWait:10, sgBack:5, mjTopic:"", mjMax:7, mjBonus:true, mjTime:0, goalN:0, goalM:0, imgStep:10 };
+function CFG(){ if(!game) return { ...CFG_DEF }; game.cfg = Object.assign({ ...CFG_DEF }, game.cfg || {}); return game.cfg; }
 function players(){ return peers.filter(p => p.presence && p.presence.role === "player" && typeof p.presence.name === "string"); }
 function hosts(){ return peers.filter(p => p.presence && p.presence.role === "host" && p.presence.game && p.presence.game.scoresAll); }
 function avatarOf(name){
@@ -1194,12 +1250,16 @@ function applyStage(force){
   const st = (game && game.st) || { bg:"night", bgm:"none" };
   let bg = BGS[st.bg] ? BGS[st.bg].css : BGS.factory.css;
   const dimA = Math.max(0, Math.min(.9, (st.dim ?? 45) / 100)), glass = Math.max(0, Math.min(100, st.glass ?? 0));
-  if(st.bg === "custom" && mediaCache.bg) bg = `linear-gradient(rgba(10,12,30,${dimA}),rgba(10,12,30,${Math.min(.95, dimA + .15)})), url("${mediaCache.bg}") center/cover fixed`;
+  const custom = st.bg === "custom" && mediaCache.bg;
   document.body.style.setProperty("--cardA", String(1 - glass / 100 * .8));
-  const key = st.bg + "|" + st.bgm + "|" + dimA + "|" + glass + "|" + (st.bg === "custom" ? (mediaCache.bg || "").length : 0);
+  const nv = Object.assign({ bgm:100, ok:100, ng:100, fx:100 }, st.vol || {});
+  if(JSON.stringify(nv) !== JSON.stringify(hostVol)){ hostVol = nv; applyVolumes(); }
+  const key = st.bg + "|" + st.bgm + "|" + dimA + "|" + glass + "|" + JSON.stringify(st.bgPos || null) + "|" + (st.bg === "custom" ? (mediaCache.bg || "").length : 0);
   if(!force && key === stageKey) return;
   stageKey = key;
-  document.body.style.background = bg;
+  if(custom){ document.body.style.background = ""; paintBodyBg(); }
+  else document.body.style.background = bg;
+  if(typeof paintCropEditor === "function") paintCropEditor();
   const ha = $("hostAudio");
   if(st.bgm === "host"){
     stopBgm();
@@ -1209,6 +1269,29 @@ function applyStage(force){
     if(role) startBgm(st.bgm || "none");
   }
 }
+
+// custom background: separate framing for landscape (PC) and portrait (phone) screens
+const bgImg = new Image(); let bgImgSrc = "";
+function bgPosOf(kind){ const bp = (game && game.st && game.st.bgPos) || {}; return Object.assign({ x:50, y:50, z:100 }, bp[kind] || {}); }
+function bgFrame(W, H, pos){
+  const iw = bgImg.naturalWidth, ih = bgImg.naturalHeight; if(!iw || !ih) return null;
+  const sc = Math.max(W / iw, H / ih) * (pos.z || 100) / 100;
+  return { w:iw * sc, h:ih * sc, x:pos.x, y:pos.y };
+}
+function paintBodyBg(){
+  const st = game && game.st; if(!st || st.bg !== "custom" || !mediaCache.bg) return;
+  if(bgImgSrc !== mediaCache.bg){ bgImgSrc = mediaCache.bg; bgImg.onload = () => { paintBodyBg(); if(typeof paintCropEditor === "function") paintCropEditor(); }; bgImg.src = mediaCache.bg; }
+  const W = window.innerWidth, H = window.innerHeight;
+  const f = bgFrame(W, H, bgPosOf(H > W ? "sp" : "pc"));
+  const dimA = Math.max(0, Math.min(.9, (st.dim ?? 45) / 100));
+  const b = document.body.style;
+  b.backgroundColor = "#111";
+  b.backgroundImage = `linear-gradient(rgba(10,12,30,${dimA}),rgba(10,12,30,${Math.min(.95, dimA + .15)})), url("${mediaCache.bg}")`;
+  b.backgroundSize = f ? `auto, ${Math.round(f.w)}px ${Math.round(f.h)}px` : "auto, cover";
+  b.backgroundPosition = f ? `0 0, ${f.x}% ${f.y}%` : "0 0, center";
+  b.backgroundRepeat = "no-repeat"; b.backgroundAttachment = "fixed";
+}
+window.addEventListener("resize", () => paintBodyBg());
 
 // ===== QR (lobby) =====
 let qrLib = null, qrData = {};
@@ -1339,6 +1422,7 @@ function applyGame(g){
     if(g.ruleSeq !== prev.ruleSeq && isQuiz(g.mode)) bannerMsg(`回答権ルール：${ruleText(g)}`);
     if(g.mode !== prev.mode) bannerMsg(`遊び方が「${MODES[g.mode]}」に変わりました`);
     if(g.stage === "play" && prev.stage === "lobby") bannerMsg("ゲーム開始！");
+    if(g.champ && !(prev.champ && prev.champ.n === g.champ.n && prev.champ.mode === g.champ.mode)){ bannerMsg(`🏆 ${g.champ.n} が目標の${g.champ.goal}点に到達！`); setTimeout(() => sfx.ok(1), 300); }
   }
   if(g) applyStage(false);
   render();
@@ -1350,7 +1434,16 @@ function ruleText(g){
 }
 
 // ===== host actions =====
+function quizGoalCheck(){
+  if(!game || !isQuiz(game.mode)) return;
+  const goal = +(game.mode === "normal" ? CFG().goalN : CFG().goalM) || 0;
+  if(!goal){ game.champ = null; return; }
+  if(game.champ && game.champ.mode === game.mode && (SC()[game.champ.n] || 0) >= goal) return;
+  const top = Object.entries(SC()).filter(([,v]) => v >= goal).sort((a,b) => b[1] - a[1])[0];
+  game.champ = top ? { n:top[0], mode:game.mode, goal } : null;
+}
 function commit(){
+  quizGoalCheck();
   const snap = JSON.parse(JSON.stringify(game));
   setPresence({ role:"host", name:myName, game:snap });
   applyGame(snap);
@@ -1464,7 +1557,7 @@ function setRule(t){
   game.rule.t = t; game.ruleSeq++;
   commit();
 }
-function stepSec(){ return +$("imgStep").value || 0; }
+function stepSec(){ return +CFG().imgStep || 0; }
 function setQuestion(i){
   game.q.idx = i; imgTick = 0; game.img = null; curImgUrl = null;
   if(!isQuiz(game.mode)){ game.q.text = ""; game.q.ans = ""; game.q.total = 0; return; }
@@ -1680,7 +1773,7 @@ function applyModeUI(){
 function render(){
   if(!role) return;
   const g = game, board = $("board");
-  applyModeUI();
+  applyModeUI(); syncCfgInputs();
   renderPeople(); renderGuide();
   if(!g){
     board.innerHTML = `<div class="sgbanner">${hadHost ? "司会の接続を待っています…" : "司会がまだいません"}<small>${hadHost ? "司会が戻ると、そのまま続きから遊べます" : "司会が入ると始まります"}</small></div>`;
@@ -1692,7 +1785,7 @@ function render(){
   // rule strip
   const unit = g.mode === "mosaic" ? "枚" : "問";
   const left = g.q.total && g.q.idx >= 0 ? `残り${Math.max(0, g.q.total - g.q.idx - 1)}${unit}` : (g.q.idx >= 0 ? `第${g.q.idx+1}問` : "準備中");
-  const strip = `<div class="rulestrip"><span>${MODES[g.mode]}</span><span>回答権：<b>${esc(ruleText(g))}</b></span><span>${g.q.idx >= 0 && g.q.total ? `第${Math.min(g.q.idx+1, g.q.total)}${unit === "枚" ? "問" : "問"} / 全${g.q.total}${unit}` : ""}</span><span>${left}</span></div>`;
+  const strip = `<div class="rulestrip"><span>${MODES[g.mode]}</span><span>回答権：<b>${esc(ruleText(g))}</b></span><span>${g.q.idx >= 0 && g.q.total ? `第${Math.min(g.q.idx+1, g.q.total)}${unit === "枚" ? "問" : "問"} / 全${g.q.total}${unit}` : ""}</span><span>${left}</span>${(() => { const gl = g.mode === "normal" ? CFG().goalN : CFG().goalM; return gl ? `<span>目標 <b>${gl}点</b></span>` : ""; })()}</div>`;
   let badgeCls = g.phase, badgeTxt = phaseLabel[g.phase];
   if(g.phase === "result"){ const ok = g.result && (g.result.type === "correct" || g.result.type === "first"); badgeCls = ok ? "correct" : "through"; badgeTxt = ok ? "正解発表" : "スルー"; }
   let qtxt;
@@ -1713,13 +1806,15 @@ function render(){
     const fxn = g.img.fx === "sil" ? "シルエット" : g.img.fx === "zoom" ? "ズーム" : "ぼかし";
     return `<div class="lvl">${fxn} ${clear ? "答え発表" : `${g.img.level+1}/${g.img.max}段階目${g.rule.t === "first" ? "" : `・正解で${imgPoints(g.img.level)}点`}`} ${Array.from({length:g.img.max},(_,i)=>`<i class="${i<=g.img.level||clear?"on":""}"></i>`).join("")}${lft}</div>`;
   })() : "";
+  const champ = g.champ && g.champ.mode === g.mode ? `<div class="champ"><div class="ct">🏆 ${esc(g.champ.n)} の優勝！</div><div class="cs">目標の${g.champ.goal}点に到達しました</div>${role === "host" ? '<button class="b-open" id="bChampReset">得点をリセットしてもう一度</button>' : ""}</div>` : "";
   board.innerHTML = `
-    ${strip}
+    ${strip}${champ}
     <div class="qhead">${badgeTxt ? `<span class="badge ${badgeCls}">${badgeTxt}</span>` : ""}</div>
     <div class="qtext">${qtxt}</div>
     ${lvl}
     ${orderHtml(g)}
     ${(g.q.showAns && g.q.ans) ? `<div class="ans">答え：${esc(g.q.ans)}${g.result && g.result.pts && g.result.n ? `（${esc(g.result.n)} +${g.result.pts}点）` : ""}</div>` : ""}`;
+  if($("bChampReset")) $("bChampReset").onclick = () => { const sc = SC(); for(const k in sc) sc[k] = 0; game.champ = null; commit(); };
   drawMosaic(); drawPlayerMosaic();
   renderScores(g); renderHost(); renderPlayer();
 }
@@ -1996,7 +2091,7 @@ const SG_EV = {
   s:{ icon:"🔄", name:"1位と交代", desc:"止まった人と、いま1位の人の場所を入れ替えます（自分が1位なら何も起きません）。" },
   b:{ icon:"⬇", name:"全員−3", desc:"止まった人以外の全員が3マス戻ります。" },
   a:{ icon:"🔁", name:"もう1回", desc:"もう一度自分の番になります。" },
-  d:{ icon:"✖2", name:"ダウト×2", desc:"次の自分の宣言でうそがばれると、10マス戻ります（いつもは5マス）。" }
+  d:{ icon:"✖2", name:"ダウト×2", desc:"次の自分の宣言でうそがばれると、戻るマスが2倍になります。" }
 };
 let trustedFor = null;
 const doneActs = new Set();
@@ -2025,14 +2120,16 @@ function sgStart(){
   for(const p of players()){ const n = p.presence.name.slice(0,12); if(!names.includes(n) && !(room && room.local && n === "あなた（見本）")) names.push(n); }
   if(names.length < 2){ showWarn("すごろくは2人以上で遊べます。回答者が入るのを待ってください。"); setTimeout(() => showWarn(""), 3000); return; }
   const order = names.slice(0,6).sort(() => Math.random() - .5);
-  const board = Array(SG_LEN + 1).fill("");
-  const evs = ["s","s","b","b","a","a","a","d","d","d"];
-  const free = []; for(let i = 3; i < SG_LEN; i++) free.push(i);
+  const C = CFG(), LEN = [20,30,40].includes(+C.sgLen) ? +C.sgLen : SG_LEN;
+  const board = Array(LEN + 1).fill("");
+  const EVS = ["s","b","a","d","a","s","b","d","a","d","s","b","a"];
+  const evs = EVS.slice(0, Math.round(10 * LEN / 30));
+  const free = []; for(let i = 3; i < LEN; i++) free.push(i);
   free.sort(() => Math.random() - .5);
   evs.forEach((e,k) => { board[free[k]] = e; });
   const pos = {}, dbl = {}, cnt = {}; order.forEach(n => { pos[n] = 0; dbl[n] = false; cnt[n] = { d:0, c:0, ok:0, ng:0, l:null }; });
   sgHist = []; sgTruth = {};
-  game.sg = { len:SG_LEN, order, pos, dbl, board, cnt, turn:0, phase:"roll", decl:null, doubt:null, res:null,
+  game.sg = { len:LEN, wait:+C.sgWait || SG_TIME, back:+C.sgBack || 5, order, pos, dbl, board, cnt, turn:0, phase:"roll", decl:null, doubt:null, res:null,
               left:0, log:[], winner:null, seq:(game.sg ? game.sg.seq + 1 : 1) };
   sgLog(`ゲーム開始！ 順番：${order.join(" → ")}`);
   game.stage = "play";
@@ -2053,7 +2150,7 @@ function processAct(n, a){
     sg.decl = { id:String(a.id).slice(0,40), n, v, commit:String(a.commit || "").slice(0,64), dbl:!!sg.dbl[n] };
     if(sg.cnt && sg.cnt[n]) sg.cnt[n].d++;
     sgHist.push({ id:sg.decl.id, n, v, commit:sg.decl.commit });
-    sg.doubt = null; sg.res = null; sg.trust = []; sg.phase = "declared"; sg.left = SG_TIME; sg.dl = Date.now() + SG_TIME * 1000;
+    sg.doubt = null; sg.res = null; sg.trust = []; sg.phase = "declared"; sg.left = sg.wait || SG_TIME; sg.dl = Date.now() + (sg.wait || SG_TIME) * 1000;
     return true;
   }
   if(a.act === "doubt"){
@@ -2098,7 +2195,7 @@ async function sgVerifyHist(n, list){
     if(h.commit && (await sha256(`${r}:${String(e.salt || "")}:${h.id}`)) !== h.commit) continue;
     sgTruth[h.id] = r;
   }
-  if(game.sg !== sg) return;
+  if(!game.sg || game.sg.seq !== sg.seq) return;
   sgFinalize(); commit();
 }
 // count lies (including ones nobody caught) once the real rolls are known
@@ -2119,7 +2216,7 @@ function sgResolveDoubt(r){
   const sg = game.sg, d = sg.decl, by = sg.doubt.by;
   const truth = r !== null && r === d.v;
   if(!truth){
-    const back = d.dbl ? 10 : 5;
+    const back = (sg.back || 5) * (d.dbl ? 2 : 1);
     sgTruth[d.id] = r === null ? -1 : r;
     if(sg.cnt){ if(sg.cnt[d.n]) sg.cnt[d.n].c++; if(sg.cnt[by]) sg.cnt[by].ok++; }
     sgMove(d.n, -back);
@@ -2170,7 +2267,7 @@ function sgAdvance(n, v){
   } else if(e === "a"){
     again = true; sg.res.evText = `${n} はもう一回！`;
   } else if(e === "d"){
-    sg.dbl[n] = true; sg.res.evText = `${n} の次の宣言は、ばれたら10マス戻る！`;
+    sg.dbl[n] = true; sg.res.evText = `${n} の次の宣言は、ばれたら${(sg.back || 5) * 2}マス戻る！`;
   }
   if(sg.res.evText) sgLog(sg.res.evText);
   sgShow(again);
@@ -2423,11 +2520,13 @@ window.addEventListener("resize", () => { clearTimeout(sgResizeT); sgResizeT = s
 
 // ---------- everyone: react to state changes ----------
 function sgRulesHtml(){
+  const sg = game && game.sg, C = CFG();
+  const len = sg ? sg.len : C.sgLen, wait = sg ? (sg.wait || 10) : C.sgWait, back = sg ? (sg.back || 5) : C.sgBack;
   return `<div class="sgrules">
     <div><b>① 振る</b>　自分の番に「サイコロを振る」。出た目は自分にしか見えません 🎲</div>
     <div><b>② 宣言</b>　1〜6の目を宣言します。うそでもOK 🤫</div>
-    <div><b>③ ほかの人</b>　🙆「信じる」か 🙅「ダウト！」を選びます（10秒）<br><span class="muted small">うそがばれたら宣言した人が5マス戻る／本当ならダウトした人が3マス戻る。全員が信じたらすぐ進みます</span></div>
-    <div class="goal">30マス目に最初に着いた人の勝ち 🏁</div>
+    <div><b>③ ほかの人</b>　🙆「信じる」か 🙅「ダウト！」を選びます（${wait}秒）<br><span class="muted small">うそがばれたら宣言した人が${back}マス戻る（ダウト×2マスのあとは${back * 2}マス）／本当ならダウトした人が3マス戻る。全員が信じたらすぐ進みます</span></div>
+    <div class="goal">${len}マス目に最初に着いた人の勝ち 🏁</div>
     <div class="small muted">${Object.values(SG_EV).map(e => `${e.icon} ${e.name}：${e.desc}`).join("<br>")}</div>
   </div>`;
 }
@@ -2489,7 +2588,7 @@ function renderSg(){
   document.body.classList.toggle("sg-on", !!g.sg);
   let sg = g.sg;
   const preview = !sg;
-  if(preview) sg = { seq:0, len:SG_LEN, order:[], pos:{}, dbl:{}, board:Array(SG_LEN + 1).fill(""), log:[], phase:"none" };
+  if(preview) sg = { seq:0, len:+CFG().sgLen || SG_LEN, order:[], pos:{}, dbl:{}, board:Array((+CFG().sgLen || SG_LEN) + 1).fill(""), log:[], phase:"none" };
   const theme = sgTheme(), cols = sgCols();
   const key = [sg.seq, cols, theme, sg.order.join(","), sg.board.join("")].join("|");
   if(key !== sgSkelKey){
@@ -2532,7 +2631,7 @@ function renderSg(){
       const dest = Math.min(sg.len, sg.pos[sg.decl.n] + sg.decl.v), de = sg.board[dest];
       const hint = dest >= sg.len ? "🏁 ゴール" : de ? `${SG_EV[de].icon}${SG_EV[de].name}マス` : `${dest}マス目`;
       btxt = `${esc(sg.decl.n)}「${sg.decl.v} が出た！」`;
-      bsub = `本当なら → ${hint}　｜　信じる？ ダウト？ あと${sg.left}秒（信じた人 ${(sg.trust||[]).length}/${sg.order.length - 1}）${sg.decl.dbl ? "・ばれたら10マス戻る！" : ""}`;
+      bsub = `本当なら → ${hint}　｜　信じる？ ダウト？ あと${sg.left}秒（信じた人 ${(sg.trust||[]).length}/${sg.order.length - 1}）${sg.decl.dbl ? `・ばれたら${(sg.back || 5) * 2}マス戻る！` : ""}`;
     }
     else if(sg.phase === "doubted"){ bcls = "doubt"; btxt = `${esc(sg.doubt.by)}：ダウト！`; bsub = `${esc(sg.decl.n)} の本当の目を答え合わせ中…`; }
     else if(sg.phase === "result" && sg.res){
@@ -2643,7 +2742,7 @@ function renderSgMe(){
         h += `<div class="big" style="margin-top:8px">🙆 信じました</div><div class="small muted" style="text-align:center">ほかの人を待っています</div>`;
       } else {
         h += `<div class="trustrow"><button class="btrust" data-sg="trust">🙆 信じる</button><button id="bDoubt" data-sg="doubt">🙅 ダウト！</button></div>
-        <div class="small muted" style="text-align:center;margin-top:8px">10秒以内に選んでね。ダウトが外れたら自分が3マス戻ります</div>`;
+        <div class="small muted" style="text-align:center;margin-top:8px">${sg.wait || 10}秒以内に選んでね。ダウトが外れたら自分が3マス戻ります</div>`;
       }
     }
   } else if(sg.phase === "doubted"){
@@ -2874,14 +2973,15 @@ function mjTurnName(){ const mj = game.mj; return mj ? mj.order[mj.turn] : null;
 // ----- host -----
 function mjSetup(){
   if(role !== "host") return;
-  const topic = ($("mjTopic").value.trim() || Object.keys(MJ_TOPICS)[Math.floor(Math.random() * 8)]).slice(0, 30);
-  const max = +$("mjMax").value || 7;
+  const C = CFG();
+  const topic = (String(C.mjTopic || "").trim() || Object.keys(MJ_TOPICS)[Math.floor(Math.random() * 8)]).slice(0, 30);
+  const max = +C.mjMax || 7;
   const names = [myName];
   for(const p of players()){ const n = p.presence.name.slice(0,12); if(!names.includes(n) && !(room && room.local && n === "あなた（見本）")) names.push(n); }
   if(names.length < 2){ showWarn("もじあてバトルは2人以上で遊べます。"); setTimeout(() => showWarn(""), 3000); return; }
   const order = names.slice(0, 8).sort(() => Math.random() - .5);
-  const ps = {}; order.forEach(n => ps[n] = { len:0, commit:"", ready:false, open:[], let:{}, out:false });
-  game.mj = { seq:(game.mj ? game.mj.seq + 1 : 1), phase:"write", topic, max, bonus:$("mjBonus").checked, order, turn:0,
+  const ps = {}; order.forEach(n => ps[n] = { commit:"", ready:false, open:[], let:{}, out:false });
+  game.mj = { seq:(game.mj ? game.mj.seq + 1 : 1), phase:"write", topic, max, bonus:!!C.mjBonus, tl:+C.mjTime || 0, left:0, cdl:0, order, turn:0,
               called:[], ps, pend:null, last:null, log:[], winners:[], n:0 };
   mjLog(`お題「${topic}」・${max}文字まで。答えを書いてください`);
   game.stage = "play";
@@ -2891,15 +2991,14 @@ function mjBegin(force){
   const mj = game.mj; if(!mj || mj.phase !== "write") return;
   if(force) mj.order = mj.order.filter(n => mj.ps[n].ready);
   if(mj.order.length < 2 || mj.order.some(n => !mj.ps[n].ready)) return;
-  mj.phase = "play"; mj.turn = 0;
+  mj.phase = "play"; mj.turn = 0; mjTurnDl();
   mjLog(`スタート！ 順番：${mj.order.join(" → ")}`);
 }
 function processMj(n, a){
   const mj = game.mj; if(!mj) return false;
   if(a.act === "word"){
     if(mj.phase !== "write" || !mj.ps[n] || mj.ps[n].ready) return false;
-    const len = +a.len; if(!(len >= 1 && len <= mj.max)) return false;
-    Object.assign(mj.ps[n], { len, commit:String(a.commit || "").slice(0,64), ready:true });
+    Object.assign(mj.ps[n], { commit:String(a.commit || "").slice(0,64), ready:true });
     if(mj.order.every(x => mj.ps[x].ready)) mjBegin(false);
     return true;
   }
@@ -2907,13 +3006,14 @@ function processMj(n, a){
     if(mj.phase !== "play" || mj.pend || n !== mjTurnName()) return false;
     const k = String(a.k || ""); if(!MJ_SET.has(k) || mj.called.includes(k)) return false;
     mj.called.push(k);
-    mj.pend = { id:String(a.id).slice(0,40), k, by:n, need:mjAlive(), got:{}, dl:Date.now() + 8000 };
+    mj.pend = { id:String(a.id).slice(0,40), k, by:n, need:mjAlive(), got:{}, all:{}, dl:Date.now() + 8000 };
+    mj.left = 0;
     return true;
   }
   if(a.act === "hit"){
     const p = mj.pend; if(!p || a.id !== p.id || !p.need.includes(n) || p.got[n]) return false;
-    const len = mj.ps[n].len;
-    p.got[n] = [...new Set((Array.isArray(a.pos) ? a.pos : []).map(Number).filter(x => Number.isInteger(x) && x >= 0 && x < len))];
+    p.got[n] = [...new Set((Array.isArray(a.pos) ? a.pos : []).map(Number).filter(x => Number.isInteger(x) && x >= 0 && x < mj.max))];
+    p.all = p.all || {}; p.all[n] = !!a.all;
     if(p.need.every(x => p.got[x])) mjApply();
     return true;
   }
@@ -2926,10 +3026,14 @@ function processMj(n, a){
 }
 async function mjVerify(n, word, salt, disp){
   const mj = game.mj, ps = mj.ps[n];
-  let ok = word.length === ps.len;
+  // the word was never shared; check it against what happened during the game
+  const w = [...word];
+  let ok = w.length >= 1 && w.length <= mj.max && ps.open.every(i => w[i] === ps.let[i]);
+  if(ok) ok = ps.out ? ps.open.length >= w.length && ps.open.every(i => i < w.length) : ps.open.length < w.length;
+  if(ok) ok = mj.called.every(k => { const has = w.some((c, i) => c === k); return !has || w.every((c, i) => c !== k || ps.open.includes(i)) || !mjCalledWhileIn(ps, k, mj); });
   if(ok && ps.commit) ok = (await sha256(`${word}:${salt}:${mj.seq}`)) === ps.commit;
-  if(game.mj !== mj) return;
-  ps.word = disp || word; ps.ok = ok;
+  const cur = game.mj; if(!cur || cur.seq !== mj.seq || !cur.ps[n]) return;
+  cur.ps[n].word = disp || word; cur.ps[n].ok = ok;
   commit();
 }
 function mjApply(){
@@ -2941,7 +3045,7 @@ function mjApply(){
     const ps = mj.ps[n];
     pos.forEach(i => { if(!ps.open.includes(i)){ ps.open.push(i); ps.let[i] = p.k; } });
     if(pos.length) hits[n] = pos.length;
-    if(ps.open.length >= ps.len && !ps.out){ ps.out = true; ps.outAt = mj.n; }
+    if(p.all && p.all[n] && !ps.out){ ps.out = true; ps.outAt = mj.n; ps.outK = mj.called.length; }
   }
   const hitOthers = Object.keys(hits).some(n => n !== p.by);
   const names = Object.keys(hits);
@@ -2951,6 +3055,7 @@ function mjApply(){
   mj.last = { k:p.k, by:p.by, hits, outs };
   mj.pend = null;
   const alive = mjAlive();
+  mj.cdl = 0;
   if(alive.length <= 1){
     mj.phase = "end";
     mj.winners = alive.length ? alive : mj.order.filter(n => mj.ps[n].outAt === mj.n);
@@ -2968,11 +3073,24 @@ function mjApply(){
     for(let i = 0; i < mj.order.length; i++){ t = (t + 1) % mj.order.length; if(!mj.ps[mj.order[t]].out) break; }
     mj.turn = t;
   }
+  mjTurnDl();
 }
+function mjTurnDl(){ const mj = game.mj; if(!mj) return; mj.cdl = mj.tl ? Date.now() + mj.tl * 1000 : 0; mj.left = mj.tl || 0; }
+// was letter k called while this player was still in the game?
+function mjCalledWhileIn(ps, k, mj){ const i = mj.called.indexOf(k); return i >= 0 && (!ps.out || ps.outK === undefined || i < ps.outK); }
 function mjTick(){
   if(role !== "host" || !game || game.mode !== "moji" || !game.mj) return;
-  const p = game.mj.pend;
-  if(p && Date.now() >= p.dl){ mjApply(); commit(); }
+  const mj = game.mj, p = mj.pend;
+  if(p && Date.now() >= p.dl){ mjApply(); commit(); return; }
+  if(!p && mj.phase === "play" && mj.tl && mj.cdl){
+    const left = Math.max(0, Math.ceil((mj.cdl - Date.now()) / 1000));
+    if(left <= 0){
+      mjLog(`⏰ ${mjTurnName()} は時間切れ。次の人へ`);
+      let t = mj.turn;
+      for(let i = 0; i < mj.order.length; i++){ t = (t + 1) % mj.order.length; if(!mj.ps[mj.order[t]].out) break; }
+      mj.turn = t; mjTurnDl(); commit();
+    } else if(left !== mj.left){ mj.left = left; commit(); }
+  }
 }
 makeTicker(mjTick, 500);
 function mjForce(){
@@ -2983,7 +3101,7 @@ function mjForce(){
     mjLog(`${mjTurnName()} の番を飛ばしました`);
     let t = mj.turn;
     for(let i = 0; i < mj.order.length; i++){ t = (t + 1) % mj.order.length; if(!mj.ps[mj.order[t]].out) break; }
-    mj.turn = t;
+    mj.turn = t; mjTurnDl();
   }
   commit();
 }
@@ -3013,7 +3131,7 @@ async function mjSubmit(){
   myMj = { seq:mj.seq, word:w, disp:mjDisp(raw).slice(0, w.length), salt };
   try{ sessionStorage.setItem("asoviva.mj", JSON.stringify(myMj)); }catch(e){}
   const commitH = await sha256(`${w}:${salt}:${mj.seq}`);
-  mjSend({ act:"word", id:"w" + mj.seq, len:w.length, commit:commitH });
+  mjSend({ act:"word", id:"w" + mj.seq, commit:commitH });
   render();
 }
 function mjCall(){
@@ -3047,7 +3165,8 @@ function mjOnUpdate(prev, mj){
   if(p && p.need.includes(myName) && !(p.got && p.got[myName]) && myMj && myMj.seq === mj.seq && !mjReported.has(p.id)){
     mjReported.add(p.id);
     const pos = []; [...myMj.word].forEach((c, i) => { if(c === p.k) pos.push(i); });
-    mjSend({ act:"hit", id:p.id, pos });
+    const opened = new Set([...(mj.ps[myName].open || []), ...pos]);
+    mjSend({ act:"hit", id:p.id, pos, all:opened.size >= [...myMj.word].length });
   }
   if(mj.phase === "end" && mj.ps[myName] && mj.ps[myName].word === undefined && myMj && myMj.seq === mj.seq && !mjReported.has("f" + mj.seq)){
     mjReported.add("f" + mj.seq);
@@ -3066,10 +3185,14 @@ function mjBoxes(n, big){
   const mj = game.mj, ps = mj.ps[n];
   if(!ps.ready) return `<span class="muted small">${mj.phase === "write" ? "書いています…" : "参加していません"}</span>`;
   let h = "";
-  for(let i = 0; i < ps.len; i++){
+  // always show the maximum number of boxes so nobody can tell the real length
+  const real = mj.phase === "end" && ps.word !== undefined ? [...ps.word] : null;
+  const known = real ? real.length : ps.out ? ps.open.length : null;
+  for(let i = 0; i < mj.max; i++){
     const open = ps.open.includes(i);
-    const ch = mj.phase === "end" && ps.word !== undefined ? [...ps.word][i] : (open ? ps.let[i] : "");
-    h += `<b class="mjb ${open ? "open" : ""} ${big ? "big" : ""}">${esc(ch || "")}</b>`;
+    const pad = known !== null && i >= known;
+    const ch = real ? real[i] : (open ? ps.let[i] : "");
+    h += `<b class="mjb ${open ? "open" : ""} ${pad ? "pad" : ""} ${big ? "big" : ""}">${esc(pad ? "" : ch || "")}</b>`;
   }
   return h;
 }
@@ -3084,7 +3207,7 @@ function renderMj(){
   const tn = mjTurnName();
   let stat = "";
   if(mj.phase === "write") stat = `答えを書いています（${mj.order.filter(n => mj.ps[n].ready).length}/${mj.order.length}人）`;
-  else if(mj.phase === "play") stat = mj.pend ? `${esc(mj.pend.by)}「${esc(mj.pend.k)}」！ 確認中…` : `${esc(tn)} の番`;
+  else if(mj.phase === "play") stat = mj.pend ? `${esc(mj.pend.by)}「${esc(mj.pend.k)}」！ 確認中…` : `${esc(tn)} の番${mj.tl && mj.left ? `（あと${mj.left}秒）` : ""}`;
   else stat = `🏆 ${esc(mj.winners.join("・"))} の勝ち！`;
   const rows = mj.order.map(n => {
     const ps = mj.ps[n];
@@ -3155,7 +3278,10 @@ $("board").addEventListener("click", e => { if(game && game.mode === "moji" && e
 $("bMjStart").onclick = mjSetup;
 $("bMjForce").onclick = mjForce;
 $("bMjRestart").onclick = mjRestart;
-$("bMjRandom").onclick = () => { const t = Object.keys(MJ_TOPICS); $("mjTopic").value = t[Math.floor(Math.random() * t.length)]; };
+$("bMjRandom").onclick = () => { if(role !== "host") return; const t = Object.keys(MJ_TOPICS); CFG().mjTopic = t[Math.floor(Math.random() * t.length)]; $("mjTopic").value = CFG().mjTopic; commit(); };
+$("mjTopic").addEventListener("change", () => { if(role !== "host") return; CFG().mjTopic = $("mjTopic").value.trim().slice(0, 30); commit(); });
+$("mjMax").addEventListener("change", () => { if(role !== "host") return; CFG().mjMax = +$("mjMax").value; commit(); });
+$("mjBonus").addEventListener("change", () => { if(role !== "host") return; CFG().mjBonus = $("mjBonus").checked; commit(); });
 
 // ----- CPU -----
 function botMoji(L, now){
@@ -3168,7 +3294,7 @@ function botMoji(L, now){
       const list = (MJ_TOPICS[mj.topic] && MJ_TOPICS[mj.topic].length ? MJ_TOPICS[mj.topic] : MJ_GENERAL).filter(w => w.length <= mj.max);
       const w = mjNorm(list[Math.floor(Math.random() * list.length)] || "ねこ");
       botMj[b.name] = { seq:mj.seq, word:w };
-      if(processMj(b.name, { act:"word", len:w.length, commit:"" })) changed = true;
+      if(processMj(b.name, { act:"word", commit:"" })) changed = true;
     }
   }
   const p = mj.pend;
@@ -3177,7 +3303,8 @@ function botMoji(L, now){
       if(!isBot(n) || p.got[n]) continue;
       const w = (botMj[n] && botMj[n].seq === mj.seq) ? botMj[n].word : "";
       const pos = []; [...w].forEach((c, i) => { if(c === p.k) pos.push(i); });
-      if(processMj(n, { act:"hit", id:p.id, pos })) changed = true;
+      const opened = new Set([...(mj.ps[n].open || []), ...pos]);
+      if(processMj(n, { act:"hit", id:p.id, pos, all:!!w && opened.size >= [...w].length })) changed = true;
     }
   } else if(mj.phase === "play" && isBot(mjTurnName())){
     const n = mjTurnName();
@@ -3277,6 +3404,7 @@ function renderLobby(){
         <div class="gjp">${MODE_NAME[m]}</div>
         <div class="gen">${MODE_EN[m]}</div>
         <div class="gds">${esc(MODE_DESC[m])}</div>
+        <div><button class="rdbtn2" data-rd="${m}">📖 ルールの詳細</button></div>
         <div class="gwm">${MODE_ICON[m]}</div>
       </div>`).join("");
     const local = room && room.local;
@@ -3294,6 +3422,7 @@ function renderLobby(){
         </div>
         <div class="dots" id="lbDots">${MODE_KEYS.map(() => "<i></i>").join("")}</div>
         <div class="carhint">← 横にスライドしてゲームを選ぶ →</div>
+        <div class="rulepanel" id="lbRules"></div>
         <div class="gobox" id="lbGo"></div>
       </div>
       <div class="hubR">
@@ -3326,7 +3455,7 @@ function renderLobby(){
   const sel = g.sel || g.mode;
   document.querySelectorAll(".gcard").forEach(c => c.classList.toggle("picked", c.dataset.mode === sel));
   if(role !== "host" && sel !== lbSeenSel){ lbSeenSel = sel; if(!lbTouching) lbGo(MODE_KEYS.indexOf(sel)); }
-  lbPaintGo();
+  lbPaintGo(); renderRulePanel(false);
 }
 function lbPaintGo(){
   const m = MODE_KEYS[lbCenter], go = $("lbGo"); if(!go) return;
@@ -3356,7 +3485,7 @@ function lbSetCenter(i){
   lbCenter = i;
   document.querySelectorAll(".gcard").forEach((c, k) => c.classList.toggle("center", k === i));
   [...($("lbDots") || { children:[] }).children].forEach((d, k) => d.classList.toggle("on", k === i));
-  lbPaintGo();
+  lbPaintGo(); renderRulePanel(true);
   if(role === "host" && game && game.stage === "lobby"){
     const m = MODE_KEYS[i];
     if(m !== lbSelSent){
@@ -3391,7 +3520,7 @@ function openSheet(title, en, bodyHtml, node){
 function lobbyTile(k){
   if(k === "exit"){ $("bLeave").click(); return; }
   if(k === "stage"){
-    if(role === "host") openSheet("演出", "STAGE · 背景・BGM・効果音", "", $("secStage"));
+    if(role === "host"){ openSheet("演出", "STAGE · 背景・BGM・効果音・音量", "", $("secStage")); setTimeout(paintCropEditor, 50); }
     else $("volPop").classList.toggle("hidden");
     return;
   }
@@ -3412,10 +3541,7 @@ function lobbyTile(k){
     openSheet("成績", "RECORD · この部屋の通算", `<div class="recgrid">${MODE_KEYS.map(sec).join("")}</div>`);
     return;
   }
-  if(k === "help"){
-    const m = MODE_KEYS[lbCenter] || game.mode;
-    openSheet(`${MODE_NAME[m]}の遊び方`, `HOW TO PLAY · ${MODE_EN[m]}`, `<p style="margin:0;line-height:1.8">${esc(MODE_DESC[m])}</p><p class="small muted">人数・時間のめやす：${MODE_TAG[m]}</p>`);
-  }
+  if(k === "help") showRuleDetail(MODE_KEYS[lbCenter] || game.mode);
 }
 function showInvite(){
   if(room && room.local){
@@ -3430,6 +3556,187 @@ function showInvite(){
   fillQR();
   const cl = w.querySelector("#bCopyLink2");
   cl.onclick = () => { try{ navigator.clipboard.writeText(joinLink()); cl.textContent = "コピーしました"; }catch(e){} };
+}
+
+// ===== 演出: host volumes + background framing editor =====
+const HV_IDS = { bgm:"hvBgm", ok:"hvOk", ng:"hvNg", fx:"hvFx" };
+let hvThr = 0;
+function paintHostVol(){
+  const v = Object.assign({ bgm:100, ok:100, ng:100, fx:100 }, (game && game.st && game.st.vol) || {});
+  for(const [k, id] of Object.entries(HV_IDS)){
+    const el = $(id); if(!el) continue;
+    if(document.activeElement !== el) el.value = String(v[k]);
+    $(id + "T").textContent = v[k];
+  }
+}
+Object.entries(HV_IDS).forEach(([k, id]) => {
+  const el = $(id);
+  const set = fin => {
+    if(role !== "host" || !game) return;
+    game.st.vol = Object.assign({ bgm:100, ok:100, ng:100, fx:100 }, game.st.vol || {}, { [k]:+el.value });
+    $(id + "T").textContent = el.value;
+    hostVol = { ...game.st.vol }; applyVolumes();
+    const now = Date.now(); if(fin || now - hvThr > 400){ hvThr = now; commit(); }
+  };
+  el.addEventListener("input", () => set(false));
+  el.addEventListener("change", () => { set(true); if(k === "ok") sfx.ok(game.st.ok || 0); else if(k === "ng") sfx.ng(game.st.ng || 0); else if(k === "fx") sfx.open(); });
+});
+function paintCropEditor(){
+  const box = $("cropBox"); if(!box) return;
+  const on = role === "host" && game && game.st && game.st.bg === "custom" && !!mediaCache.bg;
+  box.classList.toggle("hidden", !on);
+  paintHostVol();
+  if(!on) return;
+  for(const k of ["pc", "sp"]){
+    const fr = $(k === "pc" ? "cropPc" : "cropSp"), z = $(k === "pc" ? "cropZpc" : "cropZsp");
+    const pos = bgPosOf(k);
+    if(document.activeElement !== z) z.value = String(pos.z);
+    const W = fr.clientWidth || 160, H = fr.clientHeight || 90;
+    const f = bgFrame(W, H, pos);
+    fr.style.backgroundImage = `url("${mediaCache.bg}")`;
+    fr.style.backgroundRepeat = "no-repeat";
+    fr.style.backgroundSize = f ? `${Math.round(f.w)}px ${Math.round(f.h)}px` : "cover";
+    fr.style.backgroundPosition = `${pos.x}% ${pos.y}%`;
+  }
+}
+let cropThr = 0;
+function setBgPos(k, patch, fin){
+  if(role !== "host" || !game) return;
+  const bp = Object.assign({}, game.st.bgPos || {});
+  bp[k] = Object.assign(bgPosOf(k), patch);
+  game.st.bgPos = bp;
+  paintCropEditor(); paintBodyBg();
+  const now = Date.now(); if(fin || now - cropThr > 500){ cropThr = now; commit(); }
+}
+["cropPc", "cropSp"].forEach(id => {
+  const fr = $(id), k = fr.dataset.k; let d = null;
+  fr.addEventListener("pointerdown", e => { const p = bgPosOf(k); d = { x:e.clientX, y:e.clientY, px:p.x, py:p.y }; fr.setPointerCapture(e.pointerId); e.preventDefault(); });
+  fr.addEventListener("pointermove", e => {
+    if(!d) return;
+    const f = bgFrame(fr.clientWidth, fr.clientHeight, bgPosOf(k)); if(!f) return;
+    const ox = Math.max(1, f.w - fr.clientWidth), oy = Math.max(1, f.h - fr.clientHeight);
+    const nx = Math.max(0, Math.min(100, d.px - (e.clientX - d.x) / ox * 100));
+    const ny = Math.max(0, Math.min(100, d.py - (e.clientY - d.y) / oy * 100));
+    setBgPos(k, { x:Math.round(nx), y:Math.round(ny) }, false);
+  });
+  const end = () => { if(d){ d = null; setBgPos(k, {}, true); } };
+  fr.addEventListener("pointerup", end); fr.addEventListener("pointercancel", end);
+});
+["cropZpc", "cropZsp"].forEach(id => {
+  const z = $(id), k = z.dataset.k;
+  z.addEventListener("input", () => setBgPos(k, { z:+z.value }, false));
+  z.addEventListener("change", () => setBgPos(k, { z:+z.value }, true));
+});
+$("bCropReset").onclick = () => { if(role !== "host") return; game.st.bgPos = null; paintCropEditor(); paintBodyBg(); commit(); };
+document.addEventListener("toggle", e => { if(e.target && e.target.id === "secStage" && e.target.open) setTimeout(paintCropEditor, 30); }, true);
+
+// ===== lobby: per-game rule settings + rule details =====
+// each item: [label, key, options[[value,label]], getter, setter]
+function ruleItems(m){
+  const C = CFG(), g = game;
+  const rule = [["回答権", [["std","標準"],["rest","1回休み"],["free","何度でも"],["first","先着〇人"]], () => g.rule.t, v => setRuleNoCommit(v)]];
+  if(g.rule.t === "first") rule.push(["先着の人数", [[2,"2人"],[3,"3人"],[4,"4人"],[5,"5人"]], () => g.rule.n, v => { g.rule.n = +v; while(g.rule.pp.length < g.rule.n) g.rule.pp.push(1); g.ruleSeq++; }]);
+  if(m === "normal") return [...rule,
+    ["正解の点", [[1,"+1"],[2,"+2"],[3,"+3"]], () => g.pts.ok, v => { g.pts.ok = +v; }],
+    ["不正解の点", [[0,"±0"],[-1,"−1"],[-2,"−2"]], () => g.pts.ng, v => { g.pts.ng = +v; }],
+    ["目標点で終了", [[0,"なし"],[5,"5点"],[10,"10点"]], () => C.goalN, v => { C.goalN = +v; }]];
+  if(m === "mosaic") return [...rule,
+    ["不正解の点", [[0,"±0"],[-1,"−1"],[-2,"−2"]], () => g.pts.ng, v => { g.pts.ng = +v; }],
+    ["段階が進む間隔", [[5,"5秒"],[10,"10秒"],[15,"15秒"],[0,"手動"]], () => C.imgStep, v => { C.imgStep = +v; }],
+    ["目標点で終了", [[0,"なし"],[5,"5点"],[10,"10点"]], () => C.goalM, v => { C.goalM = +v; }]];
+  if(m === "sugoroku") return [
+    ["マスの数", [[20,"20"],[30,"30"],[40,"40"]], () => C.sgLen, v => { C.sgLen = +v; }],
+    ["ダウトの待ち時間", [[7,"7秒"],[10,"10秒"],[15,"15秒"]], () => C.sgWait, v => { C.sgWait = +v; }],
+    ["ウソがバレたら", [[3,"3マス"],[5,"5マス"],[7,"7マス"]], () => C.sgBack, v => { C.sgBack = +v; }],
+    ["盤の景色", Object.entries(SG_THEMES).map(([k,t]) => [k, t.name]), () => sgTheme(), v => { g.st.sgt = v; }]];
+  if(m === "moji") return [
+    ["お題", "topic"],
+    ["文字数の上限", [[5,"5"],[6,"6"],[7,"7"],[8,"8"]], () => C.mjMax, v => { C.mjMax = +v; }],
+    ["当てたらもう1回", [[1,"あり"],[0,"なし"]], () => C.mjBonus ? 1 : 0, v => { C.mjBonus = !!+v; }],
+    ["1文字を呼ぶ時間", [[0,"なし"],[20,"20秒"],[40,"40秒"]], () => C.mjTime, v => { C.mjTime = +v; }]];
+  return [];
+}
+function setRuleNoCommit(t){ if(RULES[t]){ game.rule.t = t; game.ruleSeq++; } }
+function rulePanelHtml(m){
+  const host = role === "host";
+  const items = ruleItems(m);
+  const rows = items.map((it, i) => {
+    if(it[1] === "topic"){
+      const v = CFG().mjTopic || "";
+      return `<div class="rrow"><span class="rk">お題</span>${host
+        ? `<input id="lbTopic" maxlength="30" value="${esc(v)}" placeholder="空ならランダム（例：動物）"><button class="rc" id="lbTopicRnd">🎲</button>`
+        : `<span class="rv">${esc(v || "司会が決めます")}</span>`}</div>`;
+    }
+    const cur = String(it[2]());
+    return `<div class="rrow"><span class="rk">${esc(it[0])}</span>${it[1].map(([v, l]) => `<button class="rc ${String(v) === cur ? "on" : ""}" data-ri="${i}" data-rv="${esc(String(v))}" ${host ? "" : "disabled"}>${esc(l)}</button>`).join("")}</div>`;
+  }).join("");
+  const note = m === "normal" || m === "mosaic" ? `<div class="rnote2">回答権と不正解の点は、普通の早押しと画像クイズで共通です。問題や画像の登録は、ゲームを始めたあと司会の画面で行います。</div>` : "";
+  return `<div class="rph"><b>ルール設定</b><small>RULE · ${host ? "司会だけ変更できます" : "司会が決めた設定（読むだけ）"}</small><button class="rdbtn" data-rd="${m}">📖 ルールの詳細</button></div>${rows}${note}`;
+}
+let rpKey = "";
+function renderRulePanel(force){
+  const el = $("lbRules"); if(!el || !game) return;
+  const m = MODE_KEYS[lbCenter] || game.mode;
+  const key = m + "|" + role + "|" + JSON.stringify([game.cfg, game.rule, game.pts, game.st && game.st.sgt]);
+  if(!force && key === rpKey) return;
+  if(document.activeElement && document.activeElement.id === "lbTopic") return;   // don't wipe what the host is typing
+  rpKey = key; el.innerHTML = rulePanelHtml(m);
+}
+document.addEventListener("click", e => {
+  const rd = e.target.closest("[data-rd]");
+  if(rd){ e.stopPropagation(); showRuleDetail(rd.dataset.rd); return; }
+  const b = e.target.closest("#lbRules [data-ri]");
+  if(b && role === "host"){
+    const m = MODE_KEYS[lbCenter] || game.mode;
+    const it = ruleItems(m)[+b.dataset.ri]; if(!it) return;
+    it[3](b.dataset.rv); rpKey = ""; commit(); return;
+  }
+  if(e.target.closest("#lbTopicRnd") && role === "host"){
+    const t = Object.keys(MJ_TOPICS); CFG().mjTopic = t[Math.floor(Math.random() * t.length)]; rpKey = ""; commit(); renderRulePanel(true);
+  }
+}, true);
+document.addEventListener("change", e => {
+  if(e.target && e.target.id === "lbTopic" && role === "host"){ CFG().mjTopic = e.target.value.trim().slice(0, 30); rpKey = ""; commit(); }
+});
+document.addEventListener("keydown", e => { if(e.target && e.target.id === "lbTopic" && e.key === "Enter") e.target.blur(); });
+
+// keep the old host-panel inputs in step with the shared settings
+function syncCfgInputs(){
+  if(!game || role !== "host") return;
+  const C = CFG();
+  if(document.activeElement !== $("mjTopic")) $("mjTopic").value = C.mjTopic || "";
+  $("mjMax").value = String(C.mjMax); $("mjBonus").checked = !!C.mjBonus;
+  $("imgStep").value = String(C.imgStep);
+}
+
+// ----- rule book -----
+function ruleDetailHtml(m){
+  const C = CFG(), g = game;
+  const rows = (arr) => `<div class="rbook">${arr.map(([h, t]) => `<div><b>${h}</b><span>${t}</span></div>`).join("")}</div>`;
+  const rt = `${esc(ruleText(g))}：${esc(RULES[g.rule.t].desc)}`;
+  if(m === "normal") return rows([
+    ["目的", "司会の問題に、いちばん早く押して正しく答える"],
+    ["流れ", "司会が「出題スタート」→ 分かったら早押し → 押した順に答える → 司会が正解・不正解を判定"],
+    ["回答権", rt],
+    ["点数", `正解 +${g.pts.ok}点／不正解 ${g.pts.ng > 0 ? "+" : ""}${g.pts.ng}点${g.rule.t === "first" ? `（先着ルールでは押した順位の点数：${g.rule.pp.slice(0, g.rule.n).join("・")}点）` : ""}`],
+    ["終わり", C.goalN ? `だれかが${C.goalN}点に届いたら優勝` : "目標点なし（司会が好きなところで終える）"]]);
+  if(m === "mosaic") return rows([
+    ["目的", "少しずつはっきりする画像が何か、早く当てる"],
+    ["見せ方", "モザイク・シルエット・部分ズーム（画像ごとに司会が選ぶ）。5段階で少しずつはっきりします"],
+    ["段階", C.imgStep ? `${C.imgStep}秒ごとに次の段階へ（司会が手動で進めることもできます）` : "司会が手動で進めます"],
+    ["回答権", rt],
+    ["点数", `早く当てるほど高得点：1〜2段階目 3点、3〜4段階目 2点、5段階目 1点／不正解 ${g.pts.ng}点`],
+    ["終わり", C.goalM ? `だれかが${C.goalM}点に届いたら優勝` : "目標点なし（司会が好きなところで終える）"]]);
+  if(m === "sugoroku") return sgRulesHtml();
+  if(m === "moji") return mjRulesHtml() + rows([
+    ["お題", esc(C.mjTopic || "始めるときにランダムで決まります")],
+    ["文字数", `${C.mjMax}文字まで。全員の箱は${C.mjMax}個で表示されるので、本当の文字数は分かりません`],
+    ["もう1回", C.mjBonus ? "ほかの人の文字を当てたら、続けてもう1回呼べます" : "なし（1回呼んだら次の人へ）"],
+    ["呼ぶ時間", C.mjTime ? `${C.mjTime}秒以内に呼ばないと、次の人の番になります` : "制限なし"]]);
+  return "";
+}
+function showRuleDetail(m){
+  openSheet(`${MODE_NAME[m]}のルール`, `RULE BOOK · ${MODE_EN[m]}`, ruleDetailHtml(m));
 }
 
 // ===== avatar picker =====
@@ -3637,6 +3944,7 @@ $("showText").onchange = e => { game.q.showText = e.target.checked; commit(); };
 $("bLoad").onclick = loadQuestions;
 $("bImgLoad").onclick = startImages;
 $("imgFiles").onchange = addImages;
+$("imgStep").onchange = e => { if(role !== "host") return; CFG().imgStep = +e.target.value; commit(); };
 $("bReset").onclick = async () => {
   if(!(await confirmBox("得点をリセットしますか？", "このモードの全員の得点を0にします。", "リセット"))) return;
   const sc = SC(); for(const k in sc) sc[k] = 0; commit();
