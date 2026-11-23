@@ -700,6 +700,52 @@ header{box-shadow:0 0 0 100vmax #1d1e21;clip-path:inset(0 -100vmax)}
 .mjb.pad{background:transparent;border:1px dashed #b4b2a9;opacity:.5}
 .sheet .card{max-height:90vh;overflow:auto}
 .rng{grid-template-columns:110px auto minmax(0,1fr) auto}
+/* ===== 数字ならべ / おでこコール ===== */
+body.mode-ito .m-normal, body.mode-ito .m-mosaic, body.mode-ito .m-quiz, body.mode-ito .m-sg, body.mode-ito .m-mj,
+body.mode-odeko .m-normal, body.mode-odeko .m-mosaic, body.mode-odeko .m-quiz, body.mode-odeko .m-sg, body.mode-odeko .m-mj{display:none!important}
+body:not(.mode-ito) .m-ito{display:none!important}
+body:not(.mode-odeko) .m-od{display:none!important}
+@media(max-width:860px){ body.mode-ito .layout > div:last-child, body.mode-odeko .layout > div:last-child{order:-1} body.mode-ito #itoMe, body.mode-odeko #odMe{order:-1} }
+.lives{color:#e24b4a;letter-spacing:.1em}.lives .dim,.ol .dim{opacity:.25}
+.topicbar{background:#2c2c2a;color:#fff;padding:10px 14px;border-left:5px solid var(--acc)}
+.topicbar .tt{font-size:clamp(20px,2.8vw,28px);font-weight:800}
+.topicbar .ts{display:flex;justify-content:space-between;font-size:13px;color:#d3d1c7;margin-top:6px;border-top:2px solid #5f5e5a;padding-top:4px}
+.irow{display:flex;flex-wrap:wrap;gap:8px}
+.icard{width:112px;min-height:120px;background:#fff;border-top:5px solid var(--acc);box-shadow:0 3px 0 rgba(0,0,0,.25);display:flex;flex-direction:column;align-items:center;padding:8px 6px;text-align:center}
+.icard b{font-size:34px;font-weight:800;line-height:1.1}
+.icard .in{font-size:12px;color:var(--ink2);margin-top:2px}
+.icard .iw{font-size:14px;font-weight:800;margin-top:4px;word-break:break-all}
+.icard.hid{background:#e3e0d6;border-top-color:#888780}.icard.hid b{color:#888780}
+.icard.bad{border-top-color:#d8433f;background:#fcebeb}
+.icard.lost{opacity:.5;text-decoration:line-through}
+.imine{display:flex;align-items:center;gap:8px;background:var(--tile2);padding:8px;margin-top:6px}
+.imine b{font-size:34px;font-weight:800;min-width:64px;text-align:center;color:#c25a14}
+.imine input{flex:1;min-width:0}
+.imine span{flex:1;font-weight:800}
+.imine em{font-style:normal;font-size:12px;color:var(--ink2)}
+.imine.done,.imine.lost{opacity:.55}
+.peekbtn{width:100%;margin-top:6px;background:#2c2c2a!important;color:#fff!important}
+.warnbar{background:#faeeda;color:#633806;border:2px dashed #ba7517;padding:8px 12px;font-weight:800;font-size:14px}
+.otiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
+.otile{background:var(--tile2);padding:10px;text-align:center;position:relative}
+.otile.turn{outline:3px solid var(--acc)}
+.otile.out{opacity:.45}
+.otile.lose{background:#fcebeb}
+.otile .on{font-weight:800}.otile .on small{color:var(--ink2);font-weight:500}
+.otile .ol{color:#e24b4a;margin:2px 0 6px}
+.obid{margin-top:6px;background:#2c2c2a;color:#fff;font-weight:800;padding:2px 6px}
+.ocard2{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;width:72px;height:92px;background:#fff;border-top:5px solid var(--acc);box-shadow:0 3px 0 rgba(0,0,0,.25);margin:3px;vertical-align:top}
+.ocard2 b{font-size:28px;font-weight:800}
+.ocard2 span{font-size:11px;color:var(--ink2);max-width:68px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ocard2.sp{border-top-color:#534ab7;background:#eeedfe}.ocard2.sp b{font-size:20px;color:#3c3489}
+.ocard2.hid{background:#5f5e5a;border-top-color:#888780}.ocard2.hid b{color:#d3d1c7}.ocard2.hid span{color:#d3d1c7}
+.ocalc{background:#2c2c2a;color:#fff;padding:10px 14px;border-left:5px solid var(--acc);line-height:1.7}
+.ocalc .osum{font-size:22px}.ocalc .osum b{font-size:30px;color:#fac775}
+.omine{display:flex;flex-wrap:wrap;gap:2px;margin:4px 0 8px}
+.obidrow{display:flex;gap:6px;align-items:center}
+.obidrow input{flex:1;min-width:0;font-size:24px;text-align:center;padding:6px}
+.obidrow button{padding:8px 10px}
+.rulestrip b.lives{color:#ff6b6b}
 
 </style>
 </head>
@@ -843,6 +889,23 @@ header{box-shadow:0 0 0 100vmax #1d1e21;clip-path:inset(0 -100vmax)}
               <button id="bMjRestart" class="wide small hidden">↺ 最初からやり直す</button>
             </div>
           </details>
+          <details class="sec2 m-ito" id="secIto" open>
+            <summary>数字ならべ</summary>
+            <p class="small muted" style="margin:8px 0">いまいる司会と回答者の全員（2〜10人）で協力して遊びます。お題とライフはロビーのルール設定で決められます。</p>
+            <div class="ctrlbar">
+              <button class="b-open wide" id="bItoStart">🔢 いまいる人で始める</button>
+              <button class="wide hidden" id="bItoNext">⏭ 次のレベルへ</button>
+              <button class="wide hidden" id="bItoForce">⏭ 書けた人だけで始める</button>
+            </div>
+          </details>
+          <details class="sec2 m-od" id="secOd" open>
+            <summary>おでこコール</summary>
+            <p class="small muted" style="margin:8px 0">いまいる司会と回答者の全員（2〜8人）で遊びます。司会の画面にはほかの人のカードが出るので、画面共有は止めてください。</p>
+            <div class="ctrlbar">
+              <button class="b-open wide" id="bOdStart">🐺 いまいる人で始める</button>
+              <button class="wide hidden" id="bOdNext">⏭ 次のラウンドへ</button>
+            </div>
+          </details>
           <details class="sec2" id="secStage">
             <summary>演出（背景・BGM・効果音）</summary>
             <div class="small muted" style="margin-top:8px">背景（全員に反映）</div>
@@ -892,6 +955,8 @@ header{box-shadow:0 0 0 100vmax #1d1e21;clip-path:inset(0 -100vmax)}
 
         <div class="card m-sg" id="sgMe"></div>
         <div class="card m-mj" id="mjMe"></div>
+        <div class="card m-ito" id="itoMe"></div>
+        <div class="card m-od" id="odMe"></div>
 
         <div class="card hidden" id="previewCard">
           <div class="row" style="justify-content:space-between"><h3 style="margin:0" data-en="PREVIEW">回答者画面の見本</h3><button class="small" id="bPreview">横に表示</button></div>
@@ -941,13 +1006,15 @@ const store = {
   set(k,v){ try{ localStorage.setItem("asobiba." + k, v); }catch(e){} },
   del(k){ try{ localStorage.removeItem("asobiba." + k); }catch(e){} }
 };
-const MODES = { normal:"⚡ 普通の早押し", mosaic:"🖼 画像クイズ", sugoroku:"🎲 ダウトすごろく", moji:"🔤 もじあてバトル" };
+const MODES = { normal:"⚡ 普通の早押し", mosaic:"🖼 画像クイズ", sugoroku:"🎲 ダウトすごろく", moji:"🔤 もじあてバトル", ito:"🔢 数字ならべ", odeko:"🐺 おでこコール" };
 const isQuiz = m => m === "normal" || m === "mosaic";
 const MODE_DESC = {
   normal:"司会が問題を出します。分かったらすぐ押して、1番の人が答えます。",
   mosaic:"モザイク・シルエット・拡大した画像が少しずつはっきりします。早く当てるほど高得点です。",
   sugoroku:"自分だけに見えるサイコロの目を宣言して進みます。嘘もOK。怪しいと思ったら「ダウト！」、信じるなら「信じる」。",
-  moji:"お題に合う言葉をこっそり書き、順番に50音から1文字ずつ呼びます。全部の文字が開いたら脱落。最後まで残った人の勝ち。"
+  moji:"お題に合う言葉をこっそり書き、順番に50音から1文字ずつ呼びます。全部の文字が開いたら脱落。最後まで残った人の勝ち。",
+  ito:"1〜100の数字をお題に合わせた言葉でたとえ、全員で協力して小さい順に出します。ライフがなくなるまでレベルアップを目指します。",
+  odeko:"自分のカードだけ見えない状態で、全員のカードの合計を予想して数字を言い合います。言いすぎだと思ったら「コール！」。"
 };
 const RULES = {
   std:{ label:"標準", desc:"間違えた人は、その問題ではもう押せません。" },
@@ -1128,7 +1195,7 @@ let pendingPresence = null;
 let game = null, prevGame = null;
 let textQs = [];                        // host: normal-mode questions {t,a}
 let images = [];                        // host: mosaic images {url,a}
-const idxByMode = { normal:-1, mosaic:-1, sugoroku:-1, moji:-1 };
+const idxByMode = { normal:-1, mosaic:-1, sugoroku:-1, moji:-1, ito:-1, odeko:-1 };
 let flyUntil = 0, myBuzzRound = null;
 const firstSeen = {};
 const PIX = [48, 28, 16, 9, 5];
@@ -1147,7 +1214,7 @@ if(isEmbed) document.body.classList.add("embed");
 function newGame(mode){
   return { v:3, stage:"lobby", mode, sel:mode, round:0, phase:"idle", order:[], cur:-1, wrong:[], result:null,
            q:{ idx:-1, total:0, text:"", ans:"", showText:true, showAns:false }, qn:0,
-           scoresAll:{ normal:{}, mosaic:{}, sugoroku:{}, moji:{} }, pts:{ ok:1, ng:0 }, img:null, sg:null, mj:null,
+           scoresAll:{ normal:{}, mosaic:{}, sugoroku:{}, moji:{}, ito:{}, odeko:{} }, pts:{ ok:1, ng:0 }, img:null, sg:null, mj:null, it:null, od:null,
            rule:{ t:"std", n:3, pp:[3,2,1] }, ruleSeq:0, locks:[], rest:{}, colors:{},
            cfg:{ ...CFG_DEF }, st:{ vol:{ bgm:100, ok:100, ng:100, fx:100 }, bgPos:null, bg:"factory", bgm:"none", okMode:"fixed", ok:0, ngMode:"fixed", ng:0, glass:0, dim:45, sgt:"grass" },
            snd:{ ok:0, ng:0, okSeq:0, ngSeq:0 }, locked:false };
@@ -1166,7 +1233,7 @@ function onRoomError(){
   if(siteOpen !== false) showWarn("部屋との接続が切れました。再読み込みすると、同じ部屋に戻れます。");
 }
 function showWarn(msg){ const w = $("warnBox"); if(msg){ w.textContent = msg; w.classList.remove("hidden"); } else w.classList.add("hidden"); }
-const CFG_DEF = { sgLen:30, sgWait:10, sgBack:5, mjTopic:"", mjMax:7, mjBonus:true, mjTime:0, goalN:0, goalM:0, imgStep:10 };
+const CFG_DEF = { sgLen:30, sgWait:10, sgBack:5, mjTopic:"", mjMax:7, mjBonus:true, mjTime:0, goalN:0, goalM:0, imgStep:10, itoLives:3, itoTopic:"", odLives:3, odSpecial:true };
 function CFG(){ if(!game) return { ...CFG_DEF }; game.cfg = Object.assign({ ...CFG_DEF }, game.cfg || {}); return game.cfg; }
 function players(){ return peers.filter(p => p.presence && p.presence.role === "player" && typeof p.presence.name === "string"); }
 function hosts(){ return peers.filter(p => p.presence && p.presence.role === "host" && p.presence.game && p.presence.game.scoresAll); }
@@ -1383,6 +1450,17 @@ function handlePeers(){
         if(processMj(n, a)) changed = true;
       }
     }
+    if((game.mode === "ito" && game.it) || (game.mode === "odeko" && game.od)){
+      for(const p of players()){
+        const a = p.presence.pa;
+        if(!a || typeof a !== "object" || typeof a.id !== "string" || typeof a.act !== "string") continue;
+        const n = p.presence.name.slice(0,12);
+        const k = "pa:" + n + ":" + a.g + ":" + a.act + ":" + a.id;
+        if(doneActs.has(k)) continue;
+        doneActs.add(k);
+        if(processParty(n, a)) changed = true;
+      }
+    }
     if(changed) commit(); else render();
   } else if(role === "player"){
     const hs = hosts().sort((a,b) => a.peer < b.peer ? -1 : 1);
@@ -1410,6 +1488,8 @@ function applyGame(g){
   game = g;
   if(g && g.mode === "sugoroku" && g.sg) sgOnUpdate(prev && prev.sg, g.sg);
   if(g && g.mode === "moji" && g.mj) mjOnUpdate(prev && prev.mj, g.mj);
+  if(g && g.mode === "ito" && g.it) itoOnUpdate(g.it);
+  if(g && g.mode === "odeko" && g.od) odOnUpdate(g.od);
   if(prev && g){
     if(isQuiz(g.mode) && prev.mode === g.mode){
       if(g.round !== prev.round && g.phase === "open") sfx.open();
@@ -1762,6 +1842,8 @@ function applyModeUI(){
   document.body.classList.toggle("mode-mosaic", m === "mosaic");
   document.body.classList.toggle("mode-sugoroku", m === "sugoroku");
   document.body.classList.toggle("mode-moji", m === "moji");
+  document.body.classList.toggle("mode-ito", m === "ito");
+  document.body.classList.toggle("mode-odeko", m === "odeko");
   document.querySelectorAll("#modeSeg button").forEach(b => b.classList.toggle("on", b.dataset.mode === m));
   const inLobby = !!game && game.stage === "lobby";
   document.body.classList.toggle("in-lobby", inLobby);
@@ -1782,6 +1864,8 @@ function render(){
   if(g.stage === "lobby"){ renderLobby(); renderHost(); renderPlayer(); renderScores(g); return; }
   if(g.mode === "sugoroku"){ renderSg(); renderHost(); return; }
   if(g.mode === "moji"){ renderMj(); renderHost(); return; }
+  if(g.mode === "ito"){ renderIto(); renderHost(); return; }
+  if(g.mode === "odeko"){ renderOd(); renderHost(); return; }
   // rule strip
   const unit = g.mode === "mosaic" ? "枚" : "問";
   const left = g.q.total && g.q.idx >= 0 ? `残り${Math.max(0, g.q.total - g.q.idx - 1)}${unit}` : (g.q.idx >= 0 ? `第${g.q.idx+1}問` : "準備中");
@@ -2878,6 +2962,7 @@ setInterval(() => {
   if(!practice || role !== "host" || !game || game.stage !== "play") return;
   const L = BOT_LV[practice.lv] || BOT_LV.normal, now = Date.now();
   if(game.mode === "moji"){ botMoji(L, now); return; }
+  if(game.mode === "ito" || game.mode === "odeko"){ botParty(L, now); return; }
   if(isQuiz(game.mode)){
     if(game.phase !== "open" && game.phase !== "answer") return;
     for(const b of practice.bots){
@@ -3377,10 +3462,10 @@ async function openFeedback(){
 $("bFeedback").onclick = openFeedback;
 
 // ===== room lobby (game select carousel) =====
-const MODE_EN = { normal:"QUICK BUZZ", mosaic:"PICTURE QUIZ", sugoroku:"DOUBT SUGOROKU", moji:"MOJI BATTLE" };
-const MODE_ICON = { normal:"⚡", mosaic:"🖼", sugoroku:"🎲", moji:"🔤" };
-const MODE_TAG = { normal:"2人〜・約10分", mosaic:"2人〜・約10分", sugoroku:"2〜6人・約20分", moji:"2〜8人・約15分" };
-const MODE_NAME = { normal:"普通の早押し", mosaic:"画像クイズ", sugoroku:"ダウトすごろく", moji:"もじあてバトル" };
+const MODE_EN = { normal:"QUICK BUZZ", mosaic:"PICTURE QUIZ", sugoroku:"DOUBT SUGOROKU", moji:"MOJI BATTLE", ito:"NUMBER LINE", odeko:"FOREHEAD CALL" };
+const MODE_ICON = { normal:"⚡", mosaic:"🖼", sugoroku:"🎲", moji:"🔤", ito:"🔢", odeko:"🐺" };
+const MODE_TAG = { normal:"2人〜・約10分", mosaic:"2人〜・約10分", sugoroku:"2〜6人・約20分", moji:"2〜8人・約15分", ito:"2〜10人・協力・約15分", odeko:"2〜8人・約15分" };
+const MODE_NAME = { normal:"普通の早押し", mosaic:"画像クイズ", sugoroku:"ダウトすごろく", moji:"もじあてバトル", ito:"数字ならべ", odeko:"おでこコール" };
 const LOBBY_NEWS = "ダウトすごろくが道のある盤面になり、結果発表と景色テーマが追加されました。";
 const MODE_KEYS = Object.keys(MODE_NAME);
 let lbBuilt = false, lbCenter = 0, lbSelSent = null, lbSelT = 0, lbSeenSel = null, lbTouching = false;
@@ -3535,7 +3620,7 @@ function lobbyTile(k){
     const sa = game.scoresAll || {};
     const sec = m => {
       const e = Object.entries(sa[m] || {}).filter(([,v]) => v).sort((a,b) => b[1] - a[1]);
-      const unit = m === "sugoroku" || m === "moji" ? "勝" : "点";
+      const unit = m === "ito" ? "レベル" : m === "sugoroku" || m === "moji" || m === "odeko" ? "勝" : "点";
       return `<div class="recsec"><div class="rh">${MODE_ICON[m]} ${MODE_NAME[m]}</div>${e.length ? e.map(([n,v],i) => `<div class="rr"><span>${i+1}</span>${avHtml(avatarOf(n), 22, n)}<b>${esc(n)}</b><em>${v}${unit}</em></div>`).join("") : '<div class="small muted">まだ記録がありません</div>'}</div>`;
     };
     openSheet("成績", "RECORD · この部屋の通算", `<div class="recgrid">${MODE_KEYS.map(sec).join("")}</div>`);
@@ -3633,6 +3718,7 @@ document.addEventListener("toggle", e => { if(e.target && e.target.id === "secSt
 // ===== lobby: per-game rule settings + rule details =====
 // each item: [label, key, options[[value,label]], getter, setter]
 function ruleItems(m){
+  const pr = partyRuleItems(m); if(pr) return pr;
   const C = CFG(), g = game;
   const rule = [["回答権", [["std","標準"],["rest","1回休み"],["free","何度でも"],["first","先着〇人"]], () => g.rule.t, v => setRuleNoCommit(v)]];
   if(g.rule.t === "first") rule.push(["先着の人数", [[2,"2人"],[3,"3人"],[4,"4人"],[5,"5人"]], () => g.rule.n, v => { g.rule.n = +v; while(g.rule.pp.length < g.rule.n) g.rule.pp.push(1); g.ruleSeq++; }]);
@@ -3650,7 +3736,7 @@ function ruleItems(m){
     ["ウソがバレたら", [[3,"3マス"],[5,"5マス"],[7,"7マス"]], () => C.sgBack, v => { C.sgBack = +v; }],
     ["盤の景色", Object.entries(SG_THEMES).map(([k,t]) => [k, t.name]), () => sgTheme(), v => { g.st.sgt = v; }]];
   if(m === "moji") return [
-    ["お題", "topic"],
+    ["お題", "mjTopic"],
     ["文字数の上限", [[5,"5"],[6,"6"],[7,"7"],[8,"8"]], () => C.mjMax, v => { C.mjMax = +v; }],
     ["当てたらもう1回", [[1,"あり"],[0,"なし"]], () => C.mjBonus ? 1 : 0, v => { C.mjBonus = !!+v; }],
     ["1文字を呼ぶ時間", [[0,"なし"],[20,"20秒"],[40,"40秒"]], () => C.mjTime, v => { C.mjTime = +v; }]];
@@ -3661,11 +3747,11 @@ function rulePanelHtml(m){
   const host = role === "host";
   const items = ruleItems(m);
   const rows = items.map((it, i) => {
-    if(it[1] === "topic"){
-      const v = CFG().mjTopic || "";
+    if(typeof it[1] === "string"){
+      const v = CFG()[it[1]] || "";
       return `<div class="rrow"><span class="rk">お題</span>${host
-        ? `<input id="lbTopic" maxlength="30" value="${esc(v)}" placeholder="空ならランダム（例：動物）"><button class="rc" id="lbTopicRnd">🎲</button>`
-        : `<span class="rv">${esc(v || "司会が決めます")}</span>`}</div>`;
+        ? `<input id="lbTopic" data-key="${it[1]}" maxlength="30" value="${esc(v)}" placeholder="空ならランダム">${it[1] === "mjTopic" ? '<button class="rc" id="lbTopicRnd">🎲</button>' : ""}`
+        : `<span class="rv">${esc(v || "ランダム")}</span>`}</div>`;
     }
     const cur = String(it[2]());
     return `<div class="rrow"><span class="rk">${esc(it[0])}</span>${it[1].map(([v, l]) => `<button class="rc ${String(v) === cur ? "on" : ""}" data-ri="${i}" data-rv="${esc(String(v))}" ${host ? "" : "disabled"}>${esc(l)}</button>`).join("")}</div>`;
@@ -3696,7 +3782,7 @@ document.addEventListener("click", e => {
   }
 }, true);
 document.addEventListener("change", e => {
-  if(e.target && e.target.id === "lbTopic" && role === "host"){ CFG().mjTopic = e.target.value.trim().slice(0, 30); rpKey = ""; commit(); }
+  if(e.target && e.target.id === "lbTopic" && role === "host"){ CFG()[e.target.dataset.key || "mjTopic"] = e.target.value.trim().slice(0, 30); rpKey = ""; commit(); }
 });
 document.addEventListener("keydown", e => { if(e.target && e.target.id === "lbTopic" && e.key === "Enter") e.target.blur(); });
 
@@ -3728,6 +3814,8 @@ function ruleDetailHtml(m){
     ["点数", `早く当てるほど高得点：1〜2段階目 3点、3〜4段階目 2点、5段階目 1点／不正解 ${g.pts.ng}点`],
     ["終わり", C.goalM ? `だれかが${C.goalM}点に届いたら優勝` : "目標点なし（司会が好きなところで終える）"]]);
   if(m === "sugoroku") return sgRulesHtml();
+  if(m === "ito") return itoRulesHtml();
+  if(m === "odeko") return odRulesHtml();
   if(m === "moji") return mjRulesHtml() + rows([
     ["お題", esc(C.mjTopic || "始めるときにランダムで決まります")],
     ["文字数", `${C.mjMax}文字まで。全員の箱は${C.mjMax}個で表示されるので、本当の文字数は分かりません`],
@@ -3737,6 +3825,424 @@ function ruleDetailHtml(m){
 }
 function showRuleDetail(m){
   openSheet(`${MODE_NAME[m]}のルール`, `RULE BOOK · ${MODE_EN[m]}`, ruleDetailHtml(m));
+}
+
+// ===== 数字ならべ (cooperative number line-up) & おでこコール (forehead-card bidding) =====
+const ITO_TOPICS = [
+  ["こわいもの", "ちょっとこわい", "最高にこわい"], ["好きな食べ物", "まあまあ好き", "大好物"], ["強そうな動物", "弱そう", "最強"],
+  ["うれしいプレゼント", "ちょっとうれしい", "泣くほどうれしい"], ["大きいもの", "小さい", "とても大きい"], ["人気の観光地", "知る人ぞ知る", "超有名"],
+  ["もらって困るもの", "少し困る", "本気で困る"], ["朝ごはんにうれしいもの", "まあまあ", "最高の朝"], ["かっこいい職業", "ふつう", "あこがれ"],
+  ["痛いこと", "少し痛い", "激痛"], ["速いもの", "ゆっくり", "めちゃくちゃ速い"], ["高いもの（値段）", "安い", "すごく高い"],
+  ["学校でうれしいこと", "ちょっとうれしい", "最高"], ["夏っぽいもの", "少し夏っぽい", "夏そのもの"], ["冬っぽいもの", "少し冬っぽい", "冬そのもの"],
+  ["重いもの", "軽い", "とても重い"], ["寝る前にしたいこと", "まあまあ", "これしかない"], ["休日にやりたいこと", "ひまなら", "絶対やりたい"],
+  ["人気のスポーツ", "マイナー", "大人気"], ["子どもが好きなもの", "まあまあ", "大好き"], ["におう（くさい）もの", "ほんのり", "強烈"],
+  ["甘いもの", "ほんのり甘い", "激甘"], ["辛いもの", "ピリッと", "激辛"], ["便利な道具", "たまに使う", "ないと困る"],
+  ["かわいいもの", "ちょっとかわいい", "かわいすぎる"], ["うるさいもの", "少しうるさい", "耳をふさぐ"], ["長生きしそうなもの", "短い", "とても長い"],
+  ["旅行に持っていきたいもの", "あれば便利", "絶対いる"], ["テンションが上がるもの", "少し上がる", "最高に上がる"], ["ゲームのボスの強さ", "ざこ", "ラスボス"]
+];
+const OD_SPECIAL = { x2:"×2", max0:"最大→0", q:"？" };
+const odCardText = c => typeof c === "number" ? String(c) : (OD_SPECIAL[c] || "?");
+function partyNames(max){
+  const names = [myName];
+  for(const p of players()){ const n = p.presence.name.slice(0, 12); if(!names.includes(n) && !(room && room.local && n === "あなた（見本）")) names.push(n); }
+  return names.slice(0, max);
+}
+function partySend(g, a){
+  a.g = g; a.id = a.id || rid();
+  if(role === "host"){
+    const key = "pa:" + myName + ":" + a.g + ":" + a.act + ":" + a.id;
+    if(doneActs.has(key)) return;
+    doneActs.add(key);
+    if(processParty(myName, a)) commit(); else render();
+  } else setPresence({ pa:a });
+}
+function processParty(n, a){
+  if(a.g === "ito" && game.mode === "ito") return itoAct(n, a);
+  if(a.g === "od" && game.mode === "odeko") return odAct(n, a);
+  return false;
+}
+const plog = (o, t) => { o.log.unshift(t); o.log = o.log.slice(0, 8); };
+
+// ---------------- 数字ならべ ----------------
+function itoDeal(it){
+  const pool = []; for(let i = 1; i <= 100; i++) pool.push(i);
+  pool.sort(() => Math.random() - .5);
+  it.hands = {};
+  for(const n of it.order) it.hands[n] = pool.splice(0, it.level).sort((a, b) => a - b).map(v => ({ v, w:"", played:false, lost:false }));
+  it.ready = {}; it.played = []; it.phase = "write"; it.miss = null;
+  const C = CFG();
+  const custom = String(C.itoTopic || "").trim();
+  const t = custom ? [custom, "小さい", "大きい"] : ITO_TOPICS[Math.floor(Math.random() * ITO_TOPICS.length)];
+  it.topic = { name:t[0], lo:t[1], hi:t[2] };
+}
+function itoStart(){
+  if(role !== "host") return;
+  const names = partyNames(10);
+  if(names.length < 2){ showWarn("数字ならべは2人以上で遊べます。"); setTimeout(() => showWarn(""), 3000); return; }
+  const lives = +CFG().itoLives || 3;
+  game.it = { seq:(game.it ? game.it.seq + 1 : 1), order:names, level:1, lives, maxLives:lives, log:[], best:0 };
+  itoDeal(game.it);
+  plog(game.it, `レベル1スタート！ お題「${game.it.topic.name}」`);
+  game.stage = "play"; commit();
+}
+function itoBegin(force){
+  const it = game.it; if(!it || it.phase !== "write") return;
+  if(!force && it.order.some(n => !it.ready[n])) return;
+  it.phase = "play"; plog(it, "全員そろいました。小さいと思う人から「出す」！");
+}
+function itoAct(n, a){
+  const it = game.it; if(!it || !it.hands[n]) return false;
+  if(a.act === "words" && it.phase === "write"){
+    const ws = Array.isArray(a.ws) ? a.ws : [];
+    it.hands[n].forEach((c, i) => { c.w = String(ws[i] || "").slice(0, 20); });
+    it.ready[n] = true; itoBegin(false); return true;
+  }
+  if(a.act === "play" && it.phase === "play"){
+    const c = it.hands[n][+a.i]; if(!c || c.played || c.lost) return false;
+    c.played = true;
+    const lower = [];
+    for(const m of it.order) it.hands[m].forEach(x => { if(!x.played && !x.lost && x.v < c.v){ x.lost = true; lower.push({ n:m, v:x.v, w:x.w }); } });
+    it.played.push({ n, v:c.v, w:c.w, bad:lower.length > 0 });
+    if(lower.length){
+      it.lives--; it.miss = { by:n, v:c.v, lower };
+      plog(it, `💥 ${n} の ${c.v}！ でも ${lower.map(x => `${x.n}の${x.v}`).join("・")} のほうが小さかった（ライフ−1）`);
+      sfxLater("ng");
+    } else { it.miss = null; plog(it, `${n} が ${c.v}（${c.w || "—"}）を出した`); }
+    if(it.lives <= 0){ it.phase = "over"; plog(it, `ゲームオーバー… 最高レベル ${it.best}`); return true; }
+    const left = it.order.some(m => it.hands[m].some(x => !x.played && !x.lost));
+    if(!left){
+      it.phase = "clear"; it.best = Math.max(it.best, it.level);
+      it.order.forEach(m => { const S = game.scoresAll.ito || (game.scoresAll.ito = {}); S[m] = Math.max(S[m] || 0, it.level); });
+      plog(it, `🎉 レベル${it.level} クリア！`);
+    }
+    return true;
+  }
+  return false;
+}
+function sfxLater(){ /* sounds are played by everyone in itoOnUpdate */ }
+function itoNext(){
+  const it = game.it; if(!it || it.phase !== "clear") return;
+  if((it.level + 1) * it.order.length > 100){ plog(it, "これ以上カードを配れません。全レベルクリア！"); it.phase = "over"; commit(); return; }
+  it.level++; itoDeal(it); plog(it, `レベル${it.level}スタート！ お題「${it.topic.name}」（1人${it.level}枚）`); commit();
+}
+let itoPrevKey = "", itoDraft = {}, itoPeek = false;
+function itoOnUpdate(it){
+  const k = it.seq + ":" + it.level + ":" + it.played.length + ":" + it.phase;
+  if(k === itoPrevKey) return;
+  const was = itoPrevKey; itoPrevKey = k;
+  if(!was) return;
+  const last = it.played[it.played.length - 1];
+  if(it.phase === "clear" || it.phase === "over"){ if(it.phase === "clear") fanfare(); else sfx.ng(2); return; }
+  if(last && last.bad) sfx.ng(game.st.ng || 0); else if(last) sfx.ok(game.st.ok || 0);
+}
+function renderIto(){
+  const it = game.it, board = $("board");
+  partyHostButtons();
+  if(!it){
+    board.innerHTML = `<div class="qhead"><span class="badge">🔢 数字ならべ</span></div>
+      <div class="sgbanner">${role === "host" ? "右の「数字ならべ」で始めてください" : "司会が始めるのを待っています"}<small>2〜10人・全員で協力</small></div>${itoRulesHtml()}`;
+    renderItoMe(); return;
+  }
+  const lives = "❤".repeat(Math.max(0, it.lives)) + "<span class='dim'>" + "❤".repeat(Math.max(0, it.maxLives - it.lives)) + "</span>";
+  let stat = "", cls = "";
+  if(it.phase === "write") stat = `たとえる言葉を書いています（${it.order.filter(n => it.ready[n]).length}/${it.order.length}人）`;
+  else if(it.phase === "play") stat = it.miss ? `💥 失敗！ ${esc(it.miss.lower.map(x => `${x.n}の${x.v}`).join("・"))} のほうが小さかった` : "小さいと思う人から「出す」";
+  else if(it.phase === "clear"){ stat = `🎉 レベル${it.level} クリア！`; cls = "truth"; }
+  else { stat = `ゲームオーバー（最高レベル ${it.best}）`; cls = "lie"; }
+  if(it.phase === "play" && it.miss) cls = "doubt";
+  const playedHtml = it.played.map(p => `<div class="icard ${p.bad ? "bad" : ""}"><b>${p.v}</b><span class="in">${esc(p.n)}</span><span class="iw">「${esc(p.w || "—")}」</span></div>`).join("");
+  const waiting = [];
+  it.order.forEach(n => it.hands[n].forEach(c => { if(!c.played) waiting.push({ n, c }); }));
+  const show = it.phase === "clear" || it.phase === "over";
+  const waitHtml = waiting.map(({ n, c }) => `<div class="icard hid ${c.lost ? "lost" : ""}"><b>${c.lost || show ? c.v : "？"}</b><span class="in">${esc(n)}</span><span class="iw">${it.phase === "write" && !it.ready[n] ? "書いています…" : `「${esc(c.w || "—")}」`}</span></div>`).join("");
+  board.innerHTML = `
+    <div class="rulestrip"><span>🔢 数字ならべ</span><span>レベル <b>${it.level}</b>（1人${it.level}枚）</span><span>ライフ <b class="lives">${lives}</b></span></div>
+    <div class="topicbar"><div class="tt">お題：${esc(it.topic.name)}</div><div class="ts"><span>1 ＝ ${esc(it.topic.lo)}</span><span>100 ＝ ${esc(it.topic.hi)}</span></div></div>
+    <div class="sgbanner ${cls}">${stat}</div>
+    <div class="small muted">出したカード（小さい順にならべば成功）</div>
+    <div class="irow">${playedHtml || '<span class="muted small">まだありません</span>'}</div>
+    <div class="small muted">まだ出していないカード（数字はかくれています）</div>
+    <div class="irow">${waitHtml || '<span class="muted small">なし</span>'}</div>
+    <div class="legend"><button class="legbtn" data-itorules="1">❓ 遊び方</button></div>
+    <div class="sglog">${it.log.map(t => `<div>・${esc(t)}</div>`).join("")}</div>`;
+  renderItoMe();
+}
+function renderItoMe(){
+  const el = $("itoMe"); if(!el) return;
+  const it = game && game.it;
+  let h = `<h3 data-en="YOUR CARDS">あなたの操作</h3>`;
+  if(!it) h += `<div class="muted small">始まると、ここに自分の数字が出ます。</div>`;
+  else if(!it.hands[myName]) h += `<div class="muted">観戦中です。次のゲームから参加できます。</div>`;
+  else {
+    const hand = it.hands[myName];
+    const hidden = role === "host" && !itoPeek;
+    h += `<div class="todo">お題：<b>${esc(it.topic.name)}</b>（1＝${esc(it.topic.lo)}／100＝${esc(it.topic.hi)}）</div>`;
+    if(role === "host") h += `<button class="peekbtn" id="itoPeek">${itoPeek ? "🙈 数字を隠す" : "👀 押して自分の数字を見る（画面共有に注意）"}</button>`;
+    if(it.phase === "write" && !it.ready[myName]){
+      h += hand.map((c, i) => `<div class="imine"><b>${hidden ? "？" : c.v}</b><input data-itow="${i}" maxlength="20" placeholder="たとえると？" value="${esc(itoDraft[i] || "")}"></div>`).join("");
+      h += `<button class="b-open" data-ito="words" style="width:100%;margin-top:8px;font-size:18px;padding:12px">これで決定</button>`;
+    } else {
+      h += hand.map((c, i) => `<div class="imine ${c.played ? "done" : ""} ${c.lost ? "lost" : ""}"><b>${hidden && !c.played && !c.lost ? "？" : c.v}</b><span>「${esc(c.w || "—")}」</span>
+        ${it.phase === "play" && !c.played && !c.lost ? `<button class="b-open" data-ito="play" data-i="${i}">🃏 出す</button>` : c.played ? "<em>出した</em>" : c.lost ? "<em>とばされた</em>" : ""}</div>`).join("");
+      if(it.phase === "write") h += `<div class="small muted" style="margin-top:6px">ほかの人を待っています</div>`;
+    }
+    if(it.phase === "clear") h += `<div class="big" style="margin-top:8px">🎉 クリア！ 司会が次のレベルへ進めます</div>`;
+    if(it.phase === "over") h += `<div class="big" style="margin-top:8px">ゲームオーバー（最高レベル ${it.best}）</div>`;
+  }
+  const focused = document.activeElement && document.activeElement.dataset && document.activeElement.dataset.itow !== undefined;
+  if(el.dataset.h !== h && !focused){ el.innerHTML = h; el.dataset.h = h; }
+}
+function itoRulesHtml(){
+  const C = CFG();
+  return `<div class="sgrules">
+    <div><b>① 配る</b>　全員に1〜100の数字がこっそり配られます（レベル1は1人1枚、レベルが上がるごとに1枚ずつ増える）🔢</div>
+    <div><b>② たとえる</b>　お題に合わせて、自分の数字の大きさを言葉でたとえます（例：お題「こわいもの」で90なら「おばけ屋敷」）✍</div>
+    <div><b>③ 出す</b>　Discordで話し合い、自分がいちばん小さいと思った人から「出す」🃏</div>
+    <div><b>④ 失敗</b>　まだ出ていないもっと小さい数字があったらライフ−1（その小さいカードはとばされます）💥</div>
+    <div class="goal">全員で協力。ライフ${C.itoLives}つでどこまでレベルを上げられるか！</div>
+    <div class="small muted">数字を口で言うのは禁止。言葉のたとえだけで伝えよう。</div>
+  </div>`;
+}
+$("itoMe").addEventListener("click", e => {
+  if(e.target.closest("#itoPeek")){ itoPeek = !itoPeek; renderItoMe(); return; }
+  const b = e.target.closest("[data-ito]"); if(!b) return;
+  if(b.dataset.ito === "words"){
+    const ws = [...$("itoMe").querySelectorAll("[data-itow]")].map(x => x.value.trim().slice(0, 20));
+    if(ws.some(w => !w)){ showWarn("すべてのカードにたとえを書いてください"); setTimeout(() => showWarn(""), 2500); return; }
+    partySend("ito", { act:"words", ws }); itoDraft = {};
+  }
+  if(b.dataset.ito === "play") partySend("ito", { act:"play", i:+b.dataset.i });
+});
+$("itoMe").addEventListener("input", e => { const i = e.target.dataset && e.target.dataset.itow; if(i !== undefined) itoDraft[i] = e.target.value; });
+
+// ---------------- おでこコール ----------------
+function odDeck(){
+  const d = [-10, -5, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 10, 10, 10, 15, 15, 20];
+  if(CFG().odSpecial) d.push("x2", "max0", "q");
+  return d.sort(() => Math.random() - .5);
+}
+function odStart(){
+  if(role !== "host") return;
+  const names = partyNames(8);
+  if(names.length < 2){ showWarn("おでこコールは2人以上で遊べます。"); setTimeout(() => showWarn(""), 3000); return; }
+  const order = names.sort(() => Math.random() - .5), lives = {};
+  order.forEach(n => lives[n] = +CFG().odLives || 3);
+  game.od = { seq:(game.od ? game.od.seq + 1 : 1), order, lives, turn:0, log:[], winner:null, round:0, maxLives:+CFG().odLives || 3 };
+  odDealRound(order[0]); game.stage = "play"; commit();
+}
+const odAlive = od => od.order.filter(n => od.lives[n] > 0);
+function odDealRound(first){
+  const od = game.od, deck = odDeck();
+  od.round++; od.cards = {}; odAlive(od).forEach(n => od.cards[n] = deck.pop());
+  od.deck = deck; od.bid = null; od.res = null; od.phase = "bid";
+  od.turn = Math.max(0, od.order.indexOf(first)); if(od.lives[od.order[od.turn]] <= 0) odAdvance(od);
+  plog(od, `ラウンド${od.round}：${od.order[od.turn]} から`);
+}
+function odAdvance(od){ for(let i = 0; i < od.order.length; i++){ od.turn = (od.turn + 1) % od.order.length; if(od.lives[od.order[od.turn]] > 0) return; } }
+const odTurnName = () => game.od.order[game.od.turn];
+function odSum(cards, extra){
+  const all = Object.values(cards).concat(extra !== undefined ? [extra] : []);
+  let nums = all.filter(c => typeof c === "number");
+  const steps = [];
+  if(all.includes("max0") && nums.length){ const m = Math.max(...nums); nums.splice(nums.indexOf(m), 1, 0); steps.push(`最大→0：いちばん大きい${m}を0に`); }
+  let sum = nums.reduce((a, b) => a + b, 0);
+  if(all.includes("x2")){ steps.push(`×2：${sum}×2`); sum *= 2; }
+  return { sum, steps };
+}
+function odAct(n, a){
+  const od = game.od; if(!od || od.phase !== "bid" || n !== odTurnName()) return false;
+  if(a.act === "bid"){
+    const v = Math.round(+a.v); if(!Number.isFinite(v) || v < -40 || v > 300) return false;
+    if(od.bid && v <= od.bid.v) return false;
+    od.bid = { n, v }; plog(od, `${n}「${v}」`); odAdvance(od); return true;
+  }
+  if(a.act === "call"){
+    if(!od.bid) return false;
+    let extra;
+    if(Object.values(od.cards).includes("q")){ do{ extra = od.deck.pop(); } while(typeof extra !== "number" && od.deck.length); if(typeof extra !== "number") extra = 0; }
+    const r = odSum(od.cards, extra);
+    if(extra !== undefined) r.steps.unshift(`？：山札から ${extra} を足す`);
+    const under = r.sum < od.bid.v;
+    const loser = under ? od.bid.n : n;
+    od.lives[loser]--;
+    od.res = { caller:n, bidder:od.bid.n, bid:od.bid.v, sum:r.sum, steps:r.steps, extra, loser, under, dl:Date.now() + 9000 };
+    od.phase = "reveal";
+    plog(od, `🐺 ${n} がコール！ 合計は${r.sum}（宣言${od.bid.v}）→ ${loser} のライフ−1`);
+    if(od.lives[loser] <= 0) plog(od, `💥 ${loser} が脱落`);
+    const alive = odAlive(od);
+    if(alive.length <= 1){
+      od.phase = "over"; od.winner = alive[0] || loser;
+      const S = game.scoresAll.odeko || (game.scoresAll.odeko = {}); S[od.winner] = (S[od.winner] || 0) + 1;
+      plog(od, `🏆 ${od.winner} の勝ち！`);
+    }
+    return true;
+  }
+  return false;
+}
+function odNextRound(){
+  const od = game.od; if(!od || od.phase !== "reveal") return;
+  const first = od.lives[od.res.loser] > 0 ? od.res.loser : od.res.caller;
+  odDealRound(first); commit();
+}
+makeTicker(() => { if(role === "host" && game && game.mode === "odeko" && game.od && game.od.phase === "reveal" && Date.now() >= game.od.res.dl) odNextRound(); }, 500);
+let odPrevKey = "";
+function odOnUpdate(od){
+  const k = od.seq + ":" + od.round + ":" + od.phase + ":" + (od.bid ? od.bid.v : "");
+  if(k === odPrevKey) return;
+  const was = odPrevKey; odPrevKey = k; if(!was) return;
+  if(od.phase === "reveal" || od.phase === "over"){ sfx.buzz(); setTimeout(() => od.res && od.res.loser === myName ? sfx.ng(game.st.ng || 0) : sfx.ok(game.st.ok || 0), 600); if(od.phase === "over") setTimeout(fanfare, 1400); }
+  else if(od.bid) tone(660, 0, .08, "triangle", .2);
+}
+function odCardHtml(c, label, cls){ return `<div class="ocard2 ${cls || ""} ${typeof c === "string" ? "sp" : ""}"><b>${c === null ? "？" : esc(odCardText(c))}</b><span>${esc(label)}</span></div>`; }
+function renderOd(){
+  const od = game.od, board = $("board");
+  partyHostButtons();
+  const hostWarn = role === "host" ? `<div class="warnbar">📵 おでこコールの間は、Discordの画面共有を止めてください（あなたの画面にはほかの人のカードが出ます）</div>` : "";
+  if(!od){
+    board.innerHTML = `<div class="qhead"><span class="badge">🐺 おでこコール</span></div>${hostWarn}
+      <div class="sgbanner">${role === "host" ? "右の「おでこコール」で始めてください" : "司会が始めるのを待っています"}<small>2〜8人・ライフ制</small></div>${odRulesHtml()}`;
+    renderOdMe(); return;
+  }
+  const tn = odTurnName(), reveal = od.phase !== "bid";
+  let stat = "", cls = "";
+  if(od.phase === "bid") stat = od.bid ? `いまの宣言：${esc(od.bid.n)}「${od.bid.v}」 → ${esc(tn)} の番（${od.bid.v + 1}以上を言う か コール！）` : `${esc(tn)} の番：合計を予想して数字を言う`;
+  else if(od.res){ stat = `🐺 ${esc(od.res.caller)} のコール！ 合計 ${od.res.sum}（宣言 ${od.res.bid}）→ ${esc(od.res.loser)} のライフ−1`; cls = "doubt"; }
+  if(od.phase === "over"){ stat = `🏆 ${esc(od.winner)} の勝ち！`; cls = "win"; }
+  const seeCards = reveal || role === "host";   // the host doesn't share the screen during this game
+  const tiles = od.order.map(n => {
+    const out = od.lives[n] <= 0;
+    const c = od.cards[n];
+    const showC = c !== undefined && (reveal || (seeCards && n !== myName));
+    const hearts = "❤".repeat(Math.max(0, od.lives[n])) + "<span class='dim'>" + "❤".repeat(Math.max(0, od.maxLives - Math.max(0, od.lives[n]))) + "</span>";
+    return `<div class="otile ${n === tn && od.phase === "bid" ? "turn" : ""} ${out ? "out" : ""} ${od.res && od.res.loser === n ? "lose" : ""}">
+      <div class="on">${esc(n)}${n === myName ? "<small>（あなた）</small>" : ""}</div><div class="ol">${hearts}</div>
+      ${c === undefined ? '<div class="small muted">脱落</div>' : odCardHtml(showC ? c : null, "", showC ? "" : "hid")}
+      ${od.bid && od.bid.n === n && od.phase === "bid" ? `<div class="obid">「${od.bid.v}」</div>` : ""}</div>`;
+  }).join("");
+  const calc = reveal && od.res ? `<div class="ocalc">${od.res.extra !== undefined ? `山札から：${odCardHtml(od.res.extra, "？で追加")}` : ""}<div>${od.res.steps.map(esc).join("<br>")}</div><div class="osum">合計 <b>${od.res.sum}</b> ${od.res.under ? "＜" : "≧"} 宣言 ${od.res.bid}</div><div>${od.res.under ? `宣言が多すぎ！ ${esc(od.res.bidder)} の負け` : `宣言は正しかった！ ${esc(od.res.caller)} の負け`}</div></div>` : "";
+  board.innerHTML = `
+    <div class="rulestrip"><span>🐺 おでこコール</span><span>ラウンド <b>${od.round}</b></span><span>特別カード：<b>${CFG().odSpecial ? "あり" : "なし"}</b></span></div>${hostWarn}
+    <div class="sgbanner ${cls}">${stat}</div>
+    <div class="otiles">${tiles}</div>${calc}
+    <div class="legend"><button class="legbtn" data-odrules="1">❓ 遊び方</button></div>
+    <div class="sglog">${od.log.map(t => `<div>・${esc(t)}</div>`).join("")}</div>`;
+  renderOdMe();
+}
+let odBidDraft = null;
+function renderOdMe(){
+  const el = $("odMe"); if(!el) return;
+  const od = game && game.od;
+  let h = `<h3 data-en="YOUR ACTION">あなたの操作</h3>`;
+  if(!od) h += `<div class="muted small">始まると、ほかの人のカードがここに出ます。</div>`;
+  else if(!(myName in od.lives)) h += `<div class="muted">観戦中です。次のゲームから参加できます。</div>`;
+  else {
+    const reveal = od.phase !== "bid";
+    h += `<div class="small muted">みんなのカード（自分のは見えない）</div><div class="omine">${od.order.filter(n => od.cards[n] !== undefined).map(n => odCardHtml(n === myName && !reveal ? null : od.cards[n], n === myName ? "あなた" : n, n === myName && !reveal ? "hid" : "")).join("")}</div>`;
+    if(od.lives[myName] <= 0) h += `<div class="big muted">💥 脱落… 見守ろう</div>`;
+    else if(od.phase === "bid" && odTurnName() === myName){
+      const min = od.bid ? od.bid.v + 1 : -20;
+      const v = odBidDraft !== null && odBidDraft >= min ? odBidDraft : (od.bid ? min : 1);
+      h += `<div class="todo">いまやること：<b>${od.bid ? `${od.bid.v + 1}以上を言う か コール！` : "合計を予想して数字を言う"}</b></div>
+        <div class="obidrow"><button data-odadj="-1">−1</button><input id="odBid" type="number" value="${v}" min="${min}"><button data-odadj="1">＋1</button><button data-odadj="5">＋5</button></div>
+        <button class="b-open" data-od="bid" style="width:100%;font-size:18px;padding:12px;margin-top:6px">「<span id="odBidT">${v}</span>」と宣言する</button>
+        ${od.bid ? `<button class="b-ng" data-od="call" style="width:100%;font-size:20px;padding:14px;margin-top:8px">🐺 コール！（合計は${od.bid.v}より小さい）</button>` : ""}`;
+    } else if(od.phase === "bid") h += `<div class="big muted">${esc(odTurnName())} の番です</div>`;
+    else if(od.phase === "reveal") h += `<div class="big">${od.res.loser === myName ? "😣 あなたのライフ−1" : "セーフ！"}</div><div class="small muted" style="text-align:center">まもなく次のラウンド</div>`;
+    else h += `<div class="big">${od.winner === myName ? "🏆 あなたの勝ち！" : `${esc(od.winner)} の勝ち`}</div>`;
+  }
+  const focused = document.activeElement && document.activeElement.id === "odBid";
+  if(el.dataset.h !== h && !focused){ el.innerHTML = h; el.dataset.h = h; }
+}
+function odRulesHtml(){
+  const C = CFG();
+  return `<div class="sgrules">
+    <div><b>① 配る</b>　全員に1枚ずつカード。スマホには<b>ほかの人のカードだけ</b>見えて、自分のは「？」🃏</div>
+    <div><b>② 言う</b>　順番に、全員のカードの合計を予想して、前の人より大きい数字を言います 🗣</div>
+    <div><b>③ コール</b>　「合計はその数字より小さい」と思ったら、自分の番で「コール！」🐺</div>
+    <div><b>④ 判定</b>　全員のカードを公開。合計が宣言より小さければ宣言した人、そうでなければコールした人のライフ−1</div>
+    ${C.odSpecial ? `<div class="small muted">特別カード：×2＝合計が2倍／最大→0＝いちばん大きい数字が0になる／？＝山札から1枚足す</div>` : ""}
+    <div class="goal">ライフ${C.odLives}つ。最後まで残った人の勝ち 🏆</div>
+  </div>`;
+}
+$("odMe").addEventListener("click", e => {
+  const adj = e.target.closest("[data-odadj]");
+  const inp = $("odBid");
+  if(adj && inp){ const od = game.od, min = od.bid ? od.bid.v + 1 : -20; odBidDraft = Math.max(min, (+inp.value || min) + +adj.dataset.odadj); inp.value = odBidDraft; $("odBidT").textContent = odBidDraft; return; }
+  const b = e.target.closest("[data-od]"); if(!b) return;
+  if(b.dataset.od === "bid" && inp){ partySend("od", { act:"bid", v:+inp.value }); odBidDraft = null; }
+  if(b.dataset.od === "call") partySend("od", { act:"call" });
+});
+$("odMe").addEventListener("input", e => { if(e.target.id === "odBid"){ odBidDraft = +e.target.value; const t = $("odBidT"); if(t) t.textContent = e.target.value; } });
+$("board").addEventListener("click", e => {
+  if(!game) return;
+  if(e.target.closest("[data-itorules]")) modal("数字ならべの遊び方", itoRulesHtml());
+  if(e.target.closest("[data-odrules]")) modal("おでこコールの遊び方", odRulesHtml());
+});
+
+// ---------------- host buttons ----------------
+function partyHostButtons(){
+  if(role !== "host") return;
+  const it = game.it, od = game.od;
+  $("bItoStart").textContent = it && it.phase !== "over" ? "↺ 最初からやり直す" : "🔢 いまいる人で始める";
+  $("bItoNext").classList.toggle("hidden", !(it && it.phase === "clear"));
+  $("bItoForce").classList.toggle("hidden", !(it && it.phase === "write"));
+  $("bOdStart").textContent = od && od.phase !== "over" ? "↺ 最初からやり直す" : "🐺 いまいる人で始める";
+  $("bOdNext").classList.toggle("hidden", !(od && od.phase === "reveal"));
+}
+$("bItoStart").onclick = async () => { if(game.it && game.it.phase !== "over" && !(await confirmBox("最初からやり直しますか？", "レベル1からやり直します。", "やり直す"))) return; itoStart(); };
+$("bItoNext").onclick = itoNext;
+$("bItoForce").onclick = () => { itoBegin(true); commit(); };
+$("bOdStart").onclick = async () => { if(game.od && game.od.phase !== "over" && !(await confirmBox("最初からやり直しますか？", "全員のライフを元に戻して始めます。", "やり直す"))) return; odStart(); };
+$("bOdNext").onclick = odNextRound;
+
+// ---------------- CPU ----------------
+function botParty(L, now){
+  if(!practice) return;
+  const isBot = n => practice.bots.some(b => b.name === n);
+  let changed = false;
+  if(game.mode === "ito" && game.it){
+    const it = game.it;
+    if(it.phase === "write"){
+      for(const b of practice.bots){
+        if(!it.hands[b.name] || it.ready[b.name]) continue;
+        const ws = it.hands[b.name].map(c => c.v < 15 ? "ほんの少し" : c.v < 35 ? "ちょっと" : c.v < 55 ? "まあまあ" : c.v < 75 ? "かなり" : c.v < 92 ? "すごく" : "最高クラス");
+        if(itoAct(b.name, { act:"words", ws })) changed = true;
+      }
+    } else if(it.phase === "play"){
+      const base = it.played.length ? it.played[it.played.length - 1].v : 0;
+      for(const b of practice.bots){
+        const hand = it.hands[b.name]; if(!hand) continue;
+        const i = hand.findIndex(c => !c.played && !c.lost); if(i < 0) continue;
+        const key = `ito:${it.seq}:${it.level}:${it.played.length}:${b.name}`;
+        const noise = practice.lv === "strong" ? 3 : practice.lv === "normal" ? 8 : 15;
+        const at = planOnce(key, () => now + Math.max(600, (hand[i].v - base + (Math.random() - .5) * noise * 2) * 110));
+        if(at > 0 && now >= at){ botPlan[key] = -2; if(itoAct(b.name, { act:"play", i })) changed = true; break; }
+      }
+    }
+  }
+  if(game.mode === "odeko" && game.od && game.od.phase === "bid" && isBot(odTurnName())){
+    const od = game.od, n = odTurnName();
+    const key = `od:${od.seq}:${od.round}:${od.bid ? od.bid.v : "-"}:${n}`;
+    const at = planOnce(key, () => now + rnd(1200, 2600));
+    if(at > 0 && now >= at){
+      botPlan[key] = -2;
+      const seen = Object.entries(od.cards).filter(([m]) => m !== n).map(([, c]) => c);
+      let est = seen.filter(c => typeof c === "number").reduce((a, b) => a + b, 0) + 3;
+      if(seen.includes("x2")) est *= 2;
+      const slack = practice.lv === "strong" ? 1 : practice.lv === "normal" ? 4 : 8;
+      if(od.bid && od.bid.v > est + (Math.random() - .3) * slack){ if(odAct(n, { act:"call" })) changed = true; }
+      else { const v = Math.max(od.bid ? od.bid.v + 1 : 1, Math.round(est - slack + Math.random() * slack)); if(odAct(n, { act:"bid", v })) changed = true; }
+    }
+  }
+  if(changed) commit();
+}
+
+// ---------------- rule settings / book ----------------
+function partyRuleItems(m){
+  const C = CFG();
+  if(m === "ito") return [["お題", "itoTopic"], ["ライフの数", [[3,"3"],[4,"4"],[5,"5"]], () => C.itoLives, v => { C.itoLives = +v; }]];
+  if(m === "odeko") return [["ライフの数", [[2,"2"],[3,"3"],[4,"4"]], () => C.odLives, v => { C.odLives = +v; }], ["特別カード", [[1,"あり"],[0,"なし"]], () => C.odSpecial ? 1 : 0, v => { C.odSpecial = !!+v; }]];
+  return null;
 }
 
 // ===== avatar picker =====
@@ -4049,7 +4555,7 @@ $("buzz").addEventListener("pointerdown", e => { e.preventDefault(); buzz(); });
 document.addEventListener("keydown", e => {
   if(e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA" || e.target.tagName === "SELECT" || e.repeat) return;
   if(document.querySelector(".modal")) return;
-  if(game && game.mode === "moji") return;
+  if(game && (game.mode === "moji" || game.mode === "ito" || game.mode === "odeko")) return;
   if(game && game.mode === "sugoroku" && game.stage === "play"){
     if(e.code === "Space"){ e.preventDefault(); sgDoubt(); }
     return;
