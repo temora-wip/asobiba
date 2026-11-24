@@ -746,6 +746,8 @@ body:not(.mode-odeko) .m-od{display:none!important}
 .obidrow input{flex:1;min-width:0;font-size:24px;text-align:center;padding:6px}
 .obidrow button{padding:8px 10px}
 .rulestrip b.lives{color:#ff6b6b}
+.mlist .hobtn{background:var(--tblue);color:#fff;font-size:12px;padding:3px 10px}
+.rrow .rc{margin:1px 0}
 
 </style>
 </head>
@@ -854,7 +856,7 @@ body:not(.mode-odeko) .m-od{display:none!important}
             <summary>画像と答え・見せ方（共有前に！）</summary>
             <p class="small muted" style="margin:8px 0">画像を選んで、1枚ずつ答えと見せ方を決めます。参加者のスマホには「いま見えている状態」だけが届きます（全体は答え発表のあと）。シルエットは、背景が透明なPNG画像だときれいな影になります。部分ズームは📍で拡大する場所を選べます。</p>
             <div class="row" style="margin-bottom:6px"><label>これから追加する画像の見せ方</label>
-              <select id="fxAll" style="width:auto"><option value="mosaic">モザイク</option><option value="sil">シルエット</option><option value="zoom">部分ズーム</option></select>
+              <select id="fxAll" style="width:auto"><option value="mosaic">モザイク</option><option value="zoom">部分ズーム</option></select>
               <button class="small" id="bFxAll">一覧を全部この見せ方に</button></div>
             <input type="file" id="imgFiles" accept="image/*" multiple>
             <div class="row" style="margin-top:8px"><label>ぼかしが弱くなる間隔</label>
@@ -1233,7 +1235,7 @@ function onRoomError(){
   if(siteOpen !== false) showWarn("部屋との接続が切れました。再読み込みすると、同じ部屋に戻れます。");
 }
 function showWarn(msg){ const w = $("warnBox"); if(msg){ w.textContent = msg; w.classList.remove("hidden"); } else w.classList.add("hidden"); }
-const CFG_DEF = { sgLen:30, sgWait:10, sgBack:5, mjTopic:"", mjMax:7, mjBonus:true, mjTime:0, goalN:0, goalM:0, imgStep:10, itoLives:3, itoTopic:"", odLives:3, odSpecial:true };
+const CFG_DEF = { sgLen:30, sgWait:10, sgBack:5, mjTopic:"", mjTopicMode:"random", mjTopicPick:"食べ物", mjMax:7, mjBonus:true, mjTime:0, goalN:0, goalM:0, imgStep:10, zoomSec:30, itoLives:3, itoTopic:"", odLives:3, odSpecial:true };
 function CFG(){ if(!game) return { ...CFG_DEF }; game.cfg = Object.assign({ ...CFG_DEF }, game.cfg || {}); return game.cfg; }
 function players(){ return peers.filter(p => p.presence && p.presence.role === "player" && typeof p.presence.name === "string"); }
 function hosts(){ return peers.filter(p => p.presence && p.presence.role === "host" && p.presence.game && p.presence.game.scoresAll); }
@@ -1405,8 +1407,9 @@ function handlePeers(){
   if(me) myPeer = me.peer;
   if(role === "host"){
     const others = hosts().filter(h => !(h.isMe && h.sameTab));
-    showWarn(others.length ? "⚠ ほかにも司会がいます。司会は1人にしてください。" : "");
+    showWarn(others.length && !hoSwitching ? "⚠ ほかにも司会がいます。司会は1人にしてください。" : "");
     let changed = false;
+    if(hoCheckAcks()) changed = true;
     for(const p of players()){
       const n = p.presence.name.slice(0,12);
       for(const m of ["normal","mosaic"]) if(!(n in game.scoresAll[m])){ game.scoresAll[m][n] = 0; changed = true; }
@@ -1468,6 +1471,7 @@ function handlePeers(){
     const h = hs[0];
     if(h) hadHost = true;
     applyGame(h ? h.presence.game : null);
+    if(role === "player") hoPlayerCheck();
   } else render();
 }
 function nextAnswerer(from){
@@ -1488,6 +1492,7 @@ function applyGame(g){
   game = g;
   if(g && g.mode === "sugoroku" && g.sg) sgOnUpdate(prev && prev.sg, g.sg);
   if(g && g.mode === "moji" && g.mj) mjOnUpdate(prev && prev.mj, g.mj);
+  if(g && g.mode === "mosaic" && g.img) zoomSyncFromState(g);
   if(g && g.mode === "ito" && g.it) itoOnUpdate(g.it);
   if(g && g.mode === "odeko" && g.od) odOnUpdate(g.od);
   if(prev && g){
@@ -1644,10 +1649,14 @@ function setQuestion(i){
   if(game.mode === "mosaic"){
     game.q.total = images.length;
     if(i >= 0 && i < images.length){
+      if(!FX[images[i].fx]) images[i].fx = "mosaic";
       curImgUrl = images[i].url; curFp = images[i].fp || { x:.5, y:.5 };
-      game.q.text = images[i].fx === "sil" ? "このシルエットは何？" : images[i].fx === "zoom" ? "拡大されているのは何？" : "この画像は何？";
+      game.q.text = images[i].fx === "zoom" ? "拡大されているのは何？" : "この画像は何？";
       game.q.ans = images[i].a;
-      game.img = { level:0, max:PIX.length, left:stepSec() || null, seq:game.qn, fx:images[i].fx || "mosaic" };
+      const zoom = images[i].fx === "zoom";
+      game.img = { level:0, max:PIX.length, left:zoom ? null : (stepSec() || null), seq:game.qn, fx:images[i].fx || "mosaic" };
+      if(zoom){ game.img.zd = (+CFG().zoomSec || 30) * 1000; game.img.zp = 0; game.img.zr = false; game.img.fp = { x:curFp.x, y:curFp.y }; }
+      zEl = 0; zRunSince = null; zFrameSent = -1;
     } else { game.q.text = images.length && i >= 0 ? "全問終了！おつかれさまでした 🎉" : ""; game.q.ans = ""; }
   } else {
     game.q.total = textQs.length;
@@ -1666,6 +1675,10 @@ function hostNext(){
 }
 function hostLevel(){
   if(game.mode !== "mosaic" || !game.img || game.phase === "result" || game.img.level >= game.img.max - 1) return;
+  if(game.img.fx === "zoom"){
+    zEl = (game.img.level + 1) / ZSTEPS * game.img.zd; if(zRunSince !== null) zRunSince = performance.now();
+    zoomHostTick(true); return;
+  }
   game.img.level++; imgTick = 0; game.img.left = (game.img.level < game.img.max - 1 && stepSec()) ? stepSec() : null;
   commit();
 }
@@ -1678,6 +1691,7 @@ function switchMode(m){
 }
 setInterval(() => {
   if(role !== "host" || !game || game.mode !== "mosaic" || !game.img || game.phase !== "open") return;
+  if(game.img.fx === "zoom") return;
   const st = stepSec();
   if(!st || game.img.level >= game.img.max - 1){ if(game.img.left !== null){ game.img.left = null; commit(); } return; }
   imgTick++;
@@ -1723,9 +1737,45 @@ function renderThumbs(){
 }
 
 // ===== image effects (mosaic / silhouette / zoom) =====
-const FX = { mosaic:"モザイク", sil:"シルエット", zoom:"部分ズーム" };
-const SIL_AMT = [0, .15, .35, .6, .85];
+const FX = { mosaic:"モザイク", zoom:"部分ズーム" };
 const ZOOM_SC = [8, 5, 3, 2, 1.4];
+// ----- smooth zoom: starts at ZMAX times and zooms out continuously to the whole picture -----
+const ZMAX = 10, ZSTEPS = 5;
+let zEl = 0, zRunSince = null, zFrameSent = -1;
+const zScale = p => Math.pow(ZMAX, 1 - Math.max(0, Math.min(1, p)));
+const zStepEnd = k => zScale((k + 1) / ZSTEPS);
+function zRegion(s, fp){ const w = 1 / s; return { x:Math.max(0, Math.min(1 - w, fp.x - w / 2)), y:Math.max(0, Math.min(1 - w, fp.y - w / 2)), w, h:w }; }
+function zProgress(){ if(!game || !game.img || !game.img.zd) return 0; return Math.min(1, (zEl + (zRunSince !== null ? performance.now() - zRunSince : 0)) / game.img.zd); }
+// host: keep players in step (pause while someone answers, send the next area a little early)
+function zoomHostTick(force){
+  if(role !== "host" || !game || game.mode !== "mosaic" || !game.img || game.img.fx !== "zoom") return;
+  const run = game.stage === "play" && game.phase === "open" && zProgress() < 1;
+  if(run && zRunSince === null) zRunSince = performance.now();
+  if(!run && zRunSince !== null){ zEl += performance.now() - zRunSince; zRunSince = null; }
+  const p = zProgress(), lv = Math.min(ZSTEPS - 1, Math.floor(p * ZSTEPS + 1e-6));
+  let ch = !!force;
+  if(lv !== game.img.level){ game.img.level = lv; ch = true; }
+  if(run !== game.img.zr){ game.img.zr = run; ch = true; }
+  if(ch){ game.img.zp = +p.toFixed(4); commit(); }
+  sendZoomFrame();
+}
+setInterval(() => zoomHostTick(false), 150);
+function sendZoomFrame(){
+  if(role !== "host" || !room || !game || !game.img || game.img.fx !== "zoom" || game.phase === "result") return;
+  const p = zProgress(), k = Math.min(ZSTEPS - 1, Math.floor(p * ZSTEPS + .25));   // ~1/4 step ahead
+  if(k <= zFrameSent && zFrameSent >= 0) return;
+  const img = imgCache.get(curImgUrl);
+  if(!img){ const im = new Image(); im.src = curImgUrl; imgCache.set(curImgUrl, im); return; }
+  if(!img.complete || !img.naturalWidth) return;
+  const F = zRegion(zStepEnd(k), curFp), W = img.naturalWidth, H = img.naturalHeight;
+  const ow = 800, oh = Math.max(1, Math.round(800 * H / W));
+  const cv = document.createElement("canvas"); cv.width = ow; cv.height = oh;
+  const ctx = cv.getContext("2d");
+  if(hasAlpha(img)){ ctx.fillStyle = "#e8eaf2"; ctx.fillRect(0, 0, ow, oh); }
+  ctx.drawImage(img, F.x * W, F.y * H, F.w * W, F.h * H, 0, 0, ow, oh);
+  zFrameSent = k;
+  room.setMedia("mz", `z|${game.img.seq}|${k}|${cv.toDataURL("image/jpeg", .8)}`);
+}
 const alphaCache = new Map();
 let curFp = { x:.5, y:.5 };
 function hasAlpha(img){
@@ -1761,33 +1811,6 @@ function imgFrame(img, fx, fp, level, clear, maxW, maxH){
     ctx.drawImage(img, sx, sy, sw, sh, 0, 0, w, h);
     return { cv, pixel:false };
   }
-  if(fx === "sil"){
-    const amt = SIL_AMT[lv];
-    const off = document.createElement("canvas"); off.width = w; off.height = h;
-    const o = off.getContext("2d");
-    if(transparent){
-      o.drawImage(img, 0, 0, w, h);
-      o.globalCompositeOperation = "source-in"; o.fillStyle = "#0b0b10"; o.fillRect(0, 0, w, h);
-      o.globalCompositeOperation = "source-over";
-      ctx.fillStyle = "#e8eaf2"; ctx.fillRect(0, 0, w, h);
-      ctx.drawImage(off, 0, 0);
-      ctx.save(); ctx.globalAlpha = amt;
-      const tmp = document.createElement("canvas"); tmp.width = w; tmp.height = h; tmp.getContext("2d").drawImage(img, 0, 0, w, h);
-      ctx.drawImage(tmp, 0, 0); ctx.restore();
-    } else {
-      o.drawImage(img, 0, 0, w, h);
-      const id = o.getImageData(0, 0, w, h), d = id.data;
-      let sum = 0; for(let i = 0; i < d.length; i += 4) sum += d[i]*.299 + d[i+1]*.587 + d[i+2]*.114;
-      const th = sum / (d.length / 4);
-      for(let i = 0; i < d.length; i += 4){
-        const v = (d[i]*.299 + d[i+1]*.587 + d[i+2]*.114) < th ? 16 : 228;
-        d[i] = d[i+1] = d[i+2] = v; d[i+3] = 255;
-      }
-      ctx.putImageData(id, 0, 0);
-      ctx.save(); ctx.globalAlpha = amt; ctx.drawImage(img, 0, 0, w, h); ctx.restore();
-    }
-    return { cv, pixel:false };
-  }
   // mosaic
   const ps = PIX[lv];
   const sw = Math.max(1, Math.ceil(w / ps)), sh = Math.max(1, Math.ceil(h / ps));
@@ -1803,13 +1826,15 @@ function mosaicCanvas(clear){
   if(!img || !img.complete || !img.naturalWidth) return null;
   const fx = game.img.fx || "mosaic";
   if(clear) return "c|" + imgFrame(img, fx, curFp, 0, true, 720, 720).cv.toDataURL("image/jpeg", .78);
+  if(fx === "zoom") return null;
   const f = imgFrame(img, fx, curFp, game.img.level, false, fx === "zoom" ? 640 : 480, fx === "zoom" ? 640 : 480);
   if(f.pixel) return "p|" + f.cv.toDataURL("image/png");
-  return "f|" + (fx === "sil" ? f.cv.toDataURL("image/png") : f.cv.toDataURL("image/jpeg", .78));
+  return "f|" + f.cv.toDataURL("image/jpeg", .78);
 }
 function sendMosaic(){
   if(role !== "host" || !room || !game || game.mode !== "mosaic" || !game.img || !curImgUrl) return;
   const clear = game.phase === "result";
+  if(game.img.fx === "zoom" && !clear){ sendZoomFrame(); return; }
   const key = `${game.img.seq}:${clear ? "c" : game.img.level}`;
   if(key === mzSent) return;
   if(!imgCache.get(curImgUrl)){ const im = new Image(); im.onload = () => sendMosaic(); im.src = curImgUrl; imgCache.set(curImgUrl, im); return; }
@@ -1887,7 +1912,7 @@ function render(){
   const lvl = g.img ? (() => {
     const clear = g.phase === "result";
     const lft = !clear && g.phase === "open" && g.img.left ? `<b>次の段階まで ${g.img.left}秒</b>` : "";
-    const fxn = g.img.fx === "sil" ? "シルエット" : g.img.fx === "zoom" ? "ズーム" : "ぼかし";
+    const fxn = g.img.fx === "zoom" ? "ズーム" : "ぼかし";
     return `<div class="lvl">${fxn} ${clear ? "答え発表" : `${g.img.level+1}/${g.img.max}段階目${g.rule.t === "first" ? "" : `・正解で${imgPoints(g.img.level)}点`}`} ${Array.from({length:g.img.max},(_,i)=>`<i class="${i<=g.img.level||clear?"on":""}"></i>`).join("")}${lft}</div>`;
   })() : "";
   const champ = g.champ && g.champ.mode === g.mode ? `<div class="champ"><div class="ct">🏆 ${esc(g.champ.n)} の優勝！</div><div class="cs">目標の${g.champ.goal}点に到達しました</div>${role === "host" ? '<button class="b-open" id="bChampReset">得点をリセットしてもう一度</button>' : ""}</div>` : "";
@@ -1924,6 +1949,7 @@ function orderHtml(g){
 function drawMosaic(){
   const cv = $("mosaic");
   if(!cv || !curImgUrl || !game || !game.img) return;
+  if(game.img.fx === "zoom" && game.phase !== "result"){ drawZoomHost(); return; }
   let img = imgCache.get(curImgUrl);
   if(!img){ img = new Image(); img.onload = () => { drawMosaic(); sendMosaic(); }; img.src = curImgUrl; imgCache.set(curImgUrl, img); return; }
   if(!img.complete || !img.naturalWidth) return;
@@ -1938,6 +1964,8 @@ const mzImg = new Image(); let mzKey = "";
 function drawPlayerMosaic(){
   const cv = $("mzPlayer");
   if(!cv || !game || !game.img) return;
+  if(game.img.fx === "zoom" && game.phase !== "result" && /^z\|/.test(mediaCache.mz || "")){ drawZoomPlayer(); return; }
+  if(game.img.fx === "zoom" && game.phase !== "result"){ const c = cv.getContext("2d"); c.fillStyle = "#000"; c.fillRect(0, 0, cv.width, cv.height); c.fillStyle = "#9aa2d6"; c.font = "20px sans-serif"; c.textAlign = "center"; c.fillText("画像を受け取っています…", cv.width/2, cv.height/2); return; }
   const raw = mediaCache.mz || "";
   const m = /^([pcf])\|(\d+)\|(.*)$/s.exec(raw);
   const ctx = cv.getContext("2d");
@@ -2167,6 +2195,53 @@ function openPeekWin(){
 }
 let ansKey = "";
 setInterval(() => { const k = game ? (game.q && game.q.idx) + "|" + curAns() : ""; if(k !== ansKey){ ansKey = k; ansShown = false; } paintAns(); }, 400);
+
+// ===== smooth zoom drawing =====
+function drawZoomHost(){
+  const cv = $("mosaic"); if(!cv || !game || !game.img) return;
+  const img = imgCache.get(curImgUrl);
+  if(!img){ const im = new Image(); im.onload = () => drawMosaic(); im.src = curImgUrl; imgCache.set(curImgUrl, im); return; }
+  if(!img.complete || !img.naturalWidth) return;
+  const W = img.naturalWidth, H = img.naturalHeight, s = Math.min(960 / W, 540 / H);
+  const w = Math.round(W * s), h = Math.round(H * s);
+  if(cv.width !== w || cv.height !== h){ cv.width = w; cv.height = h; }
+  const R = zRegion(zScale(zProgress()), curFp), ctx = cv.getContext("2d");
+  ctx.imageSmoothingEnabled = true; ctx.clearRect(0, 0, w, h);
+  if(hasAlpha(img)){ ctx.fillStyle = "#e8eaf2"; ctx.fillRect(0, 0, w, h); }
+  ctx.drawImage(img, R.x * W, R.y * H, R.w * W, R.h * H, 0, 0, w, h);
+}
+const zImg = new Image(); let zKey = "", zFrameK = -1, zBase = { p:0, at:0, run:false }, zSyncKey = "";
+function zPlayerProgress(){
+  const g = game; if(!g || !g.img || !g.img.zd) return 0;
+  return Math.min(1, zBase.p + (zBase.run ? (performance.now() - zBase.at) / g.img.zd : 0));
+}
+function zoomSyncFromState(g){
+  if(!g || !g.img || g.img.fx !== "zoom") return;
+  const k = g.img.seq + ":" + g.img.zp + ":" + g.img.zr;
+  if(k === zSyncKey) return;
+  zSyncKey = k; zBase = { p:g.img.zp || 0, at:performance.now(), run:!!g.img.zr };
+}
+function drawZoomPlayer(){
+  const cv = $("mzPlayer"); if(!cv || !game || !game.img) return;
+  const m = /^z\|(\d+)\|(\d)\|(.*)$/s.exec(mediaCache.mz || "");
+  if(!m || +m[1] !== game.img.seq) return;
+  if(zKey !== mediaCache.mz){ zKey = mediaCache.mz; zFrameK = +m[2]; zImg.src = m[3]; }
+  if(!zImg.complete || !zImg.naturalWidth) return;
+  const fp = game.img.fp || { x:.5, y:.5 };
+  const F = zRegion(zStepEnd(zFrameK), fp);
+  const s = Math.max(zScale(zPlayerProgress()), zStepEnd(zFrameK));   // never show more than we were sent
+  const V = zRegion(s, fp);
+  const fw = zImg.naturalWidth, fh = zImg.naturalHeight;
+  const W = 640, H = Math.max(1, Math.round(640 * fh / fw));
+  if(cv.width !== W || cv.height !== H){ cv.width = W; cv.height = H; }
+  const ctx = cv.getContext("2d"); ctx.imageSmoothingEnabled = true;
+  ctx.drawImage(zImg, (V.x - F.x) / F.w * fw, (V.y - F.y) / F.h * fh, V.w / F.w * fw, V.h / F.h * fh, 0, 0, W, H);
+}
+(function zoomLoop(){
+  requestAnimationFrame(zoomLoop);
+  if(!game || game.mode !== "mosaic" || !game.img || game.img.fx !== "zoom" || game.phase === "result" || game.stage !== "play") return;
+  if(role === "host") drawZoomHost(); else drawZoomPlayer();
+})();
 
 // ---------- dice sugoroku ----------
 const SG_LEN = 30, SG_TIME = 10, SG_REVEAL = 10, SG_SHOW = 4;
@@ -3025,16 +3100,38 @@ const MJ_ROWS = [["あ","い","う","え","お"],["か","き","く","け","こ"]
 const MJ_KANA = MJ_ROWS.flat().filter(Boolean);
 const MJ_SET = new Set(MJ_KANA);
 const MJ_TOPICS = {
-  "食べ物":["おにぎり","からあげ","すし","らーめん","かれー","たこやき","ぎょうざ","てんぷら","うどん","そば","おでん","ぷりん","けーき","ぱんけーき","やきとり"],
-  "動物":["らいおん","きりん","ぞう","うさぎ","ぱんだ","ぺんぎん","いるか","くじら","ねこ","いぬ","さる","かば","こあら","ひつじ","からす"],
-  "乗り物":["でんしゃ","ばす","じてんしゃ","ひこうき","ふね","たくしー","ろけっと","しんかんせん","ばいく","へりこぷたー","とらっく","よっと"],
-  "国":["にほん","あめりか","ふらんす","いたりあ","ちゅうごく","かなだ","ぶらじる","いんど","すぺいん","どいつ","めきしこ","たい"],
+  "食べ物":["おにぎり","からあげ","すし","らーめん","かれー","たこやき","ぎょうざ","てんぷら","うどん","そば","おでん","ぷりん","やきとり","はんばーぐ"],
+  "動物":["らいおん","きりん","ぞう","うさぎ","ぱんだ","ぺんぎん","ねこ","いぬ","さる","かば","こあら","ひつじ","からす","きつね","たぬき"],
+  "乗り物":["でんしゃ","ばす","じてんしゃ","ひこうき","ふね","たくしー","ろけっと","しんかんせん","ばいく","とらっく","よっと","ぼーと"],
+  "果物":["りんご","みかん","ばなな","いちご","ぶどう","もも","めろん","すいか","なし","かき","れもん","きうい","さくらんぼ","ぱいなっぷる"],
+  "野菜":["にんじん","たまねぎ","じゃがいも","きゃべつ","とまと","なす","きゅうり","ぴーまん","だいこん","ほうれんそう","かぼちゃ","ごぼう","れたす"],
+  "お菓子":["ちょこれーと","くっきー","あめ","ぐみ","せんべい","だんご","まかろん","どーなつ","ぷりん","ようかん","ぽてとちっぷす","わたあめ"],
+  "飲み物":["おちゃ","こーひー","こうちゃ","じゅーす","みるく","さいだー","こーら","みず","ここあ","らむね","むぎちゃ","やくると"],
+  "職業":["いしゃ","せんせい","けいさつかん","しょうぼうし","べんごし","まんがか","えかき","ぱいろっと","こっく","かんごし","だいく","はいしゃ"],
+  "楽器":["ぴあの","ぎたー","たいこ","ばいおりん","ふるーと","とらんぺっと","どらむ","はーもにか","ことく","しゃみせん","べーす","おるがん"],
   "スポーツ":["さっかー","やきゅう","てにす","すもう","すいえい","ばれー","じゅうどう","すきー","ごるふ","らぐびー","たっきゅう","ぼくしんぐ"],
-  "学校にあるもの":["こくばん","つくえ","いす","ちょーく","ろうか","たいいくかん","きょうしつ","としょしつ","かだん","ぷーる","ちゃいむ"],
+  "国":["にほん","あめりか","ふらんす","いたりあ","ちゅうごく","かなだ","ぶらじる","いんど","すぺいん","どいつ","めきしこ","たい","えじぷと"],
+  "都道府県":["ほっかいどう","あおもり","いわて","みやぎ","あきた","やまがた","ふくしま","とうきょう","かながわ","しずおか","あいち","きょうと","おおさか","ひろしま","おきなわ"],
+  "海の生き物":["くじら","いるか","さめ","たこ","いか","かに","えび","くらげ","ひとで","うみがめ","あざらし","らっこ","まぐろ"],
+  "虫":["かぶとむし","くわがた","ちょうちょ","とんぼ","せみ","ばった","てんとうむし","あり","はち","ほたる","かまきり","こおろぎ"],
+  "鳥":["すずめ","からす","はと","つばめ","わし","たか","ふくろう","にわとり","ぺんぎん","かもめ","いんこ","おうむ","はくちょう"],
+  "花":["さくら","ばら","ひまわり","ちゅーりっぷ","たんぽぽ","あさがお","ゆり","うめ","こすもす","すみれ","きく","つばき"],
   "色":["あか","あお","きいろ","みどり","むらさき","ぴんく","しろ","くろ","おれんじ","みずいろ","ちゃいろ","はいいろ","きんいろ"],
+  "体の部分":["あたま","かた","うで","ゆび","ひざ","あし","おなか","せなか","みみ","はな","くち","まゆげ","ほっぺ"],
+  "家にあるもの":["てれび","れいぞうこ","そふぁー","べっど","とけい","かがみ","せんたくき","そうじき","かーてん","まくら","でんわ","えあこん"],
+  "台所にあるもの":["なべ","ほうちょう","まないた","おたま","ふらいぱん","やかん","おさら","はし","こっぷ","すぷーん","れんじ","すいはんき"],
+  "文房具":["えんぴつ","けしごむ","じょうぎ","はさみ","のり","ほちきす","のーと","ぺん","ふでばこ","こんぱす","くりっぷ","ぶんどき"],
+  "学校にあるもの":["こくばん","つくえ","いす","ちょーく","ろうか","たいいくかん","きょうしつ","としょしつ","かだん","ぷーる","ちゃいむ"],
+  "夏のもの":["すいか","かきごおり","はなび","うちわ","せんぷうき","ぷーる","うみ","ゆかた","あさがお","せみ","むぎわらぼうし","ふうりん"],
   "冬のもの":["こたつ","ゆき","みかん","てぶくろ","まふらー","すとーぶ","ゆきだるま","おしるこ","なべ","かいろ","すけーと"],
-  "好きなアニメキャラ":[], "推しの声優":[], "アニメのタイトル":[]
+  "日本の料理":["すきやき","てんぷら","すし","おこのみやき","にくじゃが","みそしる","とんかつ","やきそば","おでん","ちゃわんむし","しゃぶしゃぶ","かつどん"],
+  "天気・自然":["はれ","くもり","あめ","ゆき","かみなり","にじ","かぜ","たいふう","やま","かわ","うみ","もり","たき"],
+  "遊園地にあるもの":["かんらんしゃ","じぇっとこーすたー","めりーごーらんど","おばけやしき","こーひーかっぷ","ふうせん","ぱれーど","ぽっぷこーん","ちけっと"],
+  "おもちゃ・遊び":["けんだま","こま","たこあげ","すごろく","とらんぷ","かるた","ぶろっく","にんぎょう","かくれんぼ","おにごっこ","なわとび","ぼーる"],
+  "魚":["まぐろ","さけ","さば","いわし","あじ","たい","さんま","ぶり","うなぎ","かつお","ふぐ","めだか","きんぎょ"],
+  "趣味":["どくしょ","えいが","げーむ","つり","りょうり","さんぽ","かめら","からおけ","ぎたー","きゃんぷ","てにす","おえかき"]
 };
+const MJ_TOPIC_KEYS = Object.keys(MJ_TOPICS);
 const MJ_GENERAL = Object.values(MJ_TOPICS).flat();
 const MJ_FREQ = "いうんかしたとなるきくこのまてにすつらりれおあはもせそみめよやわけさひほふへちろねぬゆむをえー".split("");
 let myMj = null;          // { seq, word, disp, salt }
@@ -3059,7 +3156,17 @@ function mjTurnName(){ const mj = game.mj; return mj ? mj.order[mj.turn] : null;
 function mjSetup(){
   if(role !== "host") return;
   const C = CFG();
-  const topic = (String(C.mjTopic || "").trim() || Object.keys(MJ_TOPICS)[Math.floor(Math.random() * 8)]).slice(0, 30);
+  const tm = C.mjTopicMode || "random";
+  let topic = "";
+  if(tm === "free") topic = String(C.mjTopic || "").trim();
+  else if(tm === "pick") topic = MJ_TOPICS[C.mjTopicPick] ? C.mjTopicPick : "";
+  if(!topic){
+    const recent = Array.isArray(game.mjRecent) ? game.mjRecent : [];
+    const pool = MJ_TOPIC_KEYS.filter(k => !recent.includes(k));
+    topic = (pool.length ? pool : MJ_TOPIC_KEYS)[Math.floor(Math.random() * (pool.length || MJ_TOPIC_KEYS.length))];
+  }
+  topic = topic.slice(0, 30);
+  if(MJ_TOPICS[topic]) game.mjRecent = [topic, ...(game.mjRecent || []).filter(k => k !== topic)].slice(0, 5);
   const max = +C.mjMax || 7;
   const names = [myName];
   for(const p of players()){ const n = p.presence.name.slice(0,12); if(!names.includes(n) && !(room && room.local && n === "あなた（見本）")) names.push(n); }
@@ -3363,8 +3470,8 @@ $("board").addEventListener("click", e => { if(game && game.mode === "moji" && e
 $("bMjStart").onclick = mjSetup;
 $("bMjForce").onclick = mjForce;
 $("bMjRestart").onclick = mjRestart;
-$("bMjRandom").onclick = () => { if(role !== "host") return; const t = Object.keys(MJ_TOPICS); CFG().mjTopic = t[Math.floor(Math.random() * t.length)]; $("mjTopic").value = CFG().mjTopic; commit(); };
-$("mjTopic").addEventListener("change", () => { if(role !== "host") return; CFG().mjTopic = $("mjTopic").value.trim().slice(0, 30); commit(); });
+$("bMjRandom").onclick = () => { if(role !== "host") return; CFG().mjTopicMode = "random"; CFG().mjTopic = ""; $("mjTopic").value = ""; commit(); };
+$("mjTopic").addEventListener("change", () => { if(role !== "host") return; const v = $("mjTopic").value.trim().slice(0, 30); CFG().mjTopic = v; CFG().mjTopicMode = v ? "free" : "random"; commit(); });
 $("mjMax").addEventListener("change", () => { if(role !== "host") return; CFG().mjMax = +$("mjMax").value; commit(); });
 $("mjBonus").addEventListener("change", () => { if(role !== "host") return; CFG().mjBonus = $("mjBonus").checked; commit(); });
 
@@ -3612,8 +3719,16 @@ function lobbyTile(k){
   if(k === "invite"){ showInvite(); return; }
   if(k === "member"){
     const ms = lobbyMembers();
-    openSheet("参加者", "MEMBER", `<div class="mlist">${ms.map(p => `<div class="ms" style="border-left-color:${colorOf(p.n)}">${avHtml(avatarOf(p.n), 30, p.n)}<span class="mn">${esc(p.n)}${p.n === myName ? "<small>（あなた）</small>" : ""}</span>${p.host ? "<em>司会</em>" : "<em class='on'>参加中</em>"}</div>`).join("")}</div>
+    const canHand = role === "host" && !(room && room.local);
+    const w = openSheet("参加者", "MEMBER", `<div class="mlist">${ms.map(p => `<div class="ms" style="border-left-color:${colorOf(p.n)}">${avHtml(avatarOf(p.n), 30, p.n)}<span class="mn">${esc(p.n)}${p.n === myName ? "<small>（あなた）</small>" : ""}</span>${p.host ? "<em>司会</em>" : canHand ? `<button class="hobtn" data-ho="${esc(p.n)}">🎤 司会を渡す</button>` : "<em class='on'>参加中</em>"}</div>`).join("")}</div>
+      ${canHand ? '<p class="small muted" style="margin:8px 0 0">司会を渡すと、相手の画面に確認が出ます。問題リスト・画像・背景画像は引きつがれません。Discordの画面共有も新しい司会に切り替えてください。</p>' : ""}
       <p class="small muted" style="margin:10px 0 0">${game.locked ? "🔒 いまは参加を締め切っています" : "🟢 いまは参加を受け付けています"}（最大8人）</p>`);
+    w.addEventListener("click", async e => {
+      const b = e.target.closest("[data-ho]"); if(!b) return;
+      const n = b.dataset.ho;
+      if(!(await confirmBox("司会を渡しますか？", `${n} さんに司会を頼みます。引き受けてもらえると、あなたは回答者になります。`, "頼む"))) return;
+      w.remove(); hoOffer(n);
+    });
     return;
   }
   if(k === "record"){
@@ -3728,7 +3843,8 @@ function ruleItems(m){
     ["目標点で終了", [[0,"なし"],[5,"5点"],[10,"10点"]], () => C.goalN, v => { C.goalN = +v; }]];
   if(m === "mosaic") return [...rule,
     ["不正解の点", [[0,"±0"],[-1,"−1"],[-2,"−2"]], () => g.pts.ng, v => { g.pts.ng = +v; }],
-    ["段階が進む間隔", [[5,"5秒"],[10,"10秒"],[15,"15秒"],[0,"手動"]], () => C.imgStep, v => { C.imgStep = +v; }],
+    ["モザイクの段階の間隔", [[5,"5秒"],[10,"10秒"],[15,"15秒"],[0,"手動"]], () => C.imgStep, v => { C.imgStep = +v; }],
+    ["ズームで全体まで", [[20,"20秒"],[30,"30秒"],[45,"45秒"]], () => C.zoomSec, v => { C.zoomSec = +v; }],
     ["目標点で終了", [[0,"なし"],[5,"5点"],[10,"10点"]], () => C.goalM, v => { C.goalM = +v; }]];
   if(m === "sugoroku") return [
     ["マスの数", [[20,"20"],[30,"30"],[40,"40"]], () => C.sgLen, v => { C.sgLen = +v; }],
@@ -3736,7 +3852,9 @@ function ruleItems(m){
     ["ウソがバレたら", [[3,"3マス"],[5,"5マス"],[7,"7マス"]], () => C.sgBack, v => { C.sgBack = +v; }],
     ["盤の景色", Object.entries(SG_THEMES).map(([k,t]) => [k, t.name]), () => sgTheme(), v => { g.st.sgt = v; }]];
   if(m === "moji") return [
-    ["お題", "mjTopic"],
+    ["お題の決め方", [["random","🎲 ランダム"],["pick","📋 候補から選ぶ"],["free","✏ 自分で入力"]], () => C.mjTopicMode || "random", v => { C.mjTopicMode = v; }],
+    ...(C.mjTopicMode === "pick" ? [["候補", MJ_TOPIC_KEYS.map(k => [k, k]), () => C.mjTopicPick, v => { C.mjTopicPick = v; }]] : []),
+    ...(C.mjTopicMode === "free" ? [["お題", "mjTopic"]] : []),
     ["文字数の上限", [[5,"5"],[6,"6"],[7,"7"],[8,"8"]], () => C.mjMax, v => { C.mjMax = +v; }],
     ["当てたらもう1回", [[1,"あり"],[0,"なし"]], () => C.mjBonus ? 1 : 0, v => { C.mjBonus = !!+v; }],
     ["1文字を呼ぶ時間", [[0,"なし"],[20,"20秒"],[40,"40秒"]], () => C.mjTime, v => { C.mjTime = +v; }]];
@@ -3750,7 +3868,7 @@ function rulePanelHtml(m){
     if(typeof it[1] === "string"){
       const v = CFG()[it[1]] || "";
       return `<div class="rrow"><span class="rk">お題</span>${host
-        ? `<input id="lbTopic" data-key="${it[1]}" maxlength="30" value="${esc(v)}" placeholder="空ならランダム">${it[1] === "mjTopic" ? '<button class="rc" id="lbTopicRnd">🎲</button>' : ""}`
+        ? `<input id="lbTopic" data-key="${it[1]}" maxlength="30" value="${esc(v)}" placeholder="空ならランダム">`
         : `<span class="rv">${esc(v || "ランダム")}</span>`}</div>`;
     }
     const cur = String(it[2]());
@@ -3808,16 +3926,17 @@ function ruleDetailHtml(m){
     ["終わり", C.goalN ? `だれかが${C.goalN}点に届いたら優勝` : "目標点なし（司会が好きなところで終える）"]]);
   if(m === "mosaic") return rows([
     ["目的", "少しずつはっきりする画像が何か、早く当てる"],
-    ["見せ方", "モザイク・シルエット・部分ズーム（画像ごとに司会が選ぶ）。5段階で少しずつはっきりします"],
-    ["段階", C.imgStep ? `${C.imgStep}秒ごとに次の段階へ（司会が手動で進めることもできます）` : "司会が手動で進めます"],
+    ["見せ方", "モザイク・部分ズーム（画像ごとに司会が選ぶ）"],
+    ["モザイク", C.imgStep ? `5段階。${C.imgStep}秒ごとに細かくなります（司会が手動で進めることもできます）` : "5段階。司会が手動で進めます"],
+    ["ズーム", `10倍の拡大から${C.zoomSec}秒かけて少しずつ引いていき、全体が見えます。だれかが押している間は止まります`],
     ["回答権", rt],
-    ["点数", `早く当てるほど高得点：1〜2段階目 3点、3〜4段階目 2点、5段階目 1点／不正解 ${g.pts.ng}点`],
+    ["点数", `早く当てるほど高得点：1〜2段階目 3点、3〜4段階目 2点、5段階目 1点（ズームは全体の時間を5つに分けて数えます）／不正解 ${g.pts.ng}点`],
     ["終わり", C.goalM ? `だれかが${C.goalM}点に届いたら優勝` : "目標点なし（司会が好きなところで終える）"]]);
   if(m === "sugoroku") return sgRulesHtml();
   if(m === "ito") return itoRulesHtml();
   if(m === "odeko") return odRulesHtml();
   if(m === "moji") return mjRulesHtml() + rows([
-    ["お題", esc(C.mjTopic || "始めるときにランダムで決まります")],
+    ["お題", (C.mjTopicMode || "random") === "random" ? `始めるときに${MJ_TOPIC_KEYS.length}個の候補からランダムで決まります（直前の5回と同じお題は出ません）` : C.mjTopicMode === "pick" ? `「${esc(C.mjTopicPick)}」` : esc(C.mjTopic || "空なのでランダム")],
     ["文字数", `${C.mjMax}文字まで。全員の箱は${C.mjMax}個で表示されるので、本当の文字数は分かりません`],
     ["もう1回", C.mjBonus ? "ほかの人の文字を当てたら、続けてもう1回呼べます" : "なし（1回呼んだら次の人へ）"],
     ["呼ぶ時間", C.mjTime ? `${C.mjTime}秒以内に呼ばないと、次の人の番になります` : "制限なし"]]);
@@ -4243,6 +4362,71 @@ function partyRuleItems(m){
   if(m === "ito") return [["お題", "itoTopic"], ["ライフの数", [[3,"3"],[4,"4"],[5,"5"]], () => C.itoLives, v => { C.itoLives = +v; }]];
   if(m === "odeko") return [["ライフの数", [[2,"2"],[3,"3"],[4,"4"]], () => C.odLives, v => { C.odLives = +v; }], ["特別カード", [[1,"あり"],[0,"なし"]], () => C.odSpecial ? 1 : 0, v => { C.odSpecial = !!+v; }]];
   return null;
+}
+
+// ===== hand the host role to someone else (lobby only, with the receiver's OK) =====
+let hoAsked = null, hoSwitching = false;
+function hoOffer(to){
+  if(role !== "host" || !game || game.stage !== "lobby" || (room && room.local)) return;
+  game.handover = { id:rid(), from:myName, to, go:false };
+  commit();
+  bannerMsg(`${to} さんに司会を頼んでいます…`);
+}
+function hoCancel(msg){ if(game && game.handover){ game.handover = null; commit(); if(msg) bannerMsg(msg); } }
+// host: look at the receiver's answer
+function hoCheckAcks(){
+  const h = game && game.handover; if(!h || h.go) return false;
+  if(game.stage !== "lobby"){ game.handover = null; return true; }
+  const p = players().find(x => x.presence.name.slice(0, 12) === h.to);
+  if(!p){ game.handover = null; bannerMsg(`${h.to} さんが見つからないので、交代を取り消しました`); return true; }
+  const a = p.presence.hoAck;
+  if(a === "no:" + h.id){ game.handover = null; bannerMsg(`${h.to} さんが司会をことわりました`); return true; }
+  if(a === "ok:" + h.id && !hoSwitching){
+    hoSwitching = true;
+    h.go = true; commit();                       // the receiver takes over from this exact state
+    setTimeout(becomePlayer, 600);
+  }
+  return false;
+}
+// player: answer an offer / take over
+async function hoPlayerCheck(){
+  const h = game && game.handover;
+  if(!h || h.to !== myName) return;
+  if(h.go){ if(role === "player" && !hoSwitching){ hoSwitching = true; becomeHost(); } return; }
+  if(hoAsked === h.id) return;
+  hoAsked = h.id;
+  const ok = await confirmBox("司会の交代", `${h.from} さんから司会を頼まれました。引き受けますか？ 通算スコアと設定は引きつがれます。問題リストと画像、背景画像は引きつがれません。`, "引き受ける");
+  setPresence({ hoAck:(ok ? "ok:" : "no:") + h.id });
+}
+function becomeHost(){
+  const g = JSON.parse(JSON.stringify(game));
+  g.handover = null;
+  role = "host"; game = g; prevGame = null;
+  document.body.classList.remove("role-player"); document.body.classList.add("role-host");
+  $("hostPanel").classList.remove("hidden"); $("playerPanel").classList.add("hidden");
+  textQs = []; images = []; Object.keys(idxByMode).forEach(k => idxByMode[k] = -1);
+  if(game.st && game.st.bg === "custom") game.st.bg = "factory";
+  $("qList").value = store.get("q") || "";
+  lbBuilt = false; rpKey = ""; stageCtlKey = "";
+  store.set("last", JSON.stringify({ code:roomCode, role:"host", name:myName, t:Date.now() }));
+  try{ room.setMeta({ host:myName }); }catch(e){}
+  setPresence({ hoAck:null });
+  renderThumbs(); commit();
+  hoSwitching = false;
+  bannerMsg("🎤 あなたが司会になりました");
+}
+function becomePlayer(){
+  const to = game && game.handover ? game.handover.to : "";
+  role = "player";
+  document.body.classList.remove("role-host"); document.body.classList.add("role-player");
+  $("hostPanel").classList.add("hidden"); $("playerPanel").classList.remove("hidden");
+  store.del("host." + roomCode);
+  store.set("last", JSON.stringify({ code:roomCode, role:"player", name:myName, t:Date.now() }));
+  lbBuilt = false;
+  setPresence({ role:"player", name:myName, buzz:null, game:null });
+  hoSwitching = false;
+  bannerMsg(`🎤 司会が ${to} さんに交代しました`);
+  handlePeers();
 }
 
 // ===== avatar picker =====
